@@ -4,7 +4,7 @@
 		<f:form.radio name="{namespace}[{field.identifier}]"
 					  checked="{field.sessionValue} == {option.value}"
 					  value="{option.value}"
-					  additionalAttributes="{u:formFieldAttributes(record:field)}"
+					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
 					  id="c{contentData.uid}-field-{field.identifier}-{option.value}"/>
 		<label class="{blockClass}__label" for="c{contentData.uid}-field-{field.identifier}-{option.value}">{option.label}</label>
 	</f:for>

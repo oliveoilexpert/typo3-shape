@@ -26,7 +26,7 @@
 </f:render>
 
 <f:section name="AddFieldsetButton">
-	<button class="e-button"
+	<button class="{buttonClass}"
 			type="button"
 			onclick="window.__tx_shape.addFieldsFromTemplate(event)"
 			data-template-container="{id}">
@@ -35,7 +35,7 @@
 </f:section>
 
 <f:section name="RemoveFieldsetButton">
-	<button class="e-button"
+	<button class="{buttonClass}"
 			type="button"
 			for="{id}"
 			onclick="this.parentElement.remove()">

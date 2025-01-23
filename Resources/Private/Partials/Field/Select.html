@@ -1,7 +1,7 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
 	<f:render partial="Fieldlabel" arguments="{_all}"/>
 	<f:form.select name="{namespace}[{field.identifier}]"
-				   additionalAttributes="{u:formFieldAttributes(record:field)}"
+				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
 				   id="c{contentData.uid}-field-{field.identifier}">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
