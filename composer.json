@@ -1,0 +1,28 @@
+{
+	"name": "ubos/shape",
+	"type": "typo3-cms-extension",
+	"description": "Flexible form extension - if ext:form and ext:powermail had a baby",
+	"license": "GPL-2.0-or-later",
+	"version": "1.0.0",
+	"require": {
+		"php": "^8",
+		"typo3/cms-core": "^13",
+		"typo3/cms-extbase": "^13",
+		"typo3/cms-fluid": "^13",
+		"typo3/cms-frontend": "^13",
+		"typo3/cms-form": "^13"
+	},
+	"replace": {
+		"typo3-ter/puck": "self.version"
+	},
+	"autoload": {
+		"psr-4": {
+			"UBOS\\Shape\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "shape"
+		}
+	}
+}

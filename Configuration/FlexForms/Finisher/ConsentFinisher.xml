@@ -1,0 +1,27 @@
+<T3DataStructure>
+    <sheets>
+        <general>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <recipientAddressField>
+                        <label>Recipient email address field</label>
+                        <description>Identifier of form field that contains email address to send to</description>
+                        <config>
+                            <type>input</type>
+                            <required>1</required>
+                        </config>
+                    </recipientAddressField>
+                    <senderAddress>
+                        <label>Sender email address</label>
+                        <description>Optional, falls back to [MAIL][defaultMailFromAddress]</description>
+                        <config>
+                            <type>email</type>
+                        </config>
+                    </senderAddress>
+                </el>
+            </ROOT>
+        </general>
+    </sheets>
+</T3DataStructure>

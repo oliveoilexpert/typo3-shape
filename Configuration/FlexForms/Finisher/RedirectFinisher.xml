@@ -1,0 +1,27 @@
+<T3DataStructure>
+    <sheets>
+        <general>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <uri>
+                        <label>Redirect URL</label>
+                        <config>
+                            <type>link</type>
+                            <allowedTypes>
+                                <numIndex index="0">page</numIndex>
+                                <numIndex index="1">url</numIndex>
+                            </allowedTypes>
+                            <appearance>
+                                <allowedOptions>
+                                    <numIndex index="0">params</numIndex>
+                                </allowedOptions>
+                            </appearance>
+                        </config>
+                    </uri>
+                </el>
+            </ROOT>
+        </general>
+    </sheets>
+</T3DataStructure>

@@ -1,0 +1,10 @@
+categories:
+  Puck:
+    label: Shape
+  Puck.template:
+    label: Template
+    parent: Shape
+
+settings:
+
+

@@ -1,0 +1,37 @@
+<T3DataStructure>
+    <sheets>
+        <general>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <settings.form>
+
+                        <label>Form</label>
+                        <config>
+                            <type>group</type>
+                            <allowed>tx_shape_form</allowed>
+                            <size>1</size>
+                        </config>
+
+                    </settings.form>
+                    <settings.finishers>
+
+                        <label>Finishers</label>
+                        <config>
+                            <type>inline</type>
+                            <foreign_table>tx_shape_finisher</foreign_table>
+                            <foreign_field>content_parent</foreign_field>
+                            <foreign_sortby>sorting</foreign_sortby>
+                            <appearance>
+                                <useSortable>1</useSortable>
+                                <expandSingle>1</expandSingle>
+                            </appearance>
+                        </config>
+
+                    </settings.finishers>
+                </el>
+            </ROOT>
+        </general>
+    </sheets>
+</T3DataStructure>

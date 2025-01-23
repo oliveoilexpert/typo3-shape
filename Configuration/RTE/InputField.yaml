@@ -1,0 +1,47 @@
+imports:
+  - { resource: "EXT:rte_ckeditor/Configuration/RTE/Processing.yaml" }
+  - { resource: "EXT:rte_ckeditor/Configuration/RTE/Editor/Base.yaml" }
+  - { resource: "EXT:rte_ckeditor/Configuration/RTE/Editor/Plugins.yaml" }
+
+editor:
+  config:
+    allowedContent: true
+    enableContextMenu: false
+    forcePasteAsPlainText: true
+    clipboard_defaultContentType: 'text'
+    height: '45px'
+
+    toolbar:
+      - ['Subscript', 'Superscript', '-', 'SpecialChar', ]
+    toolbarGroups:
+      - { name: basicstyles, groups: [ basicstyles ] }
+      - { name: links, groups: [ links ] }
+      - { name: document, groups: [ mode ] }
+      -
+    wordcount:
+      showRemaining: true
+      showParagraphs: false
+      showWordCount: false
+      showCharCount: false
+      # Filled by Event based on TCA configuration
+      # maxCharCount: 255
+
+    autoParagraph: false
+    enterMode: 2 # <br> instead of <p>
+    format_tags: "p"
+    shiftEnterMode: 2
+    extraPlugins:
+      - wordcount
+      - specialchar
+
+    removePlugins:
+      - resize
+      - autogrow
+      - softhyphen
+
+processing:
+  overruleMode: nothing
+  allowTags:
+    - sub
+    - sup
+    - br

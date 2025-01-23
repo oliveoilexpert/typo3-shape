@@ -1,0 +1,44 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<f:variable name="id" value="c{contentData.uid}-field-{field.identifier}"/>
+	<f:render partial="Fieldlabel" arguments="{_all}"/>
+	<div id="{id}">
+		<f:render section="AddFieldsetButton" arguments="{_all}"/>
+		<f:variable name="startingIndex" value="{field.createdFieldsets -> f:count()}"/>
+		<template data-iteration="{startingIndex}">
+			<div>
+				<f:alias map="{fields:field.fields, namespace:'{namespace}[{field.identifier}][__INDEX]'}">
+					<f:render partial="Fields" arguments="{_all}"/>
+				</f:alias>
+				<f:render section="RemoveFieldsetButton" arguments="{_all}"/>
+			</div>
+		</template>
+		<f:if condition="{field.createdFieldsets}">
+			<f:for each="{field.createdFieldsets}" as="fieldset" iteration="i">
+				<div>
+					<f:alias map="{fields:fieldset, namespace:'{namespace}[{field.identifier}][{i.index}]'}">
+						<f:render partial="Fields" arguments="{_all}"/>
+					</f:alias>
+					<f:render section="RemoveFieldsetButton" arguments="{_all}"/>
+				</div>
+			</f:for>
+		</f:if>
+	</div>
+</f:render>
+
+<f:section name="AddFieldsetButton">
+	<button class="e-button"
+			type="button"
+			onclick="window.__tx_shape.addFieldsFromTemplate(event)"
+			data-template-container="{id}">
+		Add fieldset
+	</button>
+</f:section>
+
+<f:section name="RemoveFieldsetButton">
+	<button class="e-button"
+			type="button"
+			for="{id}"
+			onclick="this.parentElement.remove()">
+		Remove fieldset
+	</button>
+</f:section>

@@ -1,0 +1,75 @@
+<T3DataStructure>
+    <sheets>
+        <recipient>
+            <ROOT>
+                <sheetTitle>Recipient</sheetTitle>
+                <type>array</type>
+                <el>
+                    <recipientAddressField>
+                        <label>Recipient email address field</label>
+                        <description>Identifier of form field that contains email addresses to send to</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </recipientAddressField>
+                    <recipientAddress>
+                        <label>Recipient email address</label>
+                        <description>Comma separated list of email addresses to send to</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </recipientAddress>
+                </el>
+            </ROOT>
+        </recipient>
+        <sender>
+            <ROOT>
+                <sheetTitle>Sender</sheetTitle>
+                <type>array</type>
+                <el>
+                    <senderAddress>
+                        <label>Sender email address</label>
+                        <description>Optional, falls back to [MAIL][defaultMailFromAddress]</description>
+                        <config>
+                            <type>email</type>
+                        </config>
+                    </senderAddress>
+                    <senderName>
+                        <label>Sender name</label>
+                        <description>Optional, falls back to [MAIL][defaultMailFromName]</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </senderName>
+                </el>
+            </ROOT>
+        </sender>
+        <mail>
+            <ROOT>
+                <sheetTitle>Mail</sheetTitle>
+                <type>array</type>
+                <el>
+                    <mailSubject>
+                        <label>Subject</label>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </mailSubject>
+                    <mailBody>
+                        <label>Body</label>
+                        <config>
+                            <type>text</type>
+                            <enableRichtext>1</enableRichtext>
+                        </config>
+                    </mailBody>
+                    <mailTemplate>
+                        <label>Template name</label>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </mailTemplate>
+                </el>
+            </ROOT>
+        </mail>
+    </sheets>
+</T3DataStructure>

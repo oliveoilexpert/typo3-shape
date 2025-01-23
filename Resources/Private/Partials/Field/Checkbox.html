@@ -1,0 +1,8 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<f:form.checkbox name="{namespace}[{field.identifier}]"
+					 checked="{field.sessionValue}"
+					 value="1"
+					 additionalAttributes="{u:formFieldAttributes(record:field)}"
+					 id="c{contentData.uid}-field-{field.identifier}"/>
+	<f:render partial="Fieldlabel" arguments="{_all}"/>
+</f:render>

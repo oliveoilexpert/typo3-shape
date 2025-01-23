@@ -1,0 +1,21 @@
+<T3DataStructure>
+    <sheets>
+        <general>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <contentElements>
+                        <label>Content elements</label>
+                        <config>
+                            <type>group</type>
+                            <internal_type>db</internal_type>
+                            <allowed>tt_content</allowed>
+                            <maxitems>50</maxitems>
+                        </config>
+                    </contentElements>
+                </el>
+            </ROOT>
+        </general>
+    </sheets>
+</T3DataStructure>

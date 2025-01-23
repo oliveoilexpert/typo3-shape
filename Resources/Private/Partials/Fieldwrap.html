@@ -1,0 +1,17 @@
+<f:variable name="styleAttr"
+			value="style=--shape-field-width:{field.width}%"/>
+<f:variable name="conditionAttr"
+			value="{f:if(condition:'{field.js_display_condition}',then:'data-condition=\'{field.js_display_condition}\'')}"/>
+
+<div class="{blockClass}__field -type-{field.type}"
+	 data-wrap-for="{field.identifier}"
+	 {styleAttr} {conditionAttr}>
+	{content -> f:format.raw()}
+	<f:if condition="{session.fieldErrors.{field.identifier}}">
+		<div class="{blockClass}__field__error">
+			<f:for each="{session.fieldErrors.{field.identifier}}" as="error">
+				{error.message}
+			</f:for>
+		</div>
+	</f:if>
+</div>

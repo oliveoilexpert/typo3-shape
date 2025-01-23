@@ -1,0 +1,43 @@
+<f:variable name="blockClass" value="shape"/>
+
+<f:form class="{blockClass}__form"
+		id="c{contentData.uid}-f{form.uid}"
+		action="form"
+		name="{formName}"
+		autocomplete="on"
+		enctype="multipart/form-data"
+		data-action="{f:uri.action(action:action, arguments:{pageIndex:forwardStepPageIndex})}">
+
+	<h2 class="{blockClass}__form__header">{form.title}</h2>
+
+	<div class="{blockClass}__page">
+		<h3 class="{blockClass}__page__header">{formPage.title}</h3>
+		<fieldset class="{blockClass}__fieldset">
+			<f:alias map="{fields: formPage.fields, namespace:formName}">
+				<f:render partial="Fields" arguments="{_all}"></f:render>
+			</f:alias>
+		</fieldset>
+	</div>
+
+	<div class="{blockClass}__navigation">
+		<f:if condition="!{isFirstStep}">
+			<button type="submit"
+					class="{blockClass}__navigation__button -prev e-button"
+					formnovalidate
+					formaction="{f:uri.action(action:'formStep', arguments:{pageIndex:backStepPageIndex})}">
+				{formPage.prev_label}
+			</button>
+		</f:if>
+		<button type="submit"
+				class="{blockClass}__navigation__button -next e-button">
+			{formPage.next_label}
+		</button>
+	</div>
+
+	<div>
+		<f:form.hidden name="session" value='{sessionJson}'/>
+		<f:render partial="SpamProtection" arguments="{_all}"/>
+		<f:render partial="Scripts" arguments="{_all}"/>
+	</div>
+
+</f:form>

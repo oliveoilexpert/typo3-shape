@@ -1,0 +1,35 @@
+<T3DataStructure>
+    <sheets>
+        <general>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <storagePage>
+                        <label>Storage page</label>
+                        <config>
+                            <type>group</type>
+                            <internal_type>db</internal_type>
+                            <allowed>pages</allowed>
+                            <size>1</size>
+                            <maxitems>1</maxitems>
+                        </config>
+                    </storagePage>
+                    <excludeFields>
+                        <label>Exclude fields from saved data</label>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </excludeFields>
+                    <saveIp>
+                        <label>Save submitter IP-address</label>
+                        <config>
+                            <type>checkbox</type>
+                            <renderType>checkboxToggle</renderType>
+                        </config>
+                    </saveIp>
+                </el>
+            </ROOT>
+        </general>
+    </sheets>
+</T3DataStructure>

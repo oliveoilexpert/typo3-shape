@@ -1,0 +1,9 @@
+
+<f:form.textfield autocomplete="off" name="__email" id="f000" tabindex="-1"/>
+<style>#f000 {position:absolute;margin-left:-999em}</style>
+<script>
+	(() => {
+		const _form = document.currentScript.closest('form')
+		_form.addEventListener('focusin', () => _form.action = _form.dataset.action)
+	})()
+</script>

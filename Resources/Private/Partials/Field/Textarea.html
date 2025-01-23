@@ -1,0 +1,7 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<f:render partial="Fieldlabel" arguments="{_all}"/>
+	<f:form.textarea name="{namespace}[{field.identifier}]"
+					 value="{field.sessionValue}"
+					 additionalAttributes="{u:formFieldAttributes(record:field)}"
+					 id="c{contentData.uid}-field-{field.identifier}"/>
+</f:render>

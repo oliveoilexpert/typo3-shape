@@ -1,0 +1,11 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<h3 class="{blockClass}__header">
+		<f:if condition="{field.rte_label}">
+			<f:then>
+				<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>
+				{field.rte_label -> f:format.html() -> f:format.stripTags(allowedTags:allowedTags)}
+			</f:then>
+			<f:else>{field.label}</f:else>
+		</f:if>
+	</h3>
+</f:render>

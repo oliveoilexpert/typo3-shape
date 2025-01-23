@@ -1,0 +1,5 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<f:form.hidden name="{namespace}[{field.identifier}]"
+				   value="{field.sessionValue}"
+				   id="c{contentData.uid}-field-{field.identifier}"/>
+</f:render>

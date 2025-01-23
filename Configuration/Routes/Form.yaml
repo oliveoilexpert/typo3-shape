@@ -1,0 +1,35 @@
+routeEnhancers:
+  ShapeForm:
+    type: Extbase
+    extension: Shape
+    plugin: Form
+    routes:
+      - routePath: '/{submitLabel}'
+        _controller: 'Form::formSubmit'
+      - routePath: '/{pageLabel}-{pageIndex}'
+        _controller: 'Form::formStep'
+      - routePath: '/'
+        _controller: 'Form::form'
+    aspects:
+      finisherLabel:
+        type: LocaleModifier
+        default: 'finish'
+        localeMap:
+          - locale: 'de_DE.*'
+            value: 'finish'
+      submitLabel:
+        type: LocaleModifier
+        default: 'submit'
+        localeMap:
+          - locale: 'de_DE.*'
+            value: 'submit'
+      pageLabel:
+        type: LocaleModifier
+        default: 'seite'
+        localeMap:
+          - locale: 'de_DE.*'
+            value: 'seite'
+      pageIndex:
+        type: StaticRangeMapper
+        start: '1'
+        end: '1000'
