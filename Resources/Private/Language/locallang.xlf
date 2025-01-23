@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" datatype="plaintext" original="EXT:puck/Resources/Private/Language/locallang.xlf" date="2022-06-21T09:21:54Z" product-name="puck">
+	<file source-language="en" datatype="plaintext" original="EXT:shape/Resources/Private/Language/locallang.xlf" date="2022-06-21T09:21:54Z" product-name="shape">
 		<header/>
 		<body>
 			<trans-unit id="page" resname="page">

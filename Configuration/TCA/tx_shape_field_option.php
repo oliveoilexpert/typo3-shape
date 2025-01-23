@@ -12,7 +12,7 @@ $ctrl = [
 	'languageField' => 'sys_language_uid',
 	'transOrigPointerField' => 'l10n_parent',
 	'transOrigDiffSourceField' => 'l10n_diffsource',
-	'iconfile' => 'EXT:puck/Resources/Public/Icons/Backend/Default.svg',
+	'iconfile' => 'EXT:shape/Resources/Public/Icons/Backend/Default.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
 	],

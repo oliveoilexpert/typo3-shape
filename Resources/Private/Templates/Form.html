@@ -1,6 +1,8 @@
 
 <f:asset.css identifier="tx-shape" href="EXT:shape/Resources/Public/Css/shape.css" />
+<f:variable name="blockClass" value="shape"/>
+<f:variable name="buttonClass" value="shape__button"/>
 
-<section id="c{contentData.uid}">
+<section id="c{contentData.uid}" class="{blockClass}__section">
 	<f:render partial="Form" arguments="{_all}"/>
 </section>

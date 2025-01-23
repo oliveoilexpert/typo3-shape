@@ -5,6 +5,7 @@ namespace UBOS\Shape\Validation;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator;
 
+use UBOS\Shape\Domain;
 class FieldValidatorResolver
 {
 	public function __construct(
@@ -87,7 +88,7 @@ class FieldValidatorResolver
 			}
 		}
 
-		if ($field instanceof Puck\Domain\SingleSelectOptionFieldRecord && $value) {
+		if ($field instanceof Domain\Record\SingleSelectOptionFieldRecord && $value) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');
@@ -98,7 +99,7 @@ class FieldValidatorResolver
 			));
 		}
 
-		if ($field instanceof Puck\Domain\MultiSelectOptionFieldRecord && $value) {
+		if ($field instanceof Domain\Record\MultiSelectOptionFieldRecord && $value) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');
@@ -109,9 +110,9 @@ class FieldValidatorResolver
 			));
 		}
 
-		if ($field instanceof Puck\Domain\DatetimeFieldRecord && $value) {
+		if ($field instanceof Domain\Record\DatetimeFieldRecord && $value) {
 
-			$format = Puck\Domain\DatetimeFieldRecord::FORMATS[$field->get('type')];
+			$format = Domain\Record\DatetimeFieldRecord::FORMATS[$field->get('type')];
 
 			$min = $field->get('min');
 			$max = $field->get('max');

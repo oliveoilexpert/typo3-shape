@@ -1,1 +1,1 @@
-@import 'EXT:puck/Configuration/TsConfig/*.tsconfig'
+@import 'EXT:shape/Configuration/TsConfig/*.tsconfig'

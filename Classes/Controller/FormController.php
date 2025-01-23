@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase;
 use TYPO3\CMS\Frontend;
-use TYPO3\CMS\Extbase\Validation\Validator;
 use UBOS\Shape\Validation;
-use UBOS\Puck;
+use UBOS\Shape\Domain;
 
 // todo: consent finisher
 // todo: dispatch events
@@ -315,7 +314,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->htmlResponse($message);
 	}
 
-	protected function makeFinisherInstance(array $finisherData, $formValues): ?Puck\Domain\Finisher\AbstractFinisher
+	protected function makeFinisherInstance(array $finisherData, $formValues): ?Domain\Finisher\AbstractFinisher
 	{
 		$className = $finisherData['type'] ?? '';
 		if (!$className || !class_exists($className)) {

@@ -1,4 +1,3 @@
-<f:variable name="blockClass" value="shape"/>
 
 <f:form class="{blockClass}__form"
 		id="c{contentData.uid}-f{form.uid}"
@@ -20,16 +19,16 @@
 	</div>
 
 	<div class="{blockClass}__navigation">
-		<f:if condition="!{isFirstStep}">
+		<f:if condition="!{isFirstPage}">
 			<button type="submit"
-					class="{blockClass}__navigation__button -prev e-button"
+					class="{blockClass}__navigation__button -prev {buttonClass}"
 					formnovalidate
 					formaction="{f:uri.action(action:'formStep', arguments:{pageIndex:backStepPageIndex})}">
 				{formPage.prev_label}
 			</button>
 		</f:if>
 		<button type="submit"
-				class="{blockClass}__navigation__button -next e-button">
+				class="{blockClass}__navigation__button -next {buttonClass}">
 			{formPage.next_label}
 		</button>
 	</div>

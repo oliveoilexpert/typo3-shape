@@ -3,7 +3,7 @@
 <style>#f000 {position:absolute;margin-left:-999em}</style>
 <script>
 	(() => {
-		const _form = document.currentScript.closest('form')
-		_form.addEventListener('focusin', () => _form.action = _form.dataset.action)
+		const form = document.currentScript.closest('form')
+		 form.addEventListener('focusin', () => form.action = form.dataset.action)
 	})()
 </script>

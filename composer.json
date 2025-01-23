@@ -1,5 +1,5 @@
 {
-	"name": "ubos/shape",
+	"name": "oliveoilexpert/shape",
 	"type": "typo3-cms-extension",
 	"description": "Flexible form extension - if ext:form and ext:powermail had a baby",
 	"license": "GPL-2.0-or-later",
@@ -13,7 +13,7 @@
 		"typo3/cms-form": "^13"
 	},
 	"replace": {
-		"typo3-ter/puck": "self.version"
+		"typo3-ter/shape": "self.version"
 	},
 	"autoload": {
 		"psr-4": {

@@ -4,7 +4,7 @@ namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
-use UBOS\Shape\Domain;
+use UBOS\Shape\Domain\Record;
 
 final class FieldRecordCreation
 {
@@ -17,22 +17,22 @@ final class FieldRecordCreation
 		}
 		$type = $event->getRawRecord()->getRecordType();
 		if ($type === 'multi-checkbox') {
-			$this->setRecord($event, Domain\MultiSelectOptionFieldRecord::class);
+			$this->setRecord($event, Record\MultiSelectOptionFieldRecord::class);
 			return;
 		}
 		if ($type === 'repeatable-container') {
-			$this->setRecord($event, Domain\RepeatableContainerFieldRecord::class);
+			$this->setRecord($event, Record\RepeatableContainerFieldRecord::class);
 			return;
 		}
 		if (in_array($type, ['radio', 'select'])) {
-			$this->setRecord($event, Domain\SingleSelectOptionFieldRecord::class);
+			$this->setRecord($event, Record\SingleSelectOptionFieldRecord::class);
 			return;
 		}
 		if (in_array($type, ['date', 'datetime-local', 'time', 'month', 'week'])) {
-			$this->setRecord($event, Domain\DatetimeFieldRecord::class);
+			$this->setRecord($event, Record\DatetimeFieldRecord::class);
 			return;
 		}
-		$this->setRecord($event, Domain\GenericFieldRecord::class);
+		$this->setRecord($event, Record\GenericFieldRecord::class);
 	}
 
 	protected function setRecord(RecordCreationEvent $event, string $className): void

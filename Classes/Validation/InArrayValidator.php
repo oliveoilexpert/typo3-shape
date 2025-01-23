@@ -17,7 +17,7 @@ final class InArrayValidator extends AbstractValidator
 	{
 		if (!in_array($value, $this->options['array'], $this->options['strict'])) {
 			$this->addError(
-				'LLL:EXT:puck/Resources/Private/Language/locallang.xlf:validator.inarray.false',
+				'LLL:EXT:shape/Resources/Private/Language/locallang.xlf:validator.inarray.false',
 				// todo: find a better error code
 				1221565130
 			);

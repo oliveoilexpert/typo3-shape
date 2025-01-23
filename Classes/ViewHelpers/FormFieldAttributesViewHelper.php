@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Puck\ViewHelpers;
+namespace UBOS\Shape\ViewHelpers;
 
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;

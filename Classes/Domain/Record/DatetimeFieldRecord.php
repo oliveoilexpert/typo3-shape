@@ -4,7 +4,7 @@ namespace UBOS\Shape\Domain\Record;
 
 class DatetimeFieldRecord extends GenericFieldRecord
 {
-	const array FORMATS = [
+	const FORMATS = [
 		'date' => 'Y-m-d',
 		'time' => 'H:i',
 		'datetime' => 'Y-m-d H:i',

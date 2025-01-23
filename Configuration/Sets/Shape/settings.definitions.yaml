@@ -1,7 +1,7 @@
 categories:
-  Puck:
+  Shape:
     label: Shape
-  Puck.template:
+  Shape.template:
     label: Template
     parent: Shape
 

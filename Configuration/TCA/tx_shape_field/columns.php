@@ -254,7 +254,7 @@ return [
 			'rows' => 1,
 			'max' => 255,
 			'enableRichtext' => true,
-			'richtextConfiguration' => 'puck_input_field',
+			'richtextConfiguration' => 'tx_shape_input_field',
 		]
 	],
 	'disabled' => [
