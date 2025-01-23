@@ -10,7 +10,7 @@ class FieldValidatorResolver
 {
 	public function __construct(
 		protected Core\Domain\RecordInterface $field,
-		protected array $session,
+		protected Domain\FormSession $session,
 		protected Core\Resource\ResourceStorageInterface $storage,
 		protected string $sessionFileFolder
 	)
@@ -35,7 +35,7 @@ class FieldValidatorResolver
 		$field = $this->field;
 		$type = $field->get('type');
 		$id = $field->get('identifier');
-		$value = $this->session['values'][$id] ?? null;
+		$value = $this->session->values[$id] ?? null;
 
 		// todo: add FieldValidation Event
 		// todo: PhoneNumberValidator, ColorValidator,
@@ -170,7 +170,7 @@ class FieldValidatorResolver
 					));
 				}
 			} else if ($value) {
-				$value = $this->sessionFileFolder . '/' . ($this->session['filenames'][$id] ?? '');
+				$value = $this->sessionFileFolder . '/' . ($this->session->filenames[$id] ?? '');
 				$validator->addValidator($this->makeValidator(
 					FileExistsInStorageValidator::class,
 					['storage' => $this->storage]
