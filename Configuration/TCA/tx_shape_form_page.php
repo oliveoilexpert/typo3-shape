@@ -29,6 +29,17 @@ $columns = [
 			'eval' => 'trim',
 		],
 	],
+	'type' => [
+		'label' => 'Type',
+		'config' => [
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [
+				['Page', 'page'],
+				['Summary', 'summary'],
+			],
+		],
+	],
 	'form_parent' => [
 		'label' => 'Form',
 		'config' => [
@@ -77,7 +88,7 @@ $columns = [
 ];
 $palettes = [
 	'title' => [
-		'showitem' => 'title',
+		'showitem' => 'title, type',
 	],
 	'button-labels' => [
 		'showitem' => 'prev_label, next_label',

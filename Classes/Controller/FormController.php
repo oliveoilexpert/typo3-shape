@@ -13,6 +13,8 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
+// todo: summary page
+// todo: confirmation fields, like for passwords
 // todo: consent finisher
 // todo: dispatch events
 // todo: exceptions
@@ -76,6 +78,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function formStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->initializeSession();
+		DebugUtility::debug($this->session);
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
@@ -89,8 +92,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		if ($this->session->hasErrors) {
 			$pageIndex = $this->session->previousPageIndex;
+			DebugUtility::debug($this->session);
 		} else {
-			$this->processFields($previousPageRecord->get('fields'));
+			$this->processFieldValues($previousPageRecord->get('fields'));
 		}
 
 		return $this->renderForm($pageIndex);
@@ -110,12 +114,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 
 		$previousPageRecord = $this->formRecord->get('pages')[$this->session->previousPageIndex-1];
-		$this->processFields($previousPageRecord->get('fields'));
-
-		// set the values of file fields to the full uploaded file path
-		foreach ($this->session->filenames as $fieldId => $filename) {
-			$this->session->values[$fieldId] = $this->getSessionFileFolder() . '/' . $filename;
-		}
+		$this->processFieldValues($previousPageRecord->get('fields'));
 
 		return $this->executeFinishers();
 	}
@@ -127,14 +126,23 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		// process current page fields
 		if ($this->session?->values) {
-			foreach ($currentPageRecord->get('fields') as $field) {
-				if (!$field->has('identifier')) {
-					continue;
-				}
-				$id = $field->get('identifier');
-				if (isset($this->session->values[$id])) {
-					$field->setSessionValue($this->session->values[$id]);
-					unset($this->session->values[$id]);
+
+			$pagesToProcess = [$currentPageRecord];
+
+			if ($currentPageRecord->get('type') === 'summary') {
+				$pagesToProcess = $this->formRecord->get('pages');
+			}
+
+			foreach ($pagesToProcess as $page) {
+				foreach ($page->get('fields') as $field) {
+					if (!$field->has('identifier')) {
+						continue;
+					}
+					$id = $field->get('identifier');
+					if (isset($this->session->values[$id])) {
+						$field->setSessionValue($this->session->values[$id]);
+						//unset($this->session->values[$id]);
+					}
 				}
 			}
 		}
@@ -174,6 +182,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$mergedValues = array_merge($this->session->values, $this->request->getArguments()[$this->formName]);
 		$this->session->values = $mergedValues;
+		$this->session->hasErrors = false;
+		$this->session->fieldErrors = [];
 	}
 
 	protected function getSessionFileFolder(): string
@@ -228,8 +238,37 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 			$id = $field->get('identifier');
 
-			$validatorResolver = GeneralUtility::makeInstance(
-				Validation\FieldValidatorResolver::class,
+
+			if ($field instanceof Domain\Record\RepeatableContainerFieldRecord) {
+				$fieldTemplate = $field->get('fields');
+				$valueSets = $this->session->values[$id] ?? null;
+				$this->session->fieldErrors[$id] = [];
+				if (!$valueSets) {
+					continue;
+				}
+				foreach ($fieldTemplate as $repField) {
+					$repId = $repField->get('identifier');
+					$validationResolver = GeneralUtility::makeInstance(
+						Validation\FieldValidationResolver::class,
+						$repField,
+						$this->session,
+						$this->storageRepository->getDefaultStorage(),
+						$this->getSessionFileFolder()
+					);
+					foreach ($valueSets as $index => $values) {
+						$validationResolver->value = $values[$repId] ?? null;
+						$result = $validationResolver->resolveAndValidate();
+						if ($result->hasErrors()) {
+							$this->session->hasErrors = true;
+							array_push($this->session->fieldErrors[$id], ...$result->getErrors());
+						}
+					}
+				}
+				continue;
+			}
+
+			$validationResolver = GeneralUtility::makeInstance(
+				Validation\FieldValidationResolver::class,
 				$field,
 				$this->session,
 				$this->storageRepository->getDefaultStorage(),
@@ -238,7 +277,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 			// if ($event->doValidation()) {}
 
-			$result = $validatorResolver->resolveAndValidate();
+			$result = $validationResolver->resolveAndValidate();
 
 			//$this->session['validationResults'][$id] = $result;
 			// if field has errors, set hasErrors to true, add errors in session and remove value from session
@@ -252,7 +291,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 //		DebugUtility::debug($this->session->hasErrors);
 	}
 
-	protected function processFields($fields): void
+	protected function processFieldValues($fields): void
 	{
 		$values = $this->session->values;
 		// todo: add FieldProcess Event
@@ -265,9 +304,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				continue;
 			}
 			$value = $values[$id];
-			if ($field->get('type') == 'file' && $value instanceof Core\Http\UploadedFile) {
+			if ($field->get('type') == 'file' && $value && $value[0] instanceof Core\Http\UploadedFile) {
 				// todo: file upload event
-				$this->saveUploadedFile($value, $id);
+				$this->processUploadedFiles($value, $id);
 			}
 			if ($field->get('type') === 'password') {
 				// save password event
@@ -276,31 +315,34 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 	}
 
-	protected function saveUploadedFile(Core\Http\UploadedFile $file, string $fieldId): void
+	protected function processUploadedFiles(array $files, string $fieldId): void
 	{
 		$storage = $this->storageRepository->getDefaultStorage();
 		$folderId = $this->getSessionFileFolder();
-		$fileName = $file->getClientFilename();
 		if (!$storage->hasFolder($folderId)) {
 			$storage->createFolder($folderId);
 		}
-		$newFile = $storage->addUploadedFile(
-			$file,
-			$storage->getFolder($folderId),
-			$fileName,
-			Core\Resource\Enum\DuplicationBehavior::RENAME
-		);
 		if (!isset($this->session->filenames)) {
 			$this->session->filenames = [];
 		}
-		$this->session->filenames[$fieldId] = $newFile->getName();
-		$this->session->values[$fieldId] = $this->getSessionFileFolder() . '/' . $newFile->getName();
+		$this->session->filenames[$fieldId] = [];
+		$this->session->values[$fieldId] = [];
+		foreach ($files as $file) {
+			$newFile = $storage->addUploadedFile(
+				$file,
+				$storage->getFolder($folderId),
+				$file->getClientFilename(),
+				Core\Resource\Enum\DuplicationBehavior::RENAME
+			);
+			$this->session->filenames[$fieldId][] = $newFile->getName();
+			$this->session->values[$fieldId][] = $this->getSessionFileFolder() . '/' . $newFile->getName();
+		}
 	}
 
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->finisherRepository->findByContentParent($this->contentRecord->getUid()) as $finisherData) {
+		foreach ($this->finisherRepository->findByContentParent($this->contentRecord->getUid(), false) as $finisherData) {
 			if ($finisherData['condition'] ?? false) {
 				$conditionResolver = $this->getConditionResolver();
 				$conditionResult = $conditionResolver->evaluate($finisherData['condition']);

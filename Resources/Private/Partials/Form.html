@@ -9,14 +9,31 @@
 
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
-	<div class="{blockClass}__page">
-		<h3 class="{blockClass}__page__header">{formPage.title}</h3>
-		<fieldset class="{blockClass}__fieldset">
-			<f:alias map="{fields: formPage.fields, namespace:formName}">
-				<f:render partial="Fields" arguments="{_all}"></f:render>
-			</f:alias>
-		</fieldset>
-	</div>
+	<f:if condition="{formPage.type} == 'summary'">
+		<f:then>
+			<f:for each="{form.pages}" as="page">
+				<div class="{blockClass}__page">
+					<h3 class="{blockClass}__page__header">{formPage.title}</h3>
+					<fieldset class="{blockClass}__fieldset" disabled>
+						<f:alias map="{fields: page.fields, namespace:formName}">
+							<f:render partial="Fields" arguments="{_all}"></f:render>
+						</f:alias>
+					</fieldset>
+				</div>
+			</f:for>
+		</f:then>
+		<f:else>
+			<div class="{blockClass}__page">
+				<h3 class="{blockClass}__page__header">{formPage.title}</h3>
+				<fieldset class="{blockClass}__fieldset">
+					<f:alias map="{fields: formPage.fields, namespace:formName}">
+						<f:render partial="Fields" arguments="{_all}"></f:render>
+					</f:alias>
+				</fieldset>
+			</div>
+		</f:else>
+	</f:if>
+
 
 	<div class="{blockClass}__navigation">
 		<f:if condition="!{isFirstPage}">

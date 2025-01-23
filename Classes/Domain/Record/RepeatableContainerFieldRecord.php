@@ -12,12 +12,15 @@ class RepeatableContainerFieldRecord extends GenericFieldRecord
 		$this->createdFieldsets = null;
 	}
 
-	public function getCreatedFields(): array
+	public function getCreatedFieldsets(): array
 	{
 		if ($this->createdFieldsets !== null) {
 			return $this->createdFieldsets;
 		}
 		$index = 0;
+		if (!$this->getSessionValue()) {
+			return [];
+		}
 		foreach ($this->getSessionValue() as $values) {
 			foreach($this->get('fields') as $childField) {
 				$newField = clone $childField;

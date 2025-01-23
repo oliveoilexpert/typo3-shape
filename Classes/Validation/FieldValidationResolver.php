@@ -6,7 +6,7 @@ use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator;
 
 use UBOS\Shape\Domain;
-class FieldValidatorResolver
+class FieldValidationResolver
 {
 	public function __construct(
 		protected Core\Domain\RecordInterface $field,
@@ -17,25 +17,48 @@ class FieldValidatorResolver
 	{
 	}
 
-	protected mixed $value = null;
+	public mixed $value = null;
+	protected ?Validator\ValidatorInterface $validator = null;
+	protected bool $validateAsArray = false;
 
-	public function getValue(): mixed
+	public function getValidator(): Validator\ValidatorInterface
 	{
-		return $this->value;
+		if ($this->validator === null) {
+			$this->resolve();
+		}
+		return $this->validator;
+	}
+
+	public function reset(): void
+	{
+		$this->validator = null;
+		$this->value = null;
+		$this->validateAsArray = false;
 	}
 
 	public function resolveAndValidate(): \TYPO3\CMS\Extbase\Error\Result
 	{
-		$validator = $this->resolve();
-		return $validator->validate($this->value);
+
+		if ($this->validateAsArray) {
+			$aggregateResult = $this->getValidator()->validate($this->value[0]);
+			foreach ($this->value as $val) {
+				$result = $this->getValidator()->validate($val);
+				foreach ($result->getErrors() as $error) {
+					$aggregateResult->addError($error);
+				}
+			}
+			return $aggregateResult;
+		}
+
+		return $this->getValidator()->validate($this->value);
 	}
 
-	protected function resolve(): Validator\ValidatorInterface
+	protected function resolve(): void
 	{
 		$field = $this->field;
 		$type = $field->get('type');
 		$id = $field->get('identifier');
-		$value = $this->session->values[$id] ?? null;
+		$value = $this->value ?? $this->session->values[$id] ?? null;
 
 		// todo: add FieldValidation Event
 		// todo: PhoneNumberValidator, ColorValidator,
@@ -150,11 +173,19 @@ class FieldValidatorResolver
 					'format' => $format
 				]
 			));
-
 		}
 
 		if ($type === 'file') {
-			if ($value instanceof Core\Http\UploadedFile) {
+
+			// todo: validate that value is array?
+			$this->validateAsArray = true;
+
+			if ($value && is_string($value[0])) {
+				$validator->addValidator($this->makeValidator(
+					FileExistsInStorageValidator::class,
+					['storage' => $this->storage]
+				));
+			} else {
 				if ($field->get('accept')) {
 					$validator->addValidator($this->makeValidator(
 						Validator\MimeTypeValidator::class,
@@ -162,24 +193,18 @@ class FieldValidatorResolver
 					));
 				}
 				if ($field->get('min') || $field->get('max')) {
-					$min = ($field->get('min') ?? '0') . 'KB';
-					$max = $field->get('max') ? $field->get('max') . 'KB' : PHP_INT_MAX . 'B';
+					$min = ($field->get('min') ?? '0') . 'K';
+					$max = $field->get('max') ? ($field->get('max') . 'K') : (PHP_INT_MAX . 'B');
 					$validator->addValidator($this->makeValidator(
 						Validator\FileSizeValidator::class,
 						['minimum' => $min, 'maximum' => $max]
 					));
 				}
-			} else if ($value) {
-				$value = $this->sessionFileFolder . '/' . ($this->session->filenames[$id] ?? '');
-				$validator->addValidator($this->makeValidator(
-					FileExistsInStorageValidator::class,
-					['storage' => $this->storage]
-				));
 			}
 		}
 
+		$this->validator = $validator;
 		$this->value = $value;
-		return $validator;
 	}
 
 	protected function makeValidator(string $validator, array $options = []): Validator\ValidatorInterface

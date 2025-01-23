@@ -14,11 +14,11 @@
 	flex-wrap: wrap;
 	margin: calc(var(--shape-fieldset-gap) / -2);
 }
-.shape__field {
+.shape__fieldwrap {
 	width: var(--shape-field-width);
 	padding: calc(var(--shape-fieldset-gap) / 2);
 }
-.shape__field.-type-header {
+.shape__fieldwrap.-type-header {
 	margin-top: var(--shape-fieldset-gap);
 }
 .shape__navigation {

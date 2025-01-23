@@ -1,5 +1,3 @@
-@import 'EXT:shape/Configuration/TypoScript/0*.typoscript'
-
 lib.tx_shape.contentElementRendering = RECORDS
 lib.tx_shape.contentElementRendering {
     tables = tt_content

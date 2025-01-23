@@ -3,6 +3,7 @@
 					 checked="{field.sessionValue}"
 					 value="1"
 					 additionalAttributes="{shape:formFieldAttributes(record:field)}"
-					 id="c{contentData.uid}-field-{field.identifier}"/>
+					 class="{blockClass}__field -type-{field.type} -{formPage.type}-step"
+					 id="{fieldIdPrefix}{field.identifier}"/>
 	<f:render partial="Fieldlabel" arguments="{_all}"/>
 </f:render>

@@ -11,12 +11,6 @@ routeEnhancers:
       - routePath: '/'
         _controller: 'Form::form'
     aspects:
-      finisherLabel:
-        type: LocaleModifier
-        default: 'finish'
-        localeMap:
-          - locale: 'de_DE.*'
-            value: 'finish'
       submitLabel:
         type: LocaleModifier
         default: 'submit'

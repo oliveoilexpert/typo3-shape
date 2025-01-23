@@ -1,13 +1,14 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
 	<f:render partial="Fieldlabel" arguments="{_all}"/>
 	<f:form.select name="{namespace}[{field.identifier}]"
+				   multiple="1"
 				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
 				   class="{blockClass}__field -type-{field.type} -{formPage.type}-step"
 				   id="{fieldIdPrefix}{field.identifier}">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
-				selected="{field.sessionValue} === {option.value}"
-				value="{option.value}">{option.label}</f:form.select.option>
+					selected="{field.selectedOptions.{option.value}}"
+					value="{option.value}">{option.label}</f:form.select.option>
 		</f:for>
 	</f:form.select>
 </f:render>

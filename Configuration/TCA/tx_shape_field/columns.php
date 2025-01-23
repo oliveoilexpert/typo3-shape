@@ -36,10 +36,11 @@ return [
 			'items' => TcaUtility::selectItemsHelper([
 				['Text field', 'text', 'form-text', 'basic'],
 				['Textarea', 'textarea', 'form-textarea', 'basic'],
-				['Select', 'select', 'form-single-select', 'basic'],
 				['Checkbox', 'checkbox', 'form-checkbox', 'basic'],
-				['Multiple checkboxes', 'multi-checkbox', 'form-multi-checkbox', 'basic'],
+				['Select', 'select', 'form-single-select', 'basic'],
 				['Radio buttons', 'radio', 'form-radio-button', 'basic'],
+				['Multiple checkboxes', 'multi-checkbox', 'form-multi-checkbox', 'basic'],
+				['Multi-select', 'multi-select', 'form-multi-select', 'basic'],
 
 				['Email', 'email', 'form-email', 'typed-text-inputs'],
 				['Number', 'number', 'form-number', 'typed-text-inputs'],
@@ -54,14 +55,14 @@ return [
 				['Week', 'week', 'form-date-picker', 'datetime'],
 
 				['File', 'file', 'form-file-upload', 'special'],
-				['Range', 'range', 'default', 'special'],
-				['Color', 'color', 'default', 'special'],
-				['Reset', 'reset', 'default', 'special'],
-				['Captcha', 'captcha', 'default', 'special'],
-				['Country select', 'country', 'default', 'special'],
+				['Range', 'range', 'form-text', 'special'],
+				['Color', 'color', 'form-text', 'special'],
+				['Reset', 'reset', 'form-text', 'special'],
+				['Captcha', 'captcha', 'form-text', 'special'],
+				['Country select', 'country', 'form-single-select', 'special'],
 				['Hidden input', 'hidden', 'form-hidden', 'special'],
 
-				['Repeatable fieldset', 'repeatable-container', 'default', 'container'],
+				['Repeatable fieldset', 'repeatable-container', 'form-fieldset', 'container'],
 
 				['Header', 'header', 'form-static-text', 'no-input'],
 				['Rich text content', 'rte', 'form-static-text', 'no-input'],
@@ -74,12 +75,17 @@ return [
 				'special' => 'Special',
 				'container' => 'Field container',
 				'no-input' => 'Content only / No input',
-			]
+			],
+//			'fieldWizard' => [
+//				'selectIcons' => [
+//					'disabled' => false,
+//				],
+//			],
 		],
 	],
 	'default_value' => [
 		'label' => 'Default value',
-		'displayCond' => 'FIELD:type:!IN:select,multi-checkbox,radio',
+		'displayCond' => 'FIELD:type:!IN:select,multi-select,multi-checkbox,radio',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -127,7 +133,7 @@ return [
 				'replacements' => [ '/' => '' ],
 			],
 			'appearance' => [
-				'prefix' => \UBOS\Shape\UserFunctions\FormEngine\FieldIdentifierPrefix::class . '->getPrefix',
+				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
 			],
 			'fallbackCharacter' => '-',
 			'eval' => 'uniqueInPid',
@@ -142,7 +148,7 @@ return [
 	],
 	'field_options' => [
 		'label' => 'Options',
-		'displayCond' => 'FIELD:type:IN:select,multi-checkbox,radio',
+		'displayCond' => 'FIELD:type:IN:select,multi-select,multi-checkbox,radio',
 		'config' => [
 			'type' => 'inline',
 			'foreign_table' => 'tx_shape_field_option',

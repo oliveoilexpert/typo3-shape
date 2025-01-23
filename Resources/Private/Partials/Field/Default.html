@@ -4,5 +4,6 @@
 					  type="{field.type}"
 					  value="{field.sessionValue}"
 					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
-					  id="c{contentData.uid}-field-{field.identifier}"/>
+					  class="{blockClass}__field -type-{field.type} -{formPage.type}-step"
+					  id="{fieldIdPrefix}{field.identifier}"/>
 </f:render>

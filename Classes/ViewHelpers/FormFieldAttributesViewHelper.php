@@ -19,11 +19,11 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 		$record = $this->arguments['record'];
 		$attributes = [
 			'data-field-id' => $record->get('identifier'),
-			// replace with event listener in script
-			'onchange' => 'window.__tx_formal.evalConditions()'
+			// todo: replace with event listener in script
+			'onchange' => 'window.__tx_shape.evalConditions()'
 		];
 		if ($record->get('validation_message')) {
-			// replace with data-custom-validation and event listener in script
+			// todo: replace with data-custom-validation and event listener in script
 			$attributes['oninvalid'] = 'this.setCustomValidity("' . $record->get('validation_message') . '")';
 			$attributes['oninput'] = 'this.setCustomValidity("")';
 		}

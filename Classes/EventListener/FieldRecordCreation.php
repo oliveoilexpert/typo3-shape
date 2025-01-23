@@ -8,7 +8,6 @@ use UBOS\Shape\Domain\Record;
 
 final class FieldRecordCreation
 {
-
 	#[AsEventListener]
 	public function __invoke(RecordCreationEvent $event): void
 	{
@@ -16,16 +15,16 @@ final class FieldRecordCreation
 			return;
 		}
 		$type = $event->getRawRecord()->getRecordType();
-		if ($type === 'multi-checkbox') {
-			$this->setRecord($event, Record\MultiSelectOptionFieldRecord::class);
-			return;
-		}
 		if ($type === 'repeatable-container') {
 			$this->setRecord($event, Record\RepeatableContainerFieldRecord::class);
 			return;
 		}
 		if (in_array($type, ['radio', 'select'])) {
 			$this->setRecord($event, Record\SingleSelectOptionFieldRecord::class);
+			return;
+		}
+		if (in_array($type, ['multi-checkbox', 'multi-select'])) {
+			$this->setRecord($event, Record\MultiSelectOptionFieldRecord::class);
 			return;
 		}
 		if (in_array($type, ['date', 'datetime-local', 'time', 'month', 'week'])) {

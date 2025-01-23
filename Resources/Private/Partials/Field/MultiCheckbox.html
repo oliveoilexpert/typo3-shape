@@ -6,10 +6,11 @@
 						 multiple="1"
 						 value="{option.value}"
 						 additionalAttributes="{shape:formFieldAttributes(record:field)}"
-						 id="c{contentData.uid}-field-{field.identifier}-{option.value}"/>
-		<label class="{blockClass}__label" for="c{contentData.uid}-field-{field.identifier}-{option.value}">{option.label}</label>
+						 class="{blockClass}__field -type-{field.type} -{formPage.type}-step"
+						 id="{fieldIdPrefix}{field.identifier}-{option.value}"/>
+		<label class="{blockClass}__label" for="{fieldIdPrefix}{field.identifier}-{option.value}">{option.label}</label>
 	</f:for>
-	<script>
+	<script todo-implement="one or more">
 		const checks = document.currentScript.parentNode.querySelectorAll('[type="multi-checkbox"]');
 	</script>
 </f:render>
