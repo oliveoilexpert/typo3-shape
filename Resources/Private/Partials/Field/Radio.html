@@ -5,7 +5,7 @@
 					  checked="{field.sessionValue} == {option.value}"
 					  value="{option.value}"
 					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
-					  class="{blockClass}__field -type-{field.type} -{formPage.type}-step"
+					  class="{blockClass}__field -type-{field.type} -{currentPage.type}-step"
 					  id="{fieldIdPrefix}{field.identifier}-{option.value}"/>
 		<label class="{blockClass}__label" for="{fieldIdPrefix}{field.identifier}-{option.value}">{option.label}</label>
 	</f:for>

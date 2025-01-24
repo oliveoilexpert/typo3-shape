@@ -5,15 +5,16 @@
 		name="{formName}"
 		autocomplete="on"
 		enctype="multipart/form-data"
+		data-shape-form="1"
 		data-action="{f:uri.action(action:action, arguments:{pageIndex:forwardStepPageIndex})}">
 
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
-	<f:if condition="{formPage.type} == 'summary'">
+	<f:if condition="{currentPage.type} == 'summary'">
 		<f:then>
 			<f:for each="{form.pages}" as="page">
 				<div class="{blockClass}__page">
-					<h3 class="{blockClass}__page__header">{formPage.title}</h3>
+					<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
 					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
 						<f:alias map="{fields: page.fields, namespace:formName}">
 							<f:render partial="Fields" arguments="{_all}"></f:render>
@@ -24,9 +25,9 @@
 		</f:then>
 		<f:else>
 			<div class="{blockClass}__page">
-				<h3 class="{blockClass}__page__header">{formPage.title}</h3>
+				<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
 				<fieldset class="{blockClass}__fieldset">
-					<f:alias map="{fields: formPage.fields, namespace:formName}">
+					<f:alias map="{fields: currentPage.fields, namespace:formName}">
 						<f:render partial="Fields" arguments="{_all}"></f:render>
 					</f:alias>
 				</fieldset>
@@ -34,26 +35,24 @@
 		</f:else>
 	</f:if>
 
-
 	<div class="{blockClass}__navigation">
 		<f:if condition="!{isFirstPage}">
 			<button type="submit"
 					class="{blockClass}__navigation__button -prev {buttonClass}"
 					formnovalidate
 					formaction="{f:uri.action(action:'formStep', arguments:{pageIndex:backStepPageIndex})}">
-				{formPage.prev_label}
+				{currentPage.prev_label}
 			</button>
 		</f:if>
 		<button type="submit"
 				class="{blockClass}__navigation__button -next {buttonClass}">
-			{formPage.next_label}
+			{currentPage.next_label}
 		</button>
 	</div>
 
 	<div>
 		<f:form.hidden name="session" value='{sessionJson}'/>
 		<f:render partial="SpamProtection" arguments="{_all}"/>
-		<f:render partial="Scripts" arguments="{_all}"/>
 	</div>
 
 </f:form>

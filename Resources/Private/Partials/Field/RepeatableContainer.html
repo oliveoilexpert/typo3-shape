@@ -1,8 +1,17 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
 	<f:variable name="id" value="{fieldIdPrefix}{field.identifier}"/>
-	<f:render partial="Fieldlabel" arguments="{_all}"/>
-	<div id="{id}" class="{blockClass}__repeatable__wrap -{formPage.type}-step">
 
+	<div class="{blockClass}__label -for-{field.type}">
+		<f:if condition="{field.rte_label}">
+			<f:then>
+				<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>
+				{field.rte_label -> f:format.html() -> f:format.stripTags(allowedTags:allowedTags)}
+			</f:then>
+			<f:else>{field.label}</f:else>
+		</f:if>
+	</div>
+
+	<div id="{id}" class="{blockClass}__repeatable__list -{currentPage.type}-step">
 		<f:variable name="startingIndex" value="{field.createdFieldsets -> f:count()}"/>
 		<template data-iteration="{startingIndex}">
 			<f:alias map="{fields:field.fields, index:'__INDEX'}">
@@ -16,18 +25,17 @@
 				</f:alias>
 			</f:for>
 		</f:if>
-
-		<button class="{blockClass}__repeatable__add {buttonClass}"
-				type="button"
-				onclick="window.__tx_shape.addFieldsFromTemplate(event)"
-				data-template-container="{id}">
-			Add fieldset
-		</button>
 	</div>
+
+	<button class="{blockClass}__repeatable__add {buttonClass}"
+			type="button"
+			data-shape-repeatable-add="{id}">
+		Add fieldset
+	</button>
 </f:render>
 
 <f:section name="RepeatableContainer">
-	<div class="{blockClass}__repeatable__container">
+	<div class="{blockClass}__repeatable__item" data-shape-repeatable-item>
 		<div class="{blockClass}__repeatable__fieldset">
 			<f:alias map="{fields:fields, namespace:'{namespace}[{field.identifier}][{index}]'}">
 				<f:render partial="Fields" arguments="{_all}"/>
@@ -35,8 +43,7 @@
 		</div>
 		<button class="{blockClass}__repeatable__remove {buttonClass}"
 				type="button"
-				for="{id}"
-				onclick="this.parentElement.remove()">
+				data-shape-repeatable-remove>
 			Remove fieldset
 		</button>
 	</div>

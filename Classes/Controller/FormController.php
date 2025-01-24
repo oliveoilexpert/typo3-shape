@@ -13,6 +13,9 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
+
+// todo: animations for conditional/repeatable fields
+// todo: solve js; inline with on:attributes?
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
 // todo: dispatch events
@@ -37,9 +40,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	// todo: replace with FormSession class
 
 	public function __construct(
-		private readonly Domain\Repository\FormRepository $formRepository,
-		private readonly Domain\Repository\FinisherRepository $finisherRepository,
-		private readonly Core\Resource\StorageRepository $storageRepository
+		protected Domain\Repository\FormRepository $formRepository,
+		protected Domain\Repository\FinisherRepository $finisherRepository,
+		protected Core\Resource\StorageRepository $storageRepository
 	) {}
 
 	public function initializeAction(): void
@@ -49,6 +52,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			// todo: throw exception?
 			$this->htmlResponse('');
 		}
+
+		// todo: this needs to happen after the session is set
 		foreach ($this->formRecord->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				$field->shouldDisplay = $this->resolveFieldDisplayCondition($field);
@@ -71,11 +76,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function formStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->initializeSession();
-		DebugUtility::debug($this->session);
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
-		// $passwordHasher = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
 		$isStepBack = ($this->session->previousPageIndex ?? 1) > $pageIndex;
 		$previousPageRecord = $this->formRecord->get('pages')[$this->session->previousPageIndex-1];
 
@@ -106,6 +109,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			return $this->renderForm($this->session->previousPageIndex);
 		}
 
+		// maybe process entire form here? previousPageIndex can be manipulated client side and is not secure
+		// uploadedFiles could be validated but never saved if user manipulates previousPageIndex
 		$previousPageRecord = $this->formRecord->get('pages')[$this->session->previousPageIndex-1];
 		$this->processFieldValues($previousPageRecord->get('fields'));
 
@@ -144,7 +149,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'action' => $pageIndex < $lastPageIndex ? 'formStep' : 'formSubmit',
 			'contentData' => $this->contentRecord,
 			'form' => $this->formRecord,
-			'formPage' => $currentPageRecord,
+			'currentPage' => $currentPageRecord,
 			'pageIndex' => $pageIndex,
 			'backStepPageIndex' => $pageIndex - 1 ?: null,
 			'forwardStepPageIndex' => $lastPageIndex === $pageIndex ? null : $pageIndex + 1,
@@ -218,9 +223,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected function validateFields($fields): void
 	{
 		foreach ($fields as $field) {
-
 			$id = $field->get('identifier');
-
 
 			if ($field instanceof Domain\Record\RepeatableContainerFieldRecord) {
 				$fieldTemplate = $field->get('fields');
@@ -294,6 +297,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			if ($field->get('type') === 'password') {
 				// save password event
 				//$this->session->values[$id] = $passwordHasher->getHashedPassword($value);
+				// $passwordHasher = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
 			}
 		}
 	}

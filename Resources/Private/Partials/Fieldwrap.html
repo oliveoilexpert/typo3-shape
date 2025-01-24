@@ -1,9 +1,9 @@
 <f:variable name="styleAttr"
 			value="style=--shape-field-width:{field.width}%"/>
 <f:variable name="conditionAttr"
-			value="{f:if(condition:'{field.js_display_condition}',then:'data-condition=\'{field.js_display_condition}\'')}"/>
+			value="{f:if(condition:'{field.js_display_condition}',then:'data-shape-condition=\'{field.js_display_condition}\'')}"/>
 
-<div class="{blockClass}__fieldwrap -type-{field.type} -{formPage.type}-step"
+<div class="{blockClass}__fieldwrap -type-{field.type} -{currentPage.type}-step"
 	 data-wrap-for="{field.identifier}"
 	 {styleAttr} {conditionAttr}>
 	{content -> f:format.raw()}
