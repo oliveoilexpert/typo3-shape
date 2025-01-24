@@ -15,6 +15,10 @@
 	margin: calc(var(--shape-fieldset-gap) / -2);
 }
 
+.shape__label {
+	margin-bottom: .5em;
+}
+
 .shape__fieldwrap {
 	width: var(--shape-field-width);
 	padding: calc(var(--shape-fieldset-gap) / 2);
