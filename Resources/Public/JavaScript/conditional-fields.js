@@ -3,13 +3,11 @@
 		window.__tx_shape = {}
 	}
 
-	console.log('conditional fields')
 	let formData = {}
 	const getValue = fieldId => {
 		return formData[`tx_shape_form[values][${fieldId}]`] ?? null
 	}
 
-	console.log(window.__tx_shape)
 	window.__tx_shape.jexl.addFunction('value', fieldId => {
 		return getValue(fieldId)
 	})
@@ -21,14 +19,15 @@
 		formData = Object.fromEntries(new FormData(form))
 		conditionalFields.forEach(field => {
 			const condition = field.dataset.shapeCondition
+			if (!condition) return
 			const inputs = field.querySelectorAll('[data-shape-field]')
 			if (window.__tx_shape.jexl.evalSync(condition)) {
-				field.style.display = ''
+				field.classList.remove('-hidden')
 				inputs.forEach(input => {
 					input.disabled = false
 				})
 			} else {
-				field.style.display = 'none'
+				field.classList.add('-hidden')
 				inputs.forEach(input => {
 					input.disabled = true
 				})
@@ -38,9 +37,10 @@
 
 	const processNode = el => {
 		const form = el.closest('form') ?? el.querySelector('form')
-		el.querySelectorAll('[data-shape-field]').forEach(button => {
-			button.addEventListener('onchange', evaluateConditions(form))
+		el.querySelectorAll('[data-shape-field]').forEach(field => {
+			field.addEventListener('change', () => evaluateConditions(form))
 		})
+		evaluateConditions(form)
 	}
 
 	window.__tx_shape.conditionalFields = {

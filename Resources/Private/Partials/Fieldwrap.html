@@ -1,11 +1,10 @@
-<f:variable name="styleAttr"
-			value="style=--shape-field-width:{field.width}%"/>
-<f:variable name="conditionAttr"
-			value="{f:if(condition:'{field.js_display_condition}',then:'data-shape-condition=\'{field.js_display_condition}\'')}"/>
+<f:variable name="fieldWidthStyle"
+			value="--shape-field-width:{field.width}%;"/>
 
-<div class="{blockClass}__fieldwrap -type-{field.type} -{currentPage.type}-step"
+<div class="{blockClass}__fieldwrap -type-{field.type} -{currentPage.type}-step {f:if(condition:'{field.js_display_condition}',then:'-hidden')}"
 	 data-wrap-for="{field.identifier}"
-	 {styleAttr} {conditionAttr}>
+	 data-shape-condition="{field.js_display_condition}"
+	 style="{fieldWidthStyle}">
 	{content -> f:format.raw()}
 	<f:if condition="{session.fieldErrors.{field.identifier}}">
 		<div class="{blockClass}__field__errors">

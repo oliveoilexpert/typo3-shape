@@ -1,15 +1,7 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
 	<f:variable name="id" value="{fieldIdPrefix}{field.identifier}"/>
 
-	<div class="{blockClass}__label -for-{field.type}">
-		<f:if condition="{field.rte_label}">
-			<f:then>
-				<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>
-				{field.rte_label -> f:format.html() -> f:format.stripTags(allowedTags:allowedTags)}
-			</f:then>
-			<f:else>{field.label}</f:else>
-		</f:if>
-	</div>
+	<f:render partial="Fieldheader" arguments="{_all}"/>
 
 	<div id="{id}" class="{blockClass}__repeatable__list -{currentPage.type}-step">
 		<f:variable name="startingIndex" value="{field.createdFieldsets -> f:count()}"/>

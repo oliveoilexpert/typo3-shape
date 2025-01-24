@@ -15,7 +15,6 @@ use UBOS\Shape\Domain;
 
 
 // todo: animations for conditional/repeatable fields
-// todo: solve js; inline with on:attributes?
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
 // todo: dispatch events

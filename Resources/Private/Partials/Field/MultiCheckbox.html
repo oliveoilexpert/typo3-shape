@@ -1,5 +1,5 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
-	<f:render partial="Fieldlabel" arguments="{_all}"/>
+	<f:render partial="Fieldheader" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option">
 		<f:form.checkbox name="{namespace}[{field.identifier}]"
 						 checked="{field.selectedOptions.{option.value}}"
