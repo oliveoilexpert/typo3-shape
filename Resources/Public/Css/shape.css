@@ -27,6 +27,9 @@
 	}
 	&.-type-repeatable-container {
 		width: 100%;
+		&.-summary-step button {
+			display: none;
+		}
 	}
 	&.-summary-step {
 		opacity: 0.8;
@@ -55,9 +58,6 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	&.-summary-step button {
-		display: none;
-	}
 }
 @keyframes fade-in {
 	from {

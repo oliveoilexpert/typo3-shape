@@ -14,7 +14,6 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
 
-// todo: animations for conditional/repeatable fields
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
 // todo: dispatch events
@@ -75,6 +74,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function formStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->initializeSession();
+
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}

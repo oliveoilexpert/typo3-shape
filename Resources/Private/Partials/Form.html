@@ -14,7 +14,9 @@
 		<f:then>
 			<f:for each="{form.pages}" as="page">
 				<div class="{blockClass}__page">
-					<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+					<f:if condition="{page.title}">
+						<h3 class="{blockClass}__page__header">{page.title}</h3>
+					</f:if>
 					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
 						<f:alias map="{fields: page.fields, namespace:formName}">
 							<f:render partial="Fields" arguments="{_all}"></f:render>
@@ -25,7 +27,9 @@
 		</f:then>
 		<f:else>
 			<div class="{blockClass}__page">
-				<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+				<f:if condition="{currentPage.title}">
+					<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+				</f:if>
 				<fieldset class="{blockClass}__fieldset">
 					<f:alias map="{fields: currentPage.fields, namespace:formName}">
 						<f:render partial="Fields" arguments="{_all}"></f:render>

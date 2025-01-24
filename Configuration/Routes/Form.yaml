@@ -1,12 +1,13 @@
 routeEnhancers:
   ShapeForm:
+    limitToPages: [234]
     type: Extbase
     extension: Shape
     plugin: Form
     routes:
       - routePath: '/{submitLabel}'
         _controller: 'Form::formSubmit'
-      - routePath: '/{pageLabel}-{pageIndex}'
+      - routePath: '/{pageLabel}_{pageIndex}'
         _controller: 'Form::formStep'
       - routePath: '/'
         _controller: 'Form::form'
@@ -19,10 +20,10 @@ routeEnhancers:
             value: 'submit'
       pageLabel:
         type: LocaleModifier
-        default: 'seite'
+        default: 'step'
         localeMap:
           - locale: 'de_DE.*'
-            value: 'seite'
+            value: 'schritt'
       pageIndex:
         type: StaticRangeMapper
         start: '1'
