@@ -1,44 +1,44 @@
 <f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
 	<f:variable name="id" value="{fieldIdPrefix}{field.identifier}"/>
 	<f:render partial="Fieldlabel" arguments="{_all}"/>
-	<div id="{id}" class="{blockClass}_repeatable-container">
-		<f:render section="AddFieldsetButton" arguments="{_all}"/>
+	<div id="{id}" class="{blockClass}__repeatable__wrap -{formPage.type}-step">
+
 		<f:variable name="startingIndex" value="{field.createdFieldsets -> f:count()}"/>
 		<template data-iteration="{startingIndex}">
-			<div>
-				<f:alias map="{fields:field.fields, namespace:'{namespace}[{field.identifier}][__INDEX]'}">
-					<f:render partial="Fields" arguments="{_all}"/>
-				</f:alias>
-				<f:render section="RemoveFieldsetButton" arguments="{_all}"/>
-			</div>
+			<f:alias map="{fields:field.fields, index:'__INDEX'}">
+				<f:render section="RepeatableContainer" arguments="{_all}"/>
+			</f:alias>
 		</template>
 		<f:if condition="{field.createdFieldsets}">
 			<f:for each="{field.createdFieldsets}" as="fieldset" iteration="i">
-				<div>
-					<f:alias map="{fields:fieldset, namespace:'{namespace}[{field.identifier}][{i.index}]'}">
-						<f:render partial="Fields" arguments="{_all}"/>
-					</f:alias>
-					<f:render section="RemoveFieldsetButton" arguments="{_all}"/>
-				</div>
+				<f:alias map="{fields:fieldset, index:i.index}">
+					<f:render section="RepeatableContainer" arguments="{_all}"/>
+				</f:alias>
 			</f:for>
 		</f:if>
+
+		<button class="{blockClass}__repeatable__add {buttonClass}"
+				type="button"
+				onclick="window.__tx_shape.addFieldsFromTemplate(event)"
+				data-template-container="{id}">
+			Add fieldset
+		</button>
 	</div>
 </f:render>
 
-<f:section name="AddFieldsetButton">
-	<button class="{buttonClass}"
-			type="button"
-			onclick="window.__tx_shape.addFieldsFromTemplate(event)"
-			data-template-container="{id}">
-		Add fieldset
-	</button>
+<f:section name="RepeatableContainer">
+	<div class="{blockClass}__repeatable__container">
+		<div class="{blockClass}__repeatable__fieldset">
+			<f:alias map="{fields:fields, namespace:'{namespace}[{field.identifier}][{index}]'}">
+				<f:render partial="Fields" arguments="{_all}"/>
+			</f:alias>
+		</div>
+		<button class="{blockClass}__repeatable__remove {buttonClass}"
+				type="button"
+				for="{id}"
+				onclick="this.parentElement.remove()">
+			Remove fieldset
+		</button>
+	</div>
 </f:section>
 
-<f:section name="RemoveFieldsetButton">
-	<button class="{buttonClass}"
-			type="button"
-			for="{id}"
-			onclick="this.parentElement.remove()">
-		Remove fieldset
-	</button>
-</f:section>

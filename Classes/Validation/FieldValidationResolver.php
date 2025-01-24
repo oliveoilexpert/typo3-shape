@@ -40,7 +40,7 @@ class FieldValidationResolver
 	{
 
 		if ($this->validateAsArray) {
-			$aggregateResult = $this->getValidator()->validate($this->value[0]);
+			$aggregateResult = $this->getValidator()->validate(reset($this->value));
 			foreach ($this->value as $val) {
 				$result = $this->getValidator()->validate($val);
 				foreach ($result->getErrors() as $error) {
@@ -180,7 +180,7 @@ class FieldValidationResolver
 			// todo: validate that value is array?
 			$this->validateAsArray = true;
 
-			if ($value && is_string($value[0])) {
+			if ($value && is_string(reset($value))) {
 				$validator->addValidator($this->makeValidator(
 					FileExistsInStorageValidator::class,
 					['storage' => $this->storage]

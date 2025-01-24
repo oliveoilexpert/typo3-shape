@@ -7,4 +7,8 @@ return [
 		'source' => SvgIconProvider::class,
 		'path' => 'EXT:shape/Resources/Public/Icons/form-option.svg',
 	],
+	'shape-default' => [
+		'source' => SvgIconProvider::class,
+		'path' => 'EXT:shape/Resources/Public/Icons/default.svg',
+	],
 ];

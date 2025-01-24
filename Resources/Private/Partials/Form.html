@@ -14,7 +14,7 @@
 			<f:for each="{form.pages}" as="page">
 				<div class="{blockClass}__page">
 					<h3 class="{blockClass}__page__header">{formPage.title}</h3>
-					<fieldset class="{blockClass}__fieldset" disabled>
+					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
 						<f:alias map="{fields: page.fields, namespace:formName}">
 							<f:render partial="Fields" arguments="{_all}"></f:render>
 						</f:alias>

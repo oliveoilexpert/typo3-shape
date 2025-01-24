@@ -1,7 +1,7 @@
 
 .shape__form {
 	--shape-field-width: 100%;
-	--shape-fieldset-gap: 2rem;
+	--shape-fieldset-gap: 3rem;
 }
 .shape__page {
 	padding-bottom: var(--shape-fieldset-gap);
@@ -17,9 +17,39 @@
 .shape__fieldwrap {
 	width: var(--shape-field-width);
 	padding: calc(var(--shape-fieldset-gap) / 2);
+	&.-type-header {
+		margin-top: var(--shape-fieldset-gap);
+	}
+	&.-type-repeatable-container {
+		width: 100%;
+	}
+	&.-summary-step {
+		opacity: 0.8;
+		pointer-events: none;
+	}
 }
-.shape__fieldwrap.-type-header {
-	margin-top: var(--shape-fieldset-gap);
+.shape__repeatable__wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	&.-summary-step button {
+		display: none;
+	}
+}
+.shape__repeatable__container {
+	margin-block: calc(var(--shape-fieldset-gap) / 2);
+	padding: calc(var(--shape-fieldset-gap) / 1);
+	border: 2px solid color-mix(in srgb, currentColor 50%, transparent 50%);
+	border-radius: 10px;
+}
+.shape__repeatable__fieldset {
+	display: flex;
+	flex-wrap: wrap;
+	margin: calc(var(--shape-fieldset-gap) / -2);
+}
+.shape__repeatable__add {
+	margin-top: calc(var(--shape-fieldset-gap) / 2);
+	order: 2;
 }
 .shape__navigation {
 	display: flex;
@@ -32,5 +62,5 @@
 .shape__button {
 	padding: 0.5em 1em;
 	border: 2px solid currentColor;
-	border-radius: 5px;
+	border-radius: 10px;
 }
