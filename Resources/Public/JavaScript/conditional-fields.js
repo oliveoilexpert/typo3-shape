@@ -36,7 +36,7 @@
 	}
 
 	const processNode = el => {
-		const form = el.closest('form') ?? el.querySelector('form')
+		const form = el.closest('[data-shape-form]') ?? el.querySelector('[data-shape-form]')
 		el.querySelectorAll('[data-shape-field]').forEach(field => {
 			field.addEventListener('change', () => evaluateConditions(form))
 		})

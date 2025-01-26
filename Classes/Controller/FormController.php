@@ -14,6 +14,9 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
 
+// todo: email multiple?
+// todo: labels in language files...
+// todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
 // todo: dispatch events
@@ -21,10 +24,8 @@ use UBOS\Shape\Domain;
 // todo: captcha field
 // todo: delete/move uploads finisher?
 // todo: helper function to create new field type like existing field type
-// todo: rework js as actual file, replace onchange and onclick with event listeners, add "process" function for when fields are added dynamically
 // todo: webhook finisher
 // todo: submission export in list module
-// todo: language/translation stuff
 // note: upload and radio fields will not be in formValues if no value is set
 
 class FormController extends Extbase\Mvc\Controller\ActionController

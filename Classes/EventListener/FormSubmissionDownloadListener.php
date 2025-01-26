@@ -1,0 +1,58 @@
+<?php
+
+namespace UBOS\Shape\EventListener;
+
+use TYPO3\CMS\Backend\RecordList\Event\BeforeRecordDownloadIsExecutedEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Core\Utility\DebugUtility;
+
+#[AsEventListener]
+final class FormSubmissionDownloadListener
+{
+	public function __invoke(BeforeRecordDownloadIsExecutedEvent $event): void
+	{
+		if ($event->getTable() !== 'tx_shape_form_submission') {
+			return;
+		}
+		
+		$records = [];
+		$additionalHeaders = [];
+		$format = $event->getFormat();
+
+		if ($format === 'json') {
+			foreach ($event->getRecords() as $record) {
+				$formValues = json_decode($record['form_values'], true);
+				$record['form_values'] = $formValues;
+				$records[] = $record;
+			}
+		}
+
+		if ($format === 'csv') {
+			foreach ($event->getRecords() as $record) {
+				$formValues = json_decode($record['form_values'], true);
+				foreach ($formValues as $key => $value) {
+					$col = '$'.$key;
+					$additionalHeaders[$col] = $key;
+					if (is_array($value)) {
+						try {
+							$record[$col] = implode(',', $value);
+						} catch (\Exception $e) {
+							$record[$col] = 'Array(' . count($value) . ')';
+						}
+					} else {
+						$record[$col] = $value;
+					}
+
+				}
+				unset($record['form_values']);
+				$records[] = $record;
+			}
+
+			$headerRow = $event->getHeaderRow();
+			unset($headerRow['form_values']);
+			$event->setHeaderRow(array_merge($headerRow, $additionalHeaders));
+		}
+
+		$event->setRecords($records);
+	}
+}

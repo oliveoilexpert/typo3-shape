@@ -277,7 +277,7 @@ return [
 	],
 	'multiple' => [
 		'label' => 'Multiple',
-		'displayCond' => 'FIELD:type:IN:file,email',
+		'displayCond' => 'FIELD:type:IN:file',
 		'config' => [
 			'type' => 'check',
 		],

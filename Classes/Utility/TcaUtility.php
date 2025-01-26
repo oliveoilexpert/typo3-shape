@@ -20,4 +20,9 @@ class TcaUtility
 			return self::selectItemHelper($item);
 		}, $items);
 	}
+
+	public static function addFieldType(): void
+	{
+
+	}
 }
