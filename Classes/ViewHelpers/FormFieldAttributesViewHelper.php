@@ -23,6 +23,9 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 		if ($record->get('validation_message')) {
 			$attributes['data-shape-validity-message'] = $record->get('validation_message');
 		}
+		if ($record->get('list')) {
+			$attributes['list'] = $this->templateVariableContainer->get('fieldIdPrefix') . $record->get('identifier') . '--list';
+		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {
 			$val = $record->get($attribute);
 			if ($val) {

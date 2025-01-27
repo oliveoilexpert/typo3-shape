@@ -39,7 +39,7 @@ class FieldValidationResolver
 	{
 
 		$this->resolve();
-		if ($this->validateAsArray) {
+		if ($this->validateAsArray && is_array($this->value)) {
 			$aggregateResult = $this->getValidator()->validate(reset($this->value));
 			foreach ($this->value as $val) {
 				$result = $this->getValidator()->validate($val);

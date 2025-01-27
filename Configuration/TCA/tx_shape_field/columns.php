@@ -21,7 +21,7 @@ return [
 	],
 	'placeholder' => [
 		'label' => 'Placeholder',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,number,tel,password,url',
+		'displayCond' => 'FIELD:type:IN:text,textarea,email,number,tel,password,url,search',
 		'config' => [
 			'type' => 'text',
 			'rows' => 2,
@@ -34,19 +34,21 @@ return [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'items' => TcaUtility::selectItemsHelper([
-				['Text field', 'text', 'form-text', 'basic'],
-				['Textarea', 'textarea', 'form-textarea', 'basic'],
-				['Checkbox', 'checkbox', 'form-checkbox', 'basic'],
-				['Select', 'select', 'form-single-select', 'basic'],
-				['Radio buttons', 'radio', 'form-radio-button', 'basic'],
-				['Multiple checkboxes', 'multi-checkbox', 'form-multi-checkbox', 'basic'],
-				['Multi-select', 'multi-select', 'form-multi-select', 'basic'],
+				['Text', 'text', 'form-text', 'text-inputs'],
+				['Textarea', 'textarea', 'form-textarea', 'text-inputs'],
+				['Email', 'email', 'form-email', 'text-inputs'],
+				['Number', 'number', 'form-number', 'text-inputs'],
+				['Phone number', 'tel', 'form-telephone', 'text-inputs'],
+				['Password', 'password', 'form-password', 'text-inputs'],
+				['Search', 'search', 'form-text', 'text-inputs'],
+				['URL', 'url', 'form-url', 'text-inputs'],
 
-				['Email', 'email', 'form-email', 'typed-text-inputs'],
-				['Number', 'number', 'form-number', 'typed-text-inputs'],
-				['Phone number', 'tel', 'form-telephone', 'typed-text-inputs'],
-				['Password', 'password', 'form-password', 'typed-text-inputs'],
-				['URL', 'url', 'form-url', 'typed-text-inputs'],
+				['Checkbox', 'checkbox', 'form-checkbox', 'select-inputs'],
+				['Select', 'select', 'form-single-select', 'select-inputs'],
+				['Radio buttons', 'radio', 'form-radio-button', 'select-inputs'],
+				['Multiple checkboxes', 'multi-checkbox', 'form-multi-checkbox', 'select-inputs'],
+				['Multi-select', 'multi-select', 'form-multi-select', 'select-inputs'],
+				['Country select', 'country-select', 'form-single-select', 'select-inputs'],
 
 				['Date', 'date', 'form-date-picker', 'datetime'],
 				['Datetime', 'datetime-local', 'form-date-picker', 'datetime'],
@@ -59,7 +61,6 @@ return [
 				['Color', 'color', 'form-text', 'special'],
 				['Reset', 'reset', 'form-text', 'special'],
 				['Captcha', 'captcha', 'form-text', 'special'],
-				['Country select', 'country', 'form-single-select', 'special'],
 				['Hidden input', 'hidden', 'form-hidden', 'special'],
 
 				['Repeatable fieldset', 'repeatable-container', 'form-fieldset', 'container'],
@@ -69,10 +70,10 @@ return [
 				['Content element', 'content', 'form-content-element', 'no-input'],
 			]),
 			'itemGroups' => [
-				'basic' => 'Basic',
-				'typed-text-inputs' => 'Typed text fields',
+				'text-inputs' => 'Text fields',
+				'select-inputs' => 'Select fields',
 				'datetime' => 'Date and time',
-				'special' => 'Special',
+				'special' => 'Other',
 				'container' => 'Field container',
 				'no-input' => 'Content only / No input',
 			],
@@ -284,7 +285,7 @@ return [
 	],
 	'pattern' => [
 		'label' => 'RegEx pattern',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,url',
+		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
@@ -300,7 +301,7 @@ return [
 	],
 	'maxlength' => [
 		'label' => 'Maxlength',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,url',
+		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'number',
 			'format' => 'integer',
@@ -342,9 +343,36 @@ return [
 			'default' => null
 		],
 	],
+	'list' => [
+		'label' => 'Datalist',
+		'displayCond' => 'FIELD:type:IN:text,email,tel,search,url,date,datetime-local,time,month,week,range,color',
+		'config' => [
+			'type' => 'group',
+			'allowed' => 'tx_shape_field_datalist',
+			'size' => 1,
+			'minitems' => 0,
+			'maxitems' => 1,
+			'fieldControl' => [
+				'editPopup' => [
+					'disabled' => false,
+				],
+				'addRecord' => [
+					'disabled' => false,
+				],
+			],
+			'fieldWizard' => [
+				'recordsOverview' => [
+					'disabled' => true,
+				],
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
+		],
+	],
 	'autocomplete' => [
 		'label' => 'Autocomplete',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,url,date',
+		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url,date',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -430,7 +458,7 @@ return [
 	],
 	'autocomplete_modifier' => [
 		'label' => 'Autocomplete modifier',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,url,date',
+		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url,date',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',

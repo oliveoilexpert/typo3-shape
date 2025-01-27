@@ -1,7 +1,7 @@
 <f:variable name="fieldWidthStyle"
 			value="--shape-field-width:{field.width}%;"/>
 
-<div class="{blockClass}__fieldwrap -type-{field.type} -{currentPage.type}-step {field.css_class} {f:if(condition:'{field.js_display_condition}',then:'-hidden')}"
+<div class="{blockClass}__fieldwrap -type-{field.type} -{currentPage.type}-step {field.css_class} {f:if(condition:'{field.js_display_condition}',then:'-hidden')} {f:if(condition:'{session.fieldErrors.{field.identifier}}', then:'-has-errors')}"
 	 data-wrap-for="{field.identifier}"
 	 data-shape-condition="{field.js_display_condition}"
 	 style="{fieldWidthStyle}">

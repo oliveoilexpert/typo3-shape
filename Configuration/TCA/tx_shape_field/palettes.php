@@ -28,10 +28,11 @@ return [
 		--linebreak--, 
 		pattern, accept, maxlength, 
 		--linebreak--, 
-		min, max, step',
+		min, max, step,
+		--linebreak--',
 	],
 	'autocomplete' => [
-		'showitem' => 'autocomplete_modifier, autocomplete',
+		'showitem' => 'autocomplete_modifier, autocomplete, --linebreak--, list',
 	],
 	'rte' => [
 		'showitem' => 'type, --linebreak--, label, --linebreak--, description',

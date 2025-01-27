@@ -1,0 +1,15 @@
+<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+	<f:render partial="Fieldlabel" arguments="{_all}"/>
+	<f:form.countrySelect
+			name="{namespace}[{field.identifier}]"
+			value="{field.sessionValue}"
+			id="{fieldIdPrefix}{field.identifier}"
+			additionalAttributes="{shape:formFieldAttributes(record:field)}"
+			class="{blockClass}__field -type-{field.type} -{currentPage.type}-step"
+			prependOptionLabel=" "
+			prependOptionValue=""
+			sortByOptionLabel="true"
+			optionLabelField="localizedName"
+			onlyCountries="{field.list.0.listArray}"
+	/>
+</f:render>

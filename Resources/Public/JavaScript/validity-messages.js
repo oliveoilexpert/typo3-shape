@@ -4,6 +4,9 @@
 			input.addEventListener('invalid', () => {
 				input.setCustomValidity(input.dataset.shapeValidityMessage)
 			})
+			input.addEventListener('change', () => {
+				input.setCustomValidity('')
+			})
 		})
 	}
 
