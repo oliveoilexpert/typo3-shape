@@ -12,9 +12,30 @@
                             <type>group</type>
                             <allowed>tx_shape_form</allowed>
                             <size>1</size>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
                         </config>
 
                     </settings.form>
+                    <settings.uploadFolder>
+
+                        <label>Upload folder</label>
+                        <config>
+                            <type>folder</type>
+                            <size>1</size>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
+                        </config>
+
+                    </settings.uploadFolder>
+                </el>
+            </ROOT>
+        </general>
+        <finishers>
+            <ROOT>
+                <sheetTitle>Finishers</sheetTitle>
+                <type>array</type>
+                <el>
                     <settings.finishers>
 
                         <label>Finishers</label>
@@ -32,6 +53,6 @@
                     </settings.finishers>
                 </el>
             </ROOT>
-        </general>
+        </finishers>
     </sheets>
 </T3DataStructure>

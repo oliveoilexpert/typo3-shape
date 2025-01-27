@@ -11,8 +11,7 @@ class FieldValidationResolver
 	public function __construct(
 		protected Core\Domain\RecordInterface $field,
 		protected Domain\FormSession $session,
-		protected Core\Resource\ResourceStorageInterface $storage,
-		protected string $sessionFileFolder
+		protected Core\Resource\ResourceStorageInterface $uploadStorage
 	)
 	{
 	}
@@ -39,6 +38,7 @@ class FieldValidationResolver
 	public function resolveAndValidate(): \TYPO3\CMS\Extbase\Error\Result
 	{
 
+		$this->resolve();
 		if ($this->validateAsArray) {
 			$aggregateResult = $this->getValidator()->validate(reset($this->value));
 			foreach ($this->value as $val) {
@@ -65,7 +65,6 @@ class FieldValidationResolver
 
 		// if ($event->addDefaultValidators()) {}
 		// or define validation builders, with this being the default builder
-		$manualErrorMessages = [];
 
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
 		if ($field->get('required') && $field->shouldDisplay) {
@@ -177,13 +176,12 @@ class FieldValidationResolver
 
 		if ($type === 'file') {
 
-			// todo: validate that value is array?
 			$this->validateAsArray = true;
 
 			if ($value && is_string(reset($value))) {
 				$validator->addValidator($this->makeValidator(
 					FileExistsInStorageValidator::class,
-					['storage' => $this->storage]
+					['storage' => $this->uploadStorage]
 				));
 			} else {
 				if ($field->get('accept')) {

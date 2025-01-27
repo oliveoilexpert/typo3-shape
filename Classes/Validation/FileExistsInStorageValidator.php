@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Validation;
 
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 final class FileExistsInStorageValidator extends AbstractValidator

@@ -15,12 +15,12 @@ abstract class AbstractFinisher
 		protected array $pluginSettings,
 		protected Core\Domain\Record $contentRecord,
 		protected Core\Domain\Record $formRecord,
+		protected Core\Domain\Record $finisherRecord,
 		protected array $formValues,
-		protected array $data,
 	)
 	{
 		$flexFormService = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
-		$this->settings = $flexFormService->convertFlexFormContentToArray($data['settings']);
+		$this->settings = $flexFormService->convertFlexFormContentToArray($finisherRecord->getRawRecord()->get('settings'));
 	}
 
 	abstract public function execute(): ?ResponseInterface;

@@ -14,7 +14,7 @@ final class FormSubmissionDownloadListener
 		if ($event->getTable() !== 'tx_shape_form_submission') {
 			return;
 		}
-		
+
 		$records = [];
 		$additionalHeaders = [];
 		$format = $event->getFormat();
@@ -37,7 +37,7 @@ final class FormSubmissionDownloadListener
 						try {
 							$record[$col] = implode(',', $value);
 						} catch (\Exception $e) {
-							$record[$col] = 'Array(' . count($value) . ')';
+							$record[$col] = json_encode($value);
 						}
 					} else {
 						$record[$col] = $value;
