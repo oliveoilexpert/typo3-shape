@@ -20,6 +20,6 @@ class DatalistRecord extends Record
 
 	public function getListArray(): array
 	{
-		return explode(PHP_EOL, $this->properties['list'] ?? '');
+		return array_map('trim', explode(PHP_EOL, $this->properties['list'] ?? ''));
 	}
 }

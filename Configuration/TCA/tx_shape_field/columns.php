@@ -34,6 +34,7 @@ return [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'items' => TcaUtility::selectItemsHelper([
+
 				['Text', 'text', 'form-text', 'text-inputs'],
 				['Textarea', 'textarea', 'form-textarea', 'text-inputs'],
 				['Email', 'email', 'form-email', 'text-inputs'],
@@ -93,13 +94,11 @@ return [
 			'default' => null,
 		],
 	],
-	'page_parent' => [
-		'label' => 'Step parent',
+	'page_parents' => [
+		'label' => 'Step parents',
 		'config' => [
-			'type' => 'select',
-			'foreign_table' => 'tx_shape_form_page',
-			'minitems' => 0,
-			'maxitems' => 1,
+			'type' => 'group',
+			'allowed' => 'tx_shape_form_page',
 		],
 	],
 	'field_parent' => [
@@ -345,7 +344,7 @@ return [
 	],
 	'list' => [
 		'label' => 'Datalist',
-		'displayCond' => 'FIELD:type:IN:text,email,tel,search,url,date,datetime-local,time,month,week,range,color',
+		'displayCond' => 'FIELD:type:IN:text,email,tel,search,url,date,datetime-local,time,month,week,range,color,country-select',
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_field_datalist',

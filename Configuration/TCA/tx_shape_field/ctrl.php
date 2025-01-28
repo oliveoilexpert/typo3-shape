@@ -13,7 +13,7 @@ return [
 	'languageField' => 'sys_language_uid',
 	'transOrigPointerField' => 'l10n_parent',
 	'transOrigDiffSourceField' => 'l10n_diffsource',
-	'iconfile' => 'EXT:shape/Resources/Public/Icons/default.svg',
+	'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/form/form-text.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
 	],
@@ -21,6 +21,7 @@ return [
 	'type' => 'type',
 	'typeicon_column' => 'type',
 	'typeicon_classes' => [
+		'0' => 'form-text',
 		'text' => 'form-text',
 		'textarea' => 'form-textarea',
 		'checkbox' => 'form-checkbox',

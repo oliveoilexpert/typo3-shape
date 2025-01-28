@@ -2,16 +2,12 @@
 
 $ctrl = [
 	'label' => 'title',
-	'title' => 'Form field datalist',
+	'title' => 'Form field validation',
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
 	'origUid' => 't3_origuid',
 	'sortby' => 'sorting',
 	'delete' => 'deleted',
-	'versioningWS' => true,
-	'languageField' => 'sys_language_uid',
-	'transOrigPointerField' => 'l10n_parent',
-	'transOrigDiffSourceField' => 'l10n_diffsource',
 	'iconfile' => 'EXT:shape/Resources/Public/Icons/form-option.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
@@ -28,20 +24,21 @@ $columns = [
 			'eval' => 'trim',
 		],
 	],
-	'list' => [
-		'label' => 'List',
+	'validators' => [
+		'label' => 'Validators',
 		'config' => [
-			'type' => 'text',
-			'eval' => 'trim',
-			'rows' => 10,
-			'fixedFont' => true,
+			'type' => 'select',
+			'renderType' => 'selectMultipleSideBySide',
+			'default' => 'auto-validators',
+			'items' => \UBOS\Shape\Utility\TcaUtility::selectItemsHelper([
+				['Add validators based on type and attributes', 'auto-validators'],
+			]),
 		],
 	],
-	'strict' => [
-		'label' => 'Strict',
-		'description' => 'Only allow values from the list',
+	'options' => [
+		'label' => 'Options',
 		'config' => [
-			'type' => 'check',
+			'type' => 'json',
 		],
 	],
 	'field_parent' => [
@@ -56,16 +53,12 @@ $columns = [
 ];
 $palettes = [
 	'base' => [
-		'showitem' => 'title, strict, --linebreak--, list',
+		'showitem' => 'title, --linebreak--, validators, --linebreak--, options',
 	],
 ];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
         --palette--;;base,
-    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
-        sys_language_uid, 
-        l10n_parent, 
-        l10n_diffsource, 
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, 
         hidden';
 

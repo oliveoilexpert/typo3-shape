@@ -13,7 +13,8 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
-// todo: all settings for plugin: storage folder, maybe js?,
+// todo: all settings for plugin: storage folder, maybe js?, html/js/server validation
+// todo: powermail features: spam protection system, prefill from fe_user data, unique values,
 // todo: labels in language files...
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
@@ -31,13 +32,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected ?Core\Domain\RecordInterface $contentRecord = null;
 	protected ?Core\Domain\RecordInterface $formRecord;
 	protected ?Domain\FormSession $session = null;
-
 	private string $formName = 'values';
 
 	// todo: replace with FormSession class
 
 	public function __construct(
-		protected Domain\Repository\FormRepository $formRepository,
 		protected Core\Resource\StorageRepository $storageRepository
 	) {}
 
@@ -63,14 +62,18 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$contentData = $this->request->getAttribute('currentContentObject')?->data;
 		if (!$contentData) {
-			return;
+			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+			$contentData = $queryBuilder
+				->select('*')
+				->from('tt_content')
+				->where(
+					$queryBuilder->expr()->eq('uid', (int)$this->settings['pluginUid'] ?? 0)
+				)
+				->executeQuery()->fetchAllAssociative()[0] ?? null;
 		}
 		$this->contentRecord = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
-		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? $this->formRepository->findByUid((int)$this->settings['form']);
-		if (!$this->formRecord) {
-			// todo: throw exception?
-		}
+		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? null;
 	}
 
 	protected function resolveConditions(): void
@@ -90,6 +93,16 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->session = new Domain\FormSession();
 		$this->initializeRecords();
 		$this->resolveConditions();
+//		$pool = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class);
+//		$query = $pool->getQueryBuilderForTable('tx_shape_form_submission');
+//		$jsonSelect = $query
+//			->select('*')->from('tx_shape_form_submission')
+//			->where(
+//				'form_values->"$.mail" = "a.kiener@unibrand.de"',
+//				'plugin = ' . $this->contentRecord->getUid(),
+//			)
+//			->executeQuery()->fetchAllAssociative();
+//		DebugUtility::debug($jsonSelect);
 		return $this->renderForm();
 	}
 

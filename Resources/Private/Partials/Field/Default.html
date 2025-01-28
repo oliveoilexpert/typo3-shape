@@ -9,7 +9,7 @@
 	<f:if condition="{field.list}">
 		<datalist id="{fieldIdPrefix}{field.identifier}--list" data-shape-strict-list="{field.list.0.strict}">
 			<f:for each="{field.list.0.listArray}" as="item">
-				<option value="{item -> f:format.trim()}"/>
+				<option value="{item}"/>
 			</f:for>
 		</datalist>
 	</f:if>

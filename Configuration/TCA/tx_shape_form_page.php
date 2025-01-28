@@ -52,14 +52,26 @@ $columns = [
 	'fields' => [
 		'label' => 'Fields',
 		'config' => [
-			'type' => 'inline',
+			'type' => 'group',
+			'MM' => 'tx_shape_page_field_mm',
 			'foreign_table' => 'tx_shape_field',
-			'foreign_field' => 'page_parent',
-			'foreign_sortby' => 'sorting',
-			'appearance' => [
-				'expandSingle' => true,
-				'useSortable' => true
+			'allowed' => 'tx_shape_field',
+			'fieldControl' => [
+				'editPopup' => [
+					'disabled' => false,
+				],
+				'addRecord' => [
+					'disabled' => false,
+				],
 			],
+			'fieldWizard' => [
+				'recordsOverview' => [
+					'disabled' => false,
+				],
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
 		],
 	],
 	'display_condition' => [
