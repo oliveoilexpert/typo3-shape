@@ -99,6 +99,9 @@ return [
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_form_page',
+			'MM' => 'tx_shape_page_field_mm',
+			'foreign_table' => 'tx_shape_form_page',
+			'size' => 1,
 		],
 	],
 	'field_parent' => [
