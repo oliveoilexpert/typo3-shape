@@ -42,14 +42,10 @@
 	}
 
 	if (!window.__tx_shape) {
-		window.__tx_shape = {}
+		window.__tx_shape = {
+			processors: {}
+		}
 	}
-
-	window.__tx_shape.repeatableContainer = {
-		addButtonHandler,
-		removeButtonHandler,
-		processNode
-	}
-
+	window.__tx_shape.processors.repeatableContainer = processNode
 	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
 }

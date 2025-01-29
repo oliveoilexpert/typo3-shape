@@ -1,7 +1,7 @@
 CREATE TABLE tx_shape_field (
     page_parents int UNSIGNED DEFAULT '0' NOT NULL,
     field_parent int UNSIGNED DEFAULT '0' NOT NULL,
-    default_value varchar(255) DEFAULT NULL,
+    default_value varchar(1024) DEFAULT NULL,
     min varchar(255) DEFAULT NULL,
     max varchar(255) DEFAULT NULL,
 );

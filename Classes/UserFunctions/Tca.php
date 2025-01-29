@@ -15,6 +15,9 @@ class Tca
 		}
 		$row = $params['row'];
 		$label = $row['label'];
+		if (!$row['label'] && !$row['type']) {
+			return;
+		}
 		if (is_array($label)) {
 			$label = $label[0] ?? '';
 		}

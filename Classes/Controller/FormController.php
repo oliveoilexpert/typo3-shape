@@ -9,11 +9,13 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase;
+use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
 // todo: all settings for plugin: storage folder, maybe js?, html/js/server validation
+// todo: prefill and validation with events, prefill with fetch and js so it can still be cached?
 // todo: powermail features: spam protection system, prefill from fe_user data, unique values,
 // todo: labels in language files...
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
@@ -33,6 +35,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected ?Core\Domain\RecordInterface $formRecord;
 	protected ?Domain\FormSession $session = null;
 	private string $formName = 'values';
+	protected string $fragmentType = '11510497112101';
 
 	// todo: replace with FormSession class
 
@@ -61,13 +64,13 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected function initializeRecords(): void
 	{
 		$contentData = $this->request->getAttribute('currentContentObject')?->data;
-		if (!$contentData) {
+		if (!($contentData['CType'] ?? false)) {
 			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
 			$contentData = $queryBuilder
 				->select('*')
 				->from('tt_content')
 				->where(
-					$queryBuilder->expr()->eq('uid', (int)$this->settings['pluginUid'] ?? 0)
+					$queryBuilder->expr()->eq('uid', (int)$this->request->getArgument('pluginUid') ?? $this->settings['pluginUid'] ?? 0)
 				)
 				->executeQuery()->fetchAllAssociative()[0] ?? null;
 		}
@@ -88,8 +91,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 	}
 
-	public function formAction(): ResponseInterface
+	public function renderAction(): ResponseInterface
 	{
+		$pageType = $this->request->getQueryParams()['type'] ?? '';
+		if ($pageType !== $this->fragmentType && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
+			return $this->renderLazyLoader();
+		}
 		$this->session = new Domain\FormSession();
 		$this->initializeRecords();
 		$this->resolveConditions();
@@ -106,7 +113,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->renderForm();
 	}
 
-	public function formStepAction(int $pageIndex = 1): ResponseInterface
+
+	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
@@ -131,7 +139,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->renderForm($pageIndex);
 	}
 
-	public function formSubmitAction(): ResponseInterface
+	public function submitAction(): ResponseInterface
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
@@ -152,6 +160,21 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->processFieldValues($previousPageRecord->get('fields'));
 
 		return $this->executeFinishers();
+	}
+
+	protected function renderLazyLoader(): ResponseInterface
+	{
+		$contentData = $this->request->getAttribute('currentContentObject')?->data;
+		$uri = $this->uriBuilder
+			->reset()
+			->setNoCache(true)
+			->setCreateAbsoluteUri(true)
+			->setTargetPageType((int)$this->fragmentType)
+			->setTargetPageUid((int)$this->settings['lazyLoadFragmentPage'])
+			->uriFor('render', ['pluginUid' => $contentData['uid']]);
+		$this->view->setTemplate('lazyLoadForm');
+		$this->view->assign('fetchUri', $uri);
+		return $this->htmlResponse();
 	}
 
 	protected function renderForm(int $pageIndex = 1): ?ResponseInterface
@@ -403,9 +426,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			[
 				'formValues' => $this->session->values,
 //				'stepIdentifier' => $page->getIdentifier(),
-//				'stepType' => $page->getType(),
 //				'finisherIdentifier' => $finisherIdentifier,
-//				'contentObject' => $contentObjectData,
+//				'contentObject' => $this->contentRecord,
+				//'stepType' => $page->getType(),
+				'frontendUser' => $this->getFrontendUser(),
 				'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
 				'site' => $this->request->getAttribute('site'),
 				'siteLanguage' => $this->request->getAttribute('language'),

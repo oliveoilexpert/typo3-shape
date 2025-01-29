@@ -17,6 +17,24 @@
                         </config>
 
                     </settings.form>
+                    <settings.lazyLoad>
+                        <label>Lazy load uncached form</label>
+                        <onChange>reload</onChange>
+                        <description>Prefills or display conditions based on dynamic data like frontend users require an uncached form. When enabled, this plugin will render a placeholder that replaces itself with an uncached form fetched from the server.</description>
+                        <config>
+                            <type>check</type>
+                        </config>
+                    </settings.lazyLoad>
+                    <settings.lazyLoadFragmentPage>
+                        <label>Lazy load fragment page</label>
+                        <displayCond>FIELD:settings.lazyLoad:=:1</displayCond>
+                        <description>This must be set for lazy load to work. Page should not contain a Shape form plugin.</description>
+                        <config>
+                            <type>group</type>
+                            <allowed>pages</allowed>
+                            <size>1</size>
+                        </config>
+                    </settings.lazyLoadFragmentPage>
                     <settings.uploadFolder>
 
                         <label>Upload folder</label>

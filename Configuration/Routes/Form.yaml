@@ -6,11 +6,11 @@ routeEnhancers:
     plugin: Form
     routes:
       - routePath: '/{submitLabel}'
-        _controller: 'Form::formSubmit'
+        _controller: 'Form::submit'
       - routePath: '/{pageLabel}_{pageIndex}'
-        _controller: 'Form::formStep'
+        _controller: 'Form::renderStep'
       - routePath: '/'
-        _controller: 'Form::form'
+        _controller: 'Form::render'
     aspects:
       submitLabel:
         type: LocaleModifier

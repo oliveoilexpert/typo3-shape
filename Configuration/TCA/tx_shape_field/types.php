@@ -1,5 +1,12 @@
 <?php
 
+$showItemBase = '
+	--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
+        sys_language_uid, 
+        l10n_parent, 
+        l10n_diffsource, 
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, 
+        hidden';
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
         --palette--;;base, 
@@ -10,13 +17,10 @@ $showItem = '
 		--palette--;;attributes, 
     	--palette--;;autocomplete,   	
     --div--;Condition,
-    	--palette--;;condition, 
-    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
-        sys_language_uid, 
-        l10n_parent, 
-        l10n_diffsource, 
-    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, 
-        hidden';
+    	--palette--;;condition,
+	--div--;Validation,
+		validation,'
+	. $showItemBase;
 
 return [
 	'0' => [
@@ -272,26 +276,16 @@ return [
 	'header' => [
 		'showitem' => '
 				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-					--palette--;;rte, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
-					sys_language_uid, 
-					l10n_parent, 
-					l10n_diffsource, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-					hidden',
+					--palette--;;rte,'
+				. $showItemBase,
 		'columnsOverrides' => [
 		]
 	],
 	'rte' => [
 		'showitem' => '
 				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-					--palette--;;rte, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
-					sys_language_uid, 
-					l10n_parent, 
-					l10n_diffsource, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-					hidden',
+					--palette--;;rte,'
+			. $showItemBase,
 		'columnsOverrides' => [
 			'description' => [
 				'config' => [
@@ -303,12 +297,7 @@ return [
 	'repeatable-container' => [
 		'showitem' => '
 				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-					--palette--;;repeatable-container, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
-					sys_language_uid, 
-					l10n_parent, 
-					l10n_diffsource, 
-				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
-					hidden',
+					--palette--;;repeatable-container,'
+			. $showItemBase,
 	]
 ];

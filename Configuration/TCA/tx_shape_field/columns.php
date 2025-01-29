@@ -2,6 +2,9 @@
 
 use UBOS\Shape\Utility\TcaUtility;
 
+$ctrl = require __DIR__.'/ctrl.php';
+$typeIcons = $ctrl['typeicon_classes'];
+
 return [
 	'label' => [
 		'label' => 'Label',
@@ -64,9 +67,9 @@ return [
 				['Captcha', 'captcha', 'form-text', 'special'],
 				['Hidden input', 'hidden', 'form-hidden', 'special'],
 
-				['Repeatable fieldset', 'repeatable-container', 'form-fieldset', 'container'],
+				['Repeatable field container', 'repeatable-container', 'content-container', 'container'],
 
-				['Header', 'header', 'form-static-text', 'no-input'],
+				['Header', 'header', 'content-header', 'no-input'],
 				['Rich text content', 'rte', 'form-static-text', 'no-input'],
 				['Content element', 'content', 'form-content-element', 'no-input'],
 			]),
@@ -161,6 +164,26 @@ return [
 				'expandSingle' => true,
 				'useSortable' => true
 			],
+		],
+	],
+	'validation' => [
+		'label' => 'Validation',
+		'config' => [
+			'type' => 'group',
+			'allowed' => 'tx_shape_field_validation',
+			'MM' => 'tx_shape_field_validation_mm',
+			'size' => 1,
+			'maxitems' => 1,
+			'fieldControl' => [
+				'addRecord' => [
+					'disabled' => false,
+				],
+			],
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
 		],
 	],
 //	'server_validators' => [

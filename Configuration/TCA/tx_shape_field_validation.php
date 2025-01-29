@@ -8,7 +8,7 @@ $ctrl = [
 	'origUid' => 't3_origuid',
 	'sortby' => 'sorting',
 	'delete' => 'deleted',
-	'iconfile' => 'EXT:shape/Resources/Public/Icons/form-option.svg',
+	'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/form/form-validator.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
 	],
@@ -38,22 +38,24 @@ $columns = [
 	'options' => [
 		'label' => 'Options',
 		'config' => [
-			'type' => 'json',
+			'type' => 'text',
+			'renderType' => 'codeEditor',
+			'format' => 'typoscript',
 		],
 	],
-	'field_parent' => [
-		'label' => 'Field parent',
+	'field_parents' => [
+		'label' => 'Used in fields',
 		'config' => [
-			'type' => 'select',
-			'foreign_table' => 'tx_shape_field',
-			'minitems' => 0,
-			'maxitems' => 1,
+			'type' => 'group',
+			'allowed' => 'tx_shape_field',
+			'MM' => 'tx_shape_field_validation_mm',
+			'MM_opposite_field' => 'validation',
 		],
 	],
 ];
 $palettes = [
 	'base' => [
-		'showitem' => 'title, --linebreak--, validators, --linebreak--, options',
+		'showitem' => 'title, field_parents, --linebreak--, validators, --linebreak--, options',
 	],
 ];
 $showItem = '

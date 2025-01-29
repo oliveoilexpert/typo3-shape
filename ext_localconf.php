@@ -12,7 +12,7 @@ $GLOBALS['TYPO3_CONF_VARS']['MAIL']['templateRootPaths'][573765204] = 'EXT:shape
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
 	'Shape',
 	'Form',
-	[FormController::class => 'form, formStep, formSubmit'],
-	[FormController::class => 'formStep, formSubmit'],
+	[FormController::class => 'render, renderStep, submit'],
+	[FormController::class => 'renderStep, submit'],
 	'CType'
 );

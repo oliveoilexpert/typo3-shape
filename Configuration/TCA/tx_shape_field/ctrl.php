@@ -21,7 +21,7 @@ return [
 	'type' => 'type',
 	'typeicon_column' => 'type',
 	'typeicon_classes' => [
-		'0' => 'form-text',
+		'default' => 'form-text',
 		'text' => 'form-text',
 		'textarea' => 'form-textarea',
 		'checkbox' => 'form-checkbox',
@@ -47,9 +47,9 @@ return [
 		'reset' => 'form-text',
 		'captcha' => 'form-text',
 		'hidden' => 'form-hidden',
-		'header' => 'form-static-text',
+		'header' => 'content-header',
 		'rte' => 'form-static-text',
 		'content' => 'form-content-element',
-		'repeatable-container' => 'form-fieldset',
+		'repeatable-container' => 'content-container',
 	],
 ];

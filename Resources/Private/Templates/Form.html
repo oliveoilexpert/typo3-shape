@@ -2,8 +2,7 @@
 <f:variable name="blockClass" value="shape"/>
 <f:variable name="buttonClass" value="shape__button"/>
 <f:variable name="fieldIdPrefix" value="c{contentData.uid}--"/>
-
+<f:render partial="Assets"/>
 <section id="c{contentData.uid}" class="{blockClass}__section">
 	<f:render partial="Form" arguments="{_all}"/>
-	<f:render partial="Assets"/>
 </section>

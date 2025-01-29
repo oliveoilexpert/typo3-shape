@@ -1,6 +1,8 @@
 {
 	if (!window.__tx_shape) {
-		window.__tx_shape = {}
+		window.__tx_shape = {
+			processors: {}
+		}
 	}
 
 	let formData = {}
@@ -43,10 +45,7 @@
 		evaluateConditions(form)
 	}
 
-	window.__tx_shape.conditionalFields = {
-		processNode,
-		evaluateConditions
-	}
 
+	window.__tx_shape.processors.conditionalFields = processNode
 	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
 }

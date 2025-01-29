@@ -41,7 +41,7 @@ return [
 		'showitem' => 'type, --linebreak--, label, identifier, --linebreak--, fields',
 	],
 	'condition' => [
-		'label' => 'Dispaly condition',
+		'label' => 'Display condition',
 		'showitem' => 'display_condition, --linebreak--, js_display_condition',
 	],
 	'validation' => [
