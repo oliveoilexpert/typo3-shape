@@ -9,13 +9,6 @@
 			})
 		})
 	}
-
-	if (!window.__tx_shape) {
-		window.__tx_shape = {
-			processors: {},
-		}
-	}
-
 	window.__tx_shape.processors.validityMessages = processNode
 	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
 }

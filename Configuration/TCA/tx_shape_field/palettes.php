@@ -3,6 +3,8 @@
 return [
 	'base' => [
 		'showitem' => '
+		page_parents,
+		--linebreak--,
 		label, identifier, 
 		--linebreak--, 
 		type, default_value, required, 

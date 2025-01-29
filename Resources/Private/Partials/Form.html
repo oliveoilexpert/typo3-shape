@@ -1,12 +1,13 @@
 
 <f:form class="{blockClass}__form"
 		id="c{contentData.uid}-f{form.uid}"
-		action="form"
+		action="{action}"
 		name="{formName}"
 		autocomplete="on"
 		enctype="multipart/form-data"
-		data-shape-form="1"
-		data-action="{f:uri.action(action:action, arguments:{pageIndex:forwardStepPageIndex})}">
+		data-shape-form="{form.title}"
+		pageUid="{contentData.pid}"
+		arguments="{pageIndex:forwardStepPageIndex}">
 
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
@@ -44,7 +45,7 @@
 			<button type="submit"
 					class="{blockClass}__navigation__button -prev {buttonClass}"
 					formnovalidate
-					formaction="{f:uri.action(action:'formStep', arguments:{pageIndex:backStepPageIndex})}">
+					formaction="{f:uri.action(action:'renderStep', arguments:{pageIndex:backStepPageIndex})}">
 				{currentPage.prev_label}
 			</button>
 		</f:if>

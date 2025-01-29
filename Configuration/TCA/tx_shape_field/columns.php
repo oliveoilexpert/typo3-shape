@@ -104,6 +104,7 @@ return [
 			'allowed' => 'tx_shape_form_page',
 			'MM' => 'tx_shape_page_field_mm',
 			'foreign_table' => 'tx_shape_form_page',
+			'MM_opposite_field' => 'fields',
 			'size' => 1,
 		],
 	],
@@ -521,7 +522,7 @@ return [
 	],
 	'js_display_condition' => [
 		'label' => 'Client-side display condition',
-		'description' => 'Condition expression in jexl. Useful for conditions based on field values on the same page.',
+		'description' => 'Condition expression in subscript. Useful for conditions based on field values on the same page.',
 		'config' => [
 			'type' => 'input',
 			'size' => 100,

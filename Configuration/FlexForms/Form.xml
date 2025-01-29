@@ -17,10 +17,29 @@
                         </config>
 
                     </settings.form>
+                    <settings.uploadFolder>
+                        <label>Upload folder</label>
+                        <config>
+                            <type>folder</type>
+                            <size>1</size>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
+                        </config>
+
+                    </settings.uploadFolder>
+                </el>
+            </ROOT>
+        </general>
+        <lazyLoad>
+            <ROOT>
+                <sheetTitle>Lazy load</sheetTitle>
+                <type>array</type>
+                <el>
                     <settings.lazyLoad>
                         <label>Lazy load uncached form</label>
                         <onChange>reload</onChange>
-                        <description>Prefills or display conditions based on dynamic data like frontend users require an uncached form. When enabled, this plugin will render a placeholder that replaces itself with an uncached form fetched from the server.</description>
+                        <description>Prefills or display conditions based on dynamic data (like current frontend user) require an uncached form. When enabled, this plugin will render a placeholder that replaces itself with an uncached form fetched from the server. This is only necessary if dynamic data is used for elements on the first page of the form, as only the first page is cached.
+                        </description>
                         <config>
                             <type>check</type>
                         </config>
@@ -35,20 +54,9 @@
                             <size>1</size>
                         </config>
                     </settings.lazyLoadFragmentPage>
-                    <settings.uploadFolder>
-
-                        <label>Upload folder</label>
-                        <config>
-                            <type>folder</type>
-                            <size>1</size>
-                            <minitems>1</minitems>
-                            <maxitems>1</maxitems>
-                        </config>
-
-                    </settings.uploadFolder>
                 </el>
             </ROOT>
-        </general>
+        </lazyLoad>
         <finishers>
             <ROOT>
                 <sheetTitle>Finishers</sheetTitle>

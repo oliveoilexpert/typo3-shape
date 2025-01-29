@@ -1,9 +1,12 @@
 
 <f:form.textfield autocomplete="off" name="__email" id="f000" tabindex="-1"/>
 <style>#f000 {position:absolute;margin-left:-999em}</style>
-<script id="tx-shape-action-script">
-	window.requestAnimationFrame(() => {
-		 const form = document.getElementById('tx-shape-action-script').closest('form')
-		 form.addEventListener('focusin', () => form.action = form.dataset.action, {once: true})
-    })
-</script>
+<f:comment>
+    <script id="tx-shape-action-script">
+		 window.requestAnimationFrame(() => {
+			 const form = document.getElementById('tx-shape-action-script').closest('form')
+			 form.addEventListener('focusin', () => form.action = form.dataset.action, {once: true})
+		 })
+    </script>
+
+</f:comment>

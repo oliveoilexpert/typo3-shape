@@ -48,6 +48,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
 		try {
 			$this->session = new Domain\FormSession(...$sessionData);
+			$this->session->hasErrors = false;
+			$this->session->fieldErrors = [];
 		} catch (\Exception $e) {
 			$this->session = new Domain\FormSession();
 		}
@@ -79,7 +81,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? null;
 	}
 
-	protected function resolveConditions(): void
+	protected function resolveDisplayConditions(): void
 	{
 		foreach ($this->formRecord->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
@@ -99,7 +101,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->session = new Domain\FormSession();
 		$this->initializeRecords();
-		$this->resolveConditions();
+		$this->resolveDisplayConditions();
 //		$pool = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class);
 //		$query = $pool->getQueryBuilderForTable('tx_shape_form_submission');
 //		$jsonSelect = $query
@@ -118,7 +120,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
-		$this->resolveConditions();
+		$this->resolveDisplayConditions();
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
@@ -143,7 +145,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
-		$this->resolveConditions();
+		$this->resolveDisplayConditions();
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
@@ -206,7 +208,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'session' => $this->session,
 			'sessionJson' => json_encode($this->session),
 			'formName' => $this->formName,
-			'action' => $pageIndex < $lastPageIndex ? 'formStep' : 'formSubmit',
+			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
 			'contentData' => $this->contentRecord,
 			'form' => $this->formRecord,
 			'currentPage' => $currentPageRecord,

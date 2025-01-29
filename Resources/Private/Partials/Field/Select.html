@@ -2,7 +2,7 @@
 	<f:render partial="Fieldlabel" arguments="{_all}"/>
 	<f:form.select name="{namespace}[{field.identifier}]"
 				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
-				   class="{blockClass}__field -type-{field.type} -{currentPage.type}-step"
+				   class="{blockClass}__{field.type} -{currentPage.type}-step"
 				   id="{fieldIdPrefix}{field.identifier}">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option

@@ -1,10 +1,10 @@
 
 .shape__form {
 	--shape-field-width: 100%;
-	--shape-fieldset-gap: 1.5em;
+	--shape-field-gap: 1.5em;
 }
 .shape__page {
-	padding-bottom: var(--shape-fieldset-gap);
+	padding-bottom: var(--shape-field-gap);
 }
 .shape__page__header {
 	width: 100%;
@@ -12,7 +12,7 @@
 .shape__fieldset {
 	display: flex;
 	flex-wrap: wrap;
-	margin: calc(var(--shape-fieldset-gap) / -2);
+	margin: calc(var(--shape-field-gap) / -2);
 }
 
 .shape__label {
@@ -21,9 +21,9 @@
 
 .shape__fieldwrap {
 	width: var(--shape-field-width);
-	padding: calc(var(--shape-fieldset-gap) / 2);
+	padding: calc(var(--shape-field-gap) / 2);
 	&.-type-header {
-		margin-top: var(--shape-fieldset-gap);
+		margin-top: var(--shape-field-gap);
 	}
 	&.-type-repeatable-container {
 		width: 100%;
@@ -41,8 +41,8 @@
 }
 .shape__navigation {
 	display: flex;
-	gap: var(--shape-fieldset-gap);
-	margin-top: var(--shape-fieldset-gap);
+	gap: var(--shape-field-gap);
+	margin-top: var(--shape-field-gap);
 }
 .shape__navigation__button.-next {
 	margin-left: auto;
@@ -66,22 +66,23 @@
 	}
 }
 .shape__repeatable__item {
+	width: 100%;
 	animation: fade-in 0.4s;
-	margin-block: calc(var(--shape-fieldset-gap) / 2);
-	padding: calc(var(--shape-fieldset-gap) / 1);
+	margin-block: calc(var(--shape-field-gap) / 2);
+	padding: calc(var(--shape-field-gap) / 1);
 	border: 2px solid color-mix(in srgb, currentColor 50%, transparent 50%);
 	border-radius: 10px;
 }
 .shape__repeatable__fieldset {
 	display: flex;
 	flex-wrap: wrap;
-	margin: calc(var(--shape-fieldset-gap) / -2);
+	margin: calc(var(--shape-field-gap) / -2);
 }
 .shape__repeatable__add {
-	margin-top: calc(var(--shape-fieldset-gap) / 2);
+	margin-top: calc(var(--shape-field-gap) / 2);
 }
 .shape__repeatable__remove {
 	display: block;
-	margin-top: var(--shape-fieldset-gap);
+	margin-top: var(--shape-field-gap);
 	margin-left: auto;
 }

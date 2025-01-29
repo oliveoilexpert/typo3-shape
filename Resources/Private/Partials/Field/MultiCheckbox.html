@@ -5,12 +5,10 @@
 						 checked="{field.selectedOptions.{option.value}}"
 						 multiple="1"
 						 value="{option.value}"
+						 data-shape-multi-check-required="{field.required}"
 						 additionalAttributes="{shape:formFieldAttributes(record:field)}"
-						 class="{blockClass}__field -type-{field.type} -{currentPage.type}-step"
+						 class="{blockClass}__{field.type} -{currentPage.type}-step"
 						 id="{fieldIdPrefix}{field.identifier}-{option.value}"/>
 		<label class="{blockClass}__label" for="{fieldIdPrefix}{field.identifier}-{option.value}">{option.label}</label>
 	</f:for>
-	<script todo-implement="one or more">
-		const checks = document.currentScript.parentNode.querySelectorAll('[type="multi-checkbox"]');
-	</script>
 </f:render>

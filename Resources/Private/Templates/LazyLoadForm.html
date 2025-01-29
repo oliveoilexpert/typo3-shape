@@ -1,17 +1,5 @@
 <div id="shape-lazy-load-placeholder" data-fetch="{fetchUri}"></div>
 <f:render partial="Assets"/>
-<script defer>
-	{
-		const ph = document.getElementById('shape-lazy-load-placeholder')
-		fetch(ph.dataset.fetch).then(r => r.text()).then(html => {
-			ph.insertAdjacentHTML('beforebegin', html)
-			window.requestAnimationFrame(() => {
-				for (let key in window.__tx_shape.processors) {
-					console.log(key)
-					window.__tx_shape.processors[key](ph.previousElementSibling)
-				}
-				ph.remove()
-			})
-		})
-	}
-</script>
+<f:asset.script identifier="tx-shape-lazy-load-placeholder"
+                src="EXT:shape/Resources/Public/JavaScript/lazy-load-placeholder.js"
+                defer="defer"/>
