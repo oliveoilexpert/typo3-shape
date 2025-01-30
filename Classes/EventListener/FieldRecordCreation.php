@@ -11,6 +11,9 @@ final class FieldRecordCreation
 	#[AsEventListener]
 	public function __invoke(RecordCreationEvent $event): void
 	{
+		if ($event->isPropagationStopped()) {
+			return;
+		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field_datalist') {
 			$this->setRecord($event, Record\DatalistRecord::class);
 			return;

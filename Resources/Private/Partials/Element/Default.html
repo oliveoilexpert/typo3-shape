@@ -1,0 +1,17 @@
+<f:render partial="Element" contentAs="content" arguments="{_all}">
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:form.textfield name="{namespace}[{field.identifier}]"
+					  type="{field.type}"
+					  value="{field.sessionValue}"
+					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					  class="{blockClass}__control {blockClass}__{field.type}-control"
+					  id="{fieldIdPrefix}{field.identifier}"/>
+	<f:if condition="{field.list}">
+		<datalist id="{fieldIdPrefix}{field.identifier}--list" data-shape-strict-list="{field.list.0.strict}">
+			<f:for each="{field.list.0.listArray}" as="item">
+				<option value="{item}"/>
+			</f:for>
+		</datalist>
+	</f:if>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

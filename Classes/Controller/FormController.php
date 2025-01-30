@@ -13,6 +13,7 @@ use TYPO3\CMS\Extbase\Http\ForwardResponse;
 use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
+use UBOS\Shape\Event;
 
 // todo: all settings for plugin: storage folder, disable server validation,
 // todo: prefill and validation with events, prefill with fetch and js so it can still be cached?
@@ -208,7 +209,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$viewVariables = [
 			'session' => $this->session,
 			'sessionJson' => json_encode($this->session),
-			'formName' => $this->formName,
+			'namespace' => $this->formName,
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
 			'contentData' => $this->contentRecord,
 			'form' => $this->formRecord,
@@ -270,46 +271,44 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function validateFields($fields): void
 	{
+
+		$validator = new Validation\FormControlValidator(
+			$this->session,
+			$this->getUploadStorage(),
+		);
+
 		foreach ($fields as $field) {
+			if (!$field->has('identifier')) {
+				continue;
+			}
 			$id = $field->get('identifier');
 
 			if ($field instanceof Domain\Record\RepeatableContainerFieldRecord) {
 				$fieldTemplate = $field->get('fields');
 				$valueSets = $this->session->values[$id] ?? null;
-				$this->session->fieldErrors[$id] = [];
 				if (!$valueSets) {
 					continue;
 				}
+				$this->session->fieldErrors[$id] = [];
 				foreach ($fieldTemplate as $repField) {
 					$repId = $repField->get('identifier');
-					$validationResolver = GeneralUtility::makeInstance(
-						Validation\FieldValidationResolver::class,
-						$repField,
-						$this->session,
-						$this->getUploadStorage(),
-					);
 					foreach ($valueSets as $index => $values) {
-						$validationResolver->value = $values[$repId] ?? null;
-						$result = $validationResolver->resolveAndValidate();
+						$result = $validator->validate($field, $values[$repId] ?? null);
 						if ($result->hasErrors()) {
 							$this->session->hasErrors = true;
 							array_push($this->session->fieldErrors[$id], ...$result->getErrors());
 						}
 					}
 				}
+				if (!$this->session->fieldErrors[$id]) {
+					unset($this->session->fieldErrors[$id]);
+				}
 				continue;
 			}
 
-			$validationResolver = GeneralUtility::makeInstance(
-				Validation\FieldValidationResolver::class,
-				$field,
-				$this->session,
-				$this->getUploadStorage(),
-			);
-
 			// if ($event->doValidation()) {}
 
-			$result = $validationResolver->resolveAndValidate();
+			$result = $validator->validate($field, $this->session->values[$id] ?? null);
 
 			//$this->session['validationResults'][$id] = $result;
 			// if field has errors, set hasErrors to true, add errors in session and remove value from session

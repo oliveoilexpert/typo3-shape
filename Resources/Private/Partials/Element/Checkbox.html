@@ -1,0 +1,10 @@
+<f:render partial="Element" contentAs="content" arguments="{_all}">
+	<f:form.checkbox name="{namespace}[{field.identifier}]"
+					 checked="{field.sessionValue}"
+					 value="1"
+					 additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					 class="{blockClass}__control {blockClass}__{field.type}-control"
+					 id="{fieldIdPrefix}{field.identifier}"/>
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

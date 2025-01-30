@@ -1,0 +1,44 @@
+<f:render partial="Element" contentAs="content" arguments="{_all}">
+	<f:variable name="id" value="{fieldIdPrefix}{field.identifier}"/>
+
+	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+
+	<div id="{id}" class="{blockClass}__repeatable__list -{currentPage.type}-step">
+		<f:variable name="startingIndex" value="{field.createdFieldsets -> f:count()}"/>
+		<template data-iteration="{startingIndex}">
+			<f:alias map="{fields:field.fields, index:'__INDEX'}">
+				<f:render section="RepeatableContainer" arguments="{_all}"/>
+			</f:alias>
+		</template>
+		<f:if condition="{field.createdFieldsets}">
+			<f:for each="{field.createdFieldsets}" as="fieldset" iteration="i">
+				<f:alias map="{fields:fieldset, index:i.index}">
+					<f:render section="RepeatableContainer" arguments="{_all}"/>
+				</f:alias>
+			</f:for>
+		</f:if>
+	</div>
+
+	<button class="{blockClass}__repeatable__add {buttonClass}"
+			type="button"
+			data-shape-repeatable-add="{id}">
+		Add fieldset
+	</button>
+</f:render>
+
+<f:section name="RepeatableContainer">
+	<div class="{blockClass}__repeatable__item" data-shape-repeatable-item>
+		<div class="{blockClass}__repeatable__fieldset">
+			<f:alias map="{fields:fields, namespace:'{namespace}[{field.identifier}][{index}]'}">
+				<f:render partial="Elements" arguments="{_all}"/>
+			</f:alias>
+		</div>
+		<button class="{blockClass}__repeatable__remove {buttonClass}"
+				type="button"
+				data-shape-repeatable-remove>
+			Remove fieldset
+		</button>
+	</div>
+</f:section>
+

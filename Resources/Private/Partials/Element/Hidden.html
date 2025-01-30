@@ -1,0 +1,6 @@
+<f:render partial="Element" contentAs="content" arguments="{_all}">
+	<f:form.hidden name="{namespace}[{field.identifier}]"
+				   value="{field.sessionValue}"
+				   class="{blockClass}__control {blockClass}__{field.type}-control"
+				   id="{fieldIdPrefix}{field.identifier}"/>
+</f:render>

@@ -2,12 +2,16 @@
 <f:form class="{blockClass}__form"
 		id="c{contentData.uid}-f{form.uid}"
 		action="{action}"
-		name="{formName}"
+		name="{namespace}"
 		autocomplete="on"
 		enctype="multipart/form-data"
 		data-shape-form="{form.title}"
 		pageUid="{contentData.pid}"
 		arguments="{pageIndex:forwardStepPageIndex}">
+	<div>
+		<f:form.hidden name="session" value='{sessionJson}'/>
+		<f:render partial="SpamProtection" arguments="{_all}"/>
+	</div>
 
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
@@ -19,8 +23,8 @@
 						<h3 class="{blockClass}__page__header">{page.title}</h3>
 					</f:if>
 					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
-						<f:alias map="{fields: page.fields, namespace:formName}">
-							<f:render partial="Fields" arguments="{_all}"></f:render>
+						<f:alias map="{fields: page.fields}">
+							<f:render partial="Elements" arguments="{_all}"></f:render>
 						</f:alias>
 					</fieldset>
 				</div>
@@ -32,32 +36,13 @@
 					<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
 				</f:if>
 				<fieldset class="{blockClass}__fieldset">
-					<f:alias map="{fields: currentPage.fields, namespace:formName}">
-						<f:render partial="Fields" arguments="{_all}"></f:render>
+					<f:alias map="{fields: currentPage.fields}">
+						<f:render partial="Elements" arguments="{_all}"></f:render>
 					</f:alias>
 				</fieldset>
 			</div>
 		</f:else>
 	</f:if>
 
-	<div class="{blockClass}__navigation">
-		<f:if condition="!{isFirstPage}">
-			<button type="submit"
-					class="{blockClass}__navigation__button -prev {buttonClass}"
-					formnovalidate
-					formaction="{f:uri.action(action:'renderStep', arguments:{pageIndex:backStepPageIndex})}">
-				{currentPage.prev_label}
-			</button>
-		</f:if>
-		<button type="submit"
-				class="{blockClass}__navigation__button -next {buttonClass}">
-			{currentPage.next_label}
-		</button>
-	</div>
-
-	<div>
-		<f:form.hidden name="session" value='{sessionJson}'/>
-		<f:render partial="SpamProtection" arguments="{_all}"/>
-	</div>
-
+	<f:render partial="Navigation" arguments="{_all}"/>
 </f:form>

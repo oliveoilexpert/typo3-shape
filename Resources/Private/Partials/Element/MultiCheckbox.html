@@ -1,0 +1,15 @@
+<f:render partial="Element" contentAs="content" arguments="{_all}">
+	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
+	<f:for each="{field.field_options}" as="option">
+		<f:form.checkbox name="{namespace}[{field.identifier}]"
+						 checked="{field.selectedOptions.{option.value}}"
+						 multiple="1"
+						 value="{option.value}"
+						 data-shape-multi-check-required="{field.required}"
+						 additionalAttributes="{shape:formFieldAttributes(record:field)}"
+						 class="{blockClass}__control {blockClass}__{field.type}-control"
+						 id="{fieldIdPrefix}{field.identifier}-{option.value}"/>
+		<label class="{blockClass}__label" for="{fieldIdPrefix}{field.identifier}-{option.value}">{option.label}</label>
+	</f:for>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

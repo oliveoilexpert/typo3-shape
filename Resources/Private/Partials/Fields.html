@@ -1,7 +1,0 @@
-<f:for each="{fields}" as="field">
-	<f:if condition="{field.shouldDisplay}">
-		<f:then>
-			<f:render partial="Field/{field.camelCaseType}" arguments="{_all}"/>
-		</f:then>
-	</f:if>
-</f:for>
