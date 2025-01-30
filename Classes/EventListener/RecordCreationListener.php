@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
 use UBOS\Shape\Domain\Record;
 
-final class FieldRecordCreation
+final class RecordCreationListener
 {
 	#[AsEventListener]
 	public function __invoke(RecordCreationEvent $event): void

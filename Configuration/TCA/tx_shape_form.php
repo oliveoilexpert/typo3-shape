@@ -32,6 +32,23 @@ $columns = [
 			'required' => true,
 		],
 	],
+	'identifier' => [
+		'label' => 'Identifier',
+		'config' => [
+			'type' => 'slug',
+			'generatorOptions' => [
+				'fields' => ['title'],
+				'fieldSeparator' => '-',
+				'replacements' => [ '/' => '' ],
+			],
+			'appearance' => [
+				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
+			],
+			'fallbackCharacter' => '-',
+			'eval' => 'uniqueInSite',
+			'default' => '',
+		],
+	],
 	'pages' => [
 		'label' => 'Pages',
 		'config' => [
@@ -46,10 +63,14 @@ $columns = [
 		],
 	],
 ];
-$palettes = [];
+$palettes = [
+	'base' => [
+		'showitem' => 'title, identifier',
+	],
+];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-        title, 
+        --palette--;;base, 
         pages,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
         sys_language_uid, 

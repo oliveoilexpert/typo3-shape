@@ -35,7 +35,12 @@ class GenericFieldRecord extends Record
 	{
 		return $this->sessionValue ?? $this->get('default_value');
 	}
-
+	public function prefillValue($value): void
+	{
+		if ($this->sessionValue === null) {
+			$this->sessionValue = $value;
+		}
+	}
 	public function getCamelCaseType(): string
 	{
 		return ucFirst(str_replace('-', '', ucwords($this->get('type'), '-')));

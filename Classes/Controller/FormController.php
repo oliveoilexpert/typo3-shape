@@ -15,14 +15,14 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
-// todo: all settings for plugin: storage folder, disable server validation,
-// todo: prefill and validation with events, prefill with fetch and js so it can still be cached?
+// todo: add more arguments to events
+// todo: all settings for plugin: disable server validation,
 // todo: powermail features: spam protection system, prefill from fe_user data, unique values,
 // todo: labels in language files...
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
-// todo: dispatch events: before prefill, before validation(bool autovalidation, validator), before render, on upload process, on condition resolver,
+// todo: dispatch events: before prefill, on upload process
 // todo: exceptions
 // todo: captcha field
 // todo: delete/move uploads finisher?
@@ -80,7 +80,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->contentRecord = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
+
 		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? null;
+		$this->resolveDisplayConditions();
+		$event = new Event\FormManipulationEvent($this->request, $this->formRecord);
 	}
 
 	protected function resolveDisplayConditions(): void
@@ -103,7 +106,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->session = new Domain\FormSession();
 		$this->initializeRecords();
-		$this->resolveDisplayConditions();
 //		$pool = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class);
 //		$query = $pool->getQueryBuilderForTable('tx_shape_form_submission');
 //		$jsonSelect = $query
@@ -122,7 +124,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
-		$this->resolveDisplayConditions();
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
@@ -147,7 +148,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->initializeSession();
 		$this->initializeRecords();
-		$this->resolveDisplayConditions();
 		if (!$this->session->values) {
 			return $this->redirect('form');
 		}
@@ -205,7 +205,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			}
 		}
 
-		// form render event
 		$viewVariables = [
 			'session' => $this->session,
 			'sessionJson' => json_encode($this->session),
@@ -220,6 +219,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'isFirstPage' => $pageIndex === 1,
 			'isLastPage' => $pageIndex === $lastPageIndex,
 		];
+
+		$event = new Event\FormRenderEvent($this->request, $viewVariables);
+		$this->eventDispatcher->dispatch($event);
+		$viewVariables = $event->getVariables();
 
 		$this->view->assignMultiple($viewVariables);
 		$this->view->setTemplate('form');
@@ -389,21 +392,26 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			return $this->conditionResolver;
 		}
 
-		$event = new Event\ConditionResolverEvent($this->contentRecord, $this->formRecord);
-		$this->conditionResolver = GeneralUtility::makeInstance(
-			Core\ExpressionLanguage\Resolver::class,
-			'tx_shape',
-			[
-				'formValues' => $this->session->values,
+		$variables = [
+			'formValues' => $this->session->values,
 //				'stepIdentifier' => $page->getIdentifier(),
 //				'finisherIdentifier' => $finisherIdentifier,
 //				'contentObject' => $this->contentRecord,
-				//'stepType' => $page->getType(),
-				'frontendUser' => $this->getFrontendUser(),
-				'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
-				'site' => $this->request->getAttribute('site'),
-				'siteLanguage' => $this->request->getAttribute('language'),
-			]
+			//'stepType' => $page->getType(),
+			//'isStepBack' => $isStepBack,
+			'frontendUser' => $this->getFrontendUser(),
+			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
+			'site' => $this->request->getAttribute('site'),
+			'siteLanguage' => $this->request->getAttribute('language'),
+		];
+
+		$event = new Event\ConditionResolverCreationEvent($variables);
+		$this->eventDispatcher->dispatch($event);
+		$variables = $event->getVariables();
+
+		$this->conditionResolver = GeneralUtility::makeInstance(
+			Core\ExpressionLanguage\Resolver::class,
+			'tx_shape', $variables
 		);
 		return $this->conditionResolver;
 	}

@@ -10,7 +10,7 @@ use UBOS\Shape\Domain\Record\RepeatableContainerFieldRecord;
 use UBOS\Shape\Event\ElementValidationEvent;
 use UBOS\Shape\Validation\ElementValidator;
 
-final class OverrideRepeatableContainerValidation
+final class RepeatableContainerValidationListener
 {
 	#[AsEventListener]
 	public function __invoke(ElementValidationEvent $event): void

@@ -15,6 +15,23 @@ return [
 			'required' => true,
 		],
 	],
+	'identifier' => [
+		'label' => 'Identifier',
+		'config' => [
+			'type' => 'slug',
+			'generatorOptions' => [
+				'fields' => ['label'],
+				'fieldSeparator' => '-',
+				'replacements' => [ '/' => '' ],
+			],
+			'appearance' => [
+				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
+			],
+			'fallbackCharacter' => '-',
+			'eval' => 'uniqueInPid',
+			'default' => '',
+		],
+	],
 	'description' => [
 		'label' => 'Description',
 		'config' => [
@@ -140,23 +157,6 @@ return [
 					]
 				]
 			]
-		],
-	],
-	'identifier' => [
-		'label' => 'Identifier',
-		'config' => [
-			'type' => 'slug',
-			'generatorOptions' => [
-				'fields' => ['label'],
-				'fieldSeparator' => '-',
-				'replacements' => [ '/' => '' ],
-			],
-			'appearance' => [
-				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
-			],
-			'fallbackCharacter' => '-',
-			'eval' => 'uniqueInPid',
-			'default' => '',
 		],
 	],
 	'required' => [
