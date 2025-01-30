@@ -4,13 +4,14 @@ namespace UBOS\Shape\Validation;
 
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator;
-
 use UBOS\Shape\Domain;
-class FormControlValidator
+use Psr\EventDispatcher\EventDispatcherInterface;
+class ElementValidator
 {
 	public function __construct(
 		protected Domain\FormSession $formSession,
-		protected Core\Resource\ResourceStorageInterface $uploadStorage
+		protected Core\Resource\ResourceStorageInterface $uploadStorage,
+		protected EventDispatcherInterface $eventDispatcher
 	)
 	{
 	}
@@ -20,13 +21,26 @@ class FormControlValidator
 
 		$type = $field->get('type');
 
-		// todo: add FieldValidation Event
 		// todo: PhoneNumberValidator, ColorValidator,
 
-		// if ($event->addDefaultValidators()) {}
-		// or define validation builders, with this being the default builder
-
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
+		$event = new \UBOS\Shape\Event\ElementValidationEvent(
+			$this->formSession,
+			$this->uploadStorage,
+			$field,
+			$validator,
+			$value
+		);
+		$this->eventDispatcher->dispatch($event);
+		if ($event->isPropagationStopped()) {
+			return $event->getResult();
+		}
+		$value = $event->getValue();
+		$validator = $event->getValidator();
+		if (!$event->getBuildDefaultValidators()) {
+			return $validator->validate($value);
+		}
+
 		if ($field->get('required') && $field->shouldDisplay) {
 			$validator->addValidator($this->makeValidator(
 				Validator\NotEmptyValidator::class

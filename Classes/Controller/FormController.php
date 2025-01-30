@@ -250,7 +250,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$this->validateFields($page->get('fields'));
+		$this->validateFormValues($page->get('fields'));
 	}
 
 	protected function validateForm(Core\Domain\RecordInterface $form): void
@@ -269,12 +269,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 	}
 
-	protected function validateFields($fields): void
+	protected function validateFormValues($fields): void
 	{
-
-		$validator = new Validation\FormControlValidator(
+		$validator = new Validation\ElementValidator(
 			$this->session,
 			$this->getUploadStorage(),
+			$this->eventDispatcher
 		);
 
 		foreach ($fields as $field) {
@@ -282,44 +282,13 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				continue;
 			}
 			$id = $field->get('identifier');
-
-			if ($field instanceof Domain\Record\RepeatableContainerFieldRecord) {
-				$fieldTemplate = $field->get('fields');
-				$valueSets = $this->session->values[$id] ?? null;
-				if (!$valueSets) {
-					continue;
-				}
-				$this->session->fieldErrors[$id] = [];
-				foreach ($fieldTemplate as $repField) {
-					$repId = $repField->get('identifier');
-					foreach ($valueSets as $index => $values) {
-						$result = $validator->validate($field, $values[$repId] ?? null);
-						if ($result->hasErrors()) {
-							$this->session->hasErrors = true;
-							array_push($this->session->fieldErrors[$id], ...$result->getErrors());
-						}
-					}
-				}
-				if (!$this->session->fieldErrors[$id]) {
-					unset($this->session->fieldErrors[$id]);
-				}
-				continue;
-			}
-
-			// if ($event->doValidation()) {}
-
 			$result = $validator->validate($field, $this->session->values[$id] ?? null);
-
-			//$this->session['validationResults'][$id] = $result;
-			// if field has errors, set hasErrors to true, add errors in session and remove value from session
 			if ($result->hasErrors()) {
 				$this->session->hasErrors = true;
 				$this->session->fieldErrors[$id] = $result->getErrors();
 				//unset($this->session->values[$id]);
 			}
 		}
-//		DebugUtility::debug($this->session['validationResults']);
-//		DebugUtility::debug($this->session->hasErrors);
 	}
 
 	protected function processFieldValues($fields): void
@@ -419,6 +388,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if ($this->conditionResolver) {
 			return $this->conditionResolver;
 		}
+
+		$event = new Event\ConditionResolverEvent($this->contentRecord, $this->formRecord);
 		$this->conditionResolver = GeneralUtility::makeInstance(
 			Core\ExpressionLanguage\Resolver::class,
 			'tx_shape',

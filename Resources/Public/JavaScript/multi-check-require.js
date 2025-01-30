@@ -1,4 +1,5 @@
 {
+	// todo: doesnt work properly when one box is already checked, also only works if theres only one group, completely broken
 	const processNode = el => {
 		const boxes = el.querySelectorAll('[data-shape-multi-check-required="1"]')
 		boxes.forEach(((box, i) => {
