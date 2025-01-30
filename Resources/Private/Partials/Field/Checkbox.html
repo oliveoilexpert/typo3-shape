@@ -1,9 +1,9 @@
-<f:render partial="Fieldwrap" contentAs="content" arguments="{_all}">
+<f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:form.checkbox name="{namespace}[{field.identifier}]"
 					 checked="{field.sessionValue}"
 					 value="1"
 					 additionalAttributes="{shape:formFieldAttributes(record:field)}"
-					 class="{blockClass}__{field.type} -{currentPage.type}-step"
+					 class="{blockClass}__{field.type}-field {blockClass}__field"
 					 id="{fieldIdPrefix}{field.identifier}"/>
-	<f:render partial="Fieldlabel" arguments="{_all}"/>
+	<f:render partial="FieldLabel" arguments="{_all}"/>
 </f:render>

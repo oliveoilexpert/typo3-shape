@@ -14,17 +14,18 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 
-// todo: all settings for plugin: storage folder, maybe js?, html/js/server validation
+// todo: all settings for plugin: storage folder, disable server validation,
 // todo: prefill and validation with events, prefill with fetch and js so it can still be cached?
 // todo: powermail features: spam protection system, prefill from fe_user data, unique values,
 // todo: labels in language files...
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
-// todo: dispatch events
+// todo: dispatch events: before prefill, before validation(bool autovalidation, validator), before render, on upload process, on condition resolver,
 // todo: exceptions
 // todo: captcha field
 // todo: delete/move uploads finisher?
+// todo: disclaimer link
 // todo: helper function to create new field type like existing field type
 // todo: webhook finisher
 // note: upload and radio fields will not be in formValues if no value is set
@@ -352,9 +353,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$folderPath = $this->getSessionUploadFolder();
 		if (!$this->getUploadStorage()->hasFolder($folderPath)) {
 			$this->getUploadStorage()->createFolder($folderPath);
-		}
-		if (!isset($this->session->filenames)) {
-			$this->session->filenames = [];
 		}
 		$this->session->filenames[$fieldId] = [];
 		$this->session->values[$fieldId] = [];

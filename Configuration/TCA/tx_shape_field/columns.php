@@ -98,7 +98,7 @@ return [
 		],
 	],
 	'page_parents' => [
-		'label' => 'Step parents',
+		'label' => 'On page',
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_form_page',
@@ -106,6 +106,11 @@ return [
 			'foreign_table' => 'tx_shape_form_page',
 			'MM_opposite_field' => 'fields',
 			'size' => 1,
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
 		],
 	],
 	'field_parent' => [
@@ -128,6 +133,13 @@ return [
 				'expandSingle' => true,
 				'useSortable' => true
 			],
+			'overrideChildTca' => [
+				'columns' => [
+					'page_parents' => [
+						'displayCond' => 'FIELD:type:=:666666',
+					]
+				]
+			]
 		],
 	],
 	'identifier' => [

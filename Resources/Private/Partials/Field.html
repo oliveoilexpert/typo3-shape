@@ -5,12 +5,9 @@
 	 data-wrap-for="{field.identifier}"
 	 data-shape-condition="{field.js_display_condition}"
 	 style="{fieldWidthStyle}">
+
 	{content -> f:format.raw()}
-	<f:if condition="{session.fieldErrors.{field.identifier}}">
-		<div class="{blockClass}__field__errors">
-			<f:for each="{session.fieldErrors.{field.identifier}}" as="error">
-				<div>{error.message}</div>
-			</f:for>
-		</div>
-	</f:if>
+
+	<f:render partial="FieldDescription" arguments="{_all}"/>
+	<f:render partial="FieldErrors" arguments="{_all}"/>
 </div>
