@@ -49,8 +49,10 @@
                         <displayCond>FIELD:settings.lazyLoad:=:1</displayCond>
                         <description>This must be set for lazy load to work. Page should not contain a Shape form plugin.</description>
                         <config>
-                            <type>group</type>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
                             <allowed>pages</allowed>
+                            <foreign_table>pages</foreign_table>
                             <size>1</size>
                         </config>
                     </settings.lazyLoadFragmentPage>

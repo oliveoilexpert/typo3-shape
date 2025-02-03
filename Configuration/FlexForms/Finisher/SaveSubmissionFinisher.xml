@@ -9,25 +9,24 @@
                         <label>Storage page</label>
                         <config>
                             <type>group</type>
-                            <internal_type>db</internal_type>
                             <allowed>pages</allowed>
                             <size>1</size>
                             <maxitems>1</maxitems>
                         </config>
                     </storagePage>
-                    <excludeFields>
+                    <excludedFields>
                         <label>Exclude fields from saved data</label>
                         <config>
                             <type>input</type>
                         </config>
-                    </excludeFields>
-                    <saveIp>
+                    </excludedFields>
+                    <saveIpAddress>
                         <label>Save submitter IP-address</label>
                         <config>
-                            <type>checkbox</type>
+                            <type>check</type>
                             <renderType>checkboxToggle</renderType>
                         </config>
-                    </saveIp>
+                    </saveIpAddress>
                 </el>
             </ROOT>
         </general>

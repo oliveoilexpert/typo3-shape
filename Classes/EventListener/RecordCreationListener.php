@@ -18,6 +18,10 @@ final class RecordCreationListener
 			$this->setRecord($event, Record\DatalistRecord::class);
 			return;
 		}
+		if ($event->getRawRecord()->getMainType() === 'tx_shape_finisher') {
+			$this->setRecord($event, Record\FinisherRecord::class);
+			return;
+		}
 
 		if ($event->getRawRecord()->getMainType() !== 'tx_shape_field') {
 			return;

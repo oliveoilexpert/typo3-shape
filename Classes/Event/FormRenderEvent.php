@@ -9,7 +9,7 @@ use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 final class FormRenderEvent
 {
 	public function __construct(
-		public readonly RequestInterface $request,
+		protected readonly RequestInterface $request,
 		protected array $variables = [],
 	) {}
 	public function getVariables(): array
@@ -25,5 +25,10 @@ final class FormRenderEvent
 	public function setVariables(array $variables): void
 	{
 		$this->variables = array_merge($this->variables, $variables);
+	}
+
+	public function getRequest(): RequestInterface
+	{
+		return $this->request;
 	}
 }

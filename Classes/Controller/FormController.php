@@ -15,6 +15,9 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
+
+
+// todo: maybe make form and finisher models and keep form elements as records
 // todo: add more arguments to events
 // todo: all settings for plugin: disable server validation,
 // todo: powermail features: spam protection system, prefill from fe_user data, unique values,
@@ -83,7 +86,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		$this->resolveDisplayConditions();
-		$event = new Event\FormManipulationEvent($this->request, $this->formRecord);
+		$event = new Event\FormManipulationEvent($this->request, $this->session, $this->formRecord);
+		$this->eventDispatcher->dispatch($event);
+		$this->formRecord = $event->getFormRecord();
 	}
 
 	protected function resolveDisplayConditions(): void
@@ -343,12 +348,19 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$response = null;
 		foreach ($this->contentRecord->get('pi_flexform')->get('settings')['finishers'] as $finisherRecord) {
+			$willExecute = true;
 			if ($finisherRecord->get('condition') ?? false) {
-				$conditionResolver = $this->getConditionResolver();
-				$conditionResult = $conditionResolver->evaluate($finisherRecord->get('condition'));
+				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));
 				if (!$conditionResult) {
-					continue;
+					$willExecute = false;
 				}
+			}
+//			$event = new Event\FinisherExecutionEvent($finisherRecord, $this->session, $willExecute);
+//			$this->eventDispatcher->dispatch($event);
+//			$finisherRecord = $event->getFinisherRecord();
+//			$willExecute = $event->willExecute();
+			if (!$willExecute) {
+				continue;
 			}
 			try {
 				// execute finisher event
@@ -394,10 +406,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		$variables = [
 			'formValues' => $this->session->values,
-//				'stepIdentifier' => $page->getIdentifier(),
-//				'finisherIdentifier' => $finisherIdentifier,
-//				'contentObject' => $this->contentRecord,
-			//'stepType' => $page->getType(),
+//			'stepIdentifier' => $page->getIdentifier(),
+//			'finisherIdentifier' => $finisherIdentifier,
+//			'contentObject' => $this->contentRecord,
+////		'stepType' => $page->getType(),
 			//'isStepBack' => $isStepBack,
 			'frontendUser' => $this->getFrontendUser(),
 			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
@@ -405,7 +417,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'siteLanguage' => $this->request->getAttribute('language'),
 		];
 
-		$event = new Event\ConditionResolverCreationEvent($variables);
+		$event = new Event\ConditionResolverCreationEvent($this->request, $variables);
 		$this->eventDispatcher->dispatch($event);
 		$variables = $event->getVariables();
 
@@ -424,6 +436,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		return 'tx_shape_c' . $this->contentRecord?->getUid() . '_f' . $this->formRecord->getUid();
 	}
+
 	// use fe_session to store form session?
 	// how to handle garbage collection?
 	// Core\Session\UserSessionManager::create('FE')->collectGarbage(10);

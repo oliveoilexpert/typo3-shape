@@ -35,11 +35,13 @@ class GenericFieldRecord extends Record
 	{
 		return $this->sessionValue ?? $this->get('default_value');
 	}
-	public function prefillValue($value): void
+	public function set($key, $value): void
 	{
-		if ($this->sessionValue === null) {
-			$this->sessionValue = $value;
-		}
+		$this->properties[$key] = $value;
+	}
+	public function prefill(?string $value): void
+	{
+		$this->properties['default_value'] = $value;
 	}
 	public function getCamelCaseType(): string
 	{

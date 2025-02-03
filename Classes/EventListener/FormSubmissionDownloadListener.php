@@ -6,9 +6,9 @@ use TYPO3\CMS\Backend\RecordList\Event\BeforeRecordDownloadIsExecutedEvent;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 
-#[AsEventListener]
 final class FormSubmissionDownloadListener
 {
+	#[AsEventListener]
 	public function __invoke(BeforeRecordDownloadIsExecutedEvent $event): void
 	{
 		if ($event->getTable() !== 'tx_shape_form_submission') {

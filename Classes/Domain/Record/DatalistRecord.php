@@ -9,7 +9,6 @@ use TYPO3\CMS\Core\Domain\Record\SystemProperties;
 
 class DatalistRecord extends Record
 {
-
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,
 		protected array                      $properties,
