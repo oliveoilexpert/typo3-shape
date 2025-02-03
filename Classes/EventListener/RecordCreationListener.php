@@ -22,28 +22,13 @@ final class RecordCreationListener
 			$this->setRecord($event, Record\FinisherRecord::class);
 			return;
 		}
-
-		if ($event->getRawRecord()->getMainType() !== 'tx_shape_field') {
-			return;
+		if ($event->getRawRecord()->getMainType() === 'tx_shape_field') {
+			if ($event->getProperty('type') === 'repeatable-container') {
+				$this->setRecord($event, Record\RepeatableContainerRecord::class);
+				return;
+			}
+			$this->setRecord($event, Record\FormElementRecord::class);
 		}
-		$type = $event->getRawRecord()->getRecordType();
-		if ($type === 'repeatable-container') {
-			$this->setRecord($event, Record\RepeatableContainerFieldRecord::class);
-			return;
-		}
-		if (in_array($type, ['radio', 'select'])) {
-			$this->setRecord($event, Record\SingleSelectOptionFieldRecord::class);
-			return;
-		}
-		if (in_array($type, ['multi-checkbox', 'multi-select'])) {
-			$this->setRecord($event, Record\MultiSelectOptionFieldRecord::class);
-			return;
-		}
-		if (in_array($type, ['date', 'datetime-local', 'time', 'month', 'week'])) {
-			$this->setRecord($event, Record\DatetimeFieldRecord::class);
-			return;
-		}
-		$this->setRecord($event, Record\GenericFieldRecord::class);
 	}
 
 	protected function setRecord(RecordCreationEvent $event, string $className): void

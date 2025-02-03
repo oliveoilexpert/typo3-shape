@@ -107,7 +107,7 @@ return [
 	],
 	'default_value' => [
 		'label' => 'Default value',
-		'displayCond' => 'FIELD:type:!IN:select,multi-select,multi-checkbox,radio',
+		'displayCond' => 'FIELD:type:!IN:select,multi-select,multi-checkbox,radio,password',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,

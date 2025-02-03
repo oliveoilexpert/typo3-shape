@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
-use UBOS\Shape\Domain\Record\RepeatableContainerFieldRecord;
+use UBOS\Shape\Domain\Record\RepeatableContainerRecord;
 use UBOS\Shape\Event\ElementValidationEvent;
 use UBOS\Shape\Validation\ElementValidator;
 
@@ -17,7 +17,7 @@ final class RepeatableContainerValidationListener
 	{
 
 		$field = $event->getFormControlRecord();
-		if (!($field instanceof RepeatableContainerFieldRecord)) {
+		if (!($field instanceof RepeatableContainerRecord)) {
 			return;
 		}
 		$fieldTemplate = $field->get('fields');

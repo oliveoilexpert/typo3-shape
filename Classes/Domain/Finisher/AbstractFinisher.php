@@ -19,8 +19,8 @@ abstract class AbstractFinisher
 		protected array $formValues,
 	)
 	{
-		$flexFormService = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
-		$this->settings = $flexFormService->convertFlexFormContentToArray($finisherRecord->getRawRecord()->get('settings'));
+		$settings = $this->finisherRecord->get('settings');
+		$this->settings = is_array($settings) ? $settings : $settings->toArray();
 	}
 
 	abstract public function execute(): ?ResponseInterface;
