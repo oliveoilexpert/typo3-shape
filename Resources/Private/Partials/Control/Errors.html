@@ -1,6 +1,6 @@
-<f:if condition="{session.fieldErrors.{field.identifier}}">
+<f:if condition="{session.fieldErrors.{field.name}}">
     <div class="{blockClass}__field__errors">
-        <f:for each="{session.fieldErrors.{field.identifier}}" as="error">
+        <f:for each="{session.fieldErrors.{field.name}}" as="error">
             <div>{error.message}</div>
         </f:for>
     </div>

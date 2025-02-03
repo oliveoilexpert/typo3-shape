@@ -5,7 +5,7 @@ return [
 		'showitem' => '
 		page_parents,
 		--linebreak--,
-		label, identifier, 
+		label, name, 
 		--linebreak--, 
 		type, default_value, required, 
 		--linebreak--,
@@ -34,19 +34,16 @@ return [
 		--linebreak--',
 	],
 	'autocomplete' => [
-		'showitem' => 'autocomplete_modifier, autocomplete, --linebreak--, list',
+		'showitem' => 'autocomplete_modifier, autocomplete, --linebreak--, datalist',
 	],
 	'rte' => [
 		'showitem' => 'type, --linebreak--, label, --linebreak--, description',
 	],
 	'repeatable-container' => [
-		'showitem' => 'type, --linebreak--, label, identifier, --linebreak--, fields',
+		'showitem' => 'type, --linebreak--, label, name, --linebreak--, fields',
 	],
 	'condition' => [
 		'label' => 'Display condition',
 		'showitem' => 'display_condition, --linebreak--, js_display_condition',
 	],
-	'validation' => [
-		'showitem' => 'server_validators, --linebreak--, server_validators_options',
-	]
 ];

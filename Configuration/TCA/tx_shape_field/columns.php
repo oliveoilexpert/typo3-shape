@@ -15,8 +15,8 @@ return [
 			'required' => true,
 		],
 	],
-	'identifier' => [
-		'label' => 'Identifier',
+	'name' => [
+		'label' => 'Name',
 		'config' => [
 			'type' => 'slug',
 			'generatorOptions' => [
@@ -25,7 +25,7 @@ return [
 				'replacements' => [ '/' => '' ],
 			],
 			'appearance' => [
-				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
+				'prefix' => \UBOS\Shape\UserFunctions\Tca::class.'->getEmptySlugPrefix',
 			],
 			'fallbackCharacter' => '-',
 			'eval' => 'uniqueInPid',
@@ -179,60 +179,6 @@ return [
 			],
 		],
 	],
-	'validation' => [
-		'label' => 'Validation',
-		'config' => [
-			'type' => 'group',
-			'allowed' => 'tx_shape_field_validation',
-			'MM' => 'tx_shape_field_validation_mm',
-			'size' => 1,
-			'maxitems' => 1,
-			'fieldControl' => [
-				'addRecord' => [
-					'disabled' => false,
-				],
-			],
-			'fieldWizard' => [
-				'tableList' => [
-					'disabled' => true,
-				],
-			]
-		],
-	],
-//	'server_validators' => [
-//		'label' => 'Server-side validators',
-//		'config' => [
-//			'type' => 'select',
-//			'renderType' => 'selectMultipleSideBySide',
-//			'default' => 'auto-validators',
-//			'items' => \UBOS\Shape\Utility\TcaUtility::selectItemsHelper([
-//				['Add validators based on type and attributes', 'auto-validators'],
-//				['AlphaNumeric', 'TYPO3\CMS\Extbase\Validation\Validator\AlphaNumericValidator'],
-//				['Boolean', 'TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator'],
-//				['DateTime', 'TYPO3\CMS\Extbase\Validation\Validator\DateTimeValidator'],
-//				['EmailAddress', 'TYPO3\CMS\Extbase\Validation\Validator\EmailAddressValidator'],
-//				['FileName', 'TYPO3\CMS\Extbase\Validation\Validator\FileNameValidator'],
-//				['FileSize', 'TYPO3\CMS\Extbase\Validation\Validator\FileSizeValidator'],
-//				['Float', 'TYPO3\CMS\Extbase\Validation\Validator\FloatValidator'],
-//				['ImageDimensions', 'TYPO3\CMS\Extbase\Validation\Validator\ImageDimensionsValidator'],
-//				['Integer', 'TYPO3\CMS\Extbase\Validation\Validator\IntegerValidator'],
-//				['MimeType', 'TYPO3\CMS\Extbase\Validation\Validator\MimeTypeValidator'],
-//				['NotEmpty', 'TYPO3\CMS\Extbase\Validation\Validator\NotEmptyValidator'],
-//				['NumberRange', 'TYPO3\CMS\Extbase\Validation\Validator\NumberRangeValidator'],
-//				['Number', 'TYPO3\CMS\Extbase\Validation\Validator\NumberValidator'],
-//				['RegularExpression', 'TYPO3\CMS\Extbase\Validation\Validator\RegularExpressionValidator'],
-//				['String', 'TYPO3\CMS\Extbase\Validation\Validator\StringValidator'],
-//				['Text', 'TYPO3\CMS\Extbase\Validation\Validator\TextValidator'],
-//				['Url', 'TYPO3\CMS\Extbase\Validation\Validator\UrlValidator'],
-//			]),
-//		],
-//	],
-//	'server_validators_options' => [
-//		'label' => ' Validator options',
-//		'config' => [
-//			'type' => 'json',
-//		],
-//	],
 	'layout' => [
 		'label' => 'Layout',
 		'config' => [
@@ -322,7 +268,7 @@ return [
 		],
 	],
 	'pattern' => [
-		'label' => 'RegEx pattern',
+		'label' => 'Regular expression pattern',
 		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'input',
@@ -330,7 +276,7 @@ return [
 		],
 	],
 	'accept' => [
-		'label' => 'Accept',
+		'label' => 'Accepted MIME types',
 		'displayCond' => 'FIELD:type:IN:file',
 		'config' => [
 			'type' => 'input',
@@ -338,7 +284,7 @@ return [
 		],
 	],
 	'maxlength' => [
-		'label' => 'Maxlength',
+		'label' => 'Maximum length',
 		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'number',
@@ -349,7 +295,7 @@ return [
 		],
 	],
 	'min' => [
-		'label' => 'Min',
+		'label' => 'Minimum value',
 		'displayCond' => 'FIELD:type:IN:number,range,file,date,datetime-local,time,month,week',
 		'config' => [
 			'type' => 'input',
@@ -360,7 +306,7 @@ return [
 		],
 	],
 	'max' => [
-		'label' => 'Max',
+		'label' => 'Maximum value',
 		'displayCond' => 'FIELD:type:IN:number,range,file,date,datetime-local,time,month,week',
 		'config' => [
 			'type' => 'input',
@@ -371,7 +317,7 @@ return [
 		],
 	],
 	'step' => [
-		'label' => 'Step',
+		'label' => 'Increment step',
 		'displayCond' => 'FIELD:type:IN:number,range',
 		'config' => [
 			'type' => 'number',
@@ -381,31 +327,12 @@ return [
 			'default' => null
 		],
 	],
-	'list' => [
+	'datalist' => [
 		'label' => 'Datalist',
 		'displayCond' => 'FIELD:type:IN:text,email,tel,search,url,date,datetime-local,time,month,week,range,color,country-select',
 		'config' => [
-			'type' => 'group',
-			'allowed' => 'tx_shape_field_datalist',
-			'size' => 1,
-			'minitems' => 0,
-			'maxitems' => 1,
-			'fieldControl' => [
-				'editPopup' => [
-					'disabled' => false,
-				],
-				'addRecord' => [
-					'disabled' => false,
-				],
-			],
-			'fieldWizard' => [
-				'recordsOverview' => [
-					'disabled' => true,
-				],
-				'tableList' => [
-					'disabled' => true,
-				],
-			]
+			'type' => 'text',
+			'rows' => 5,
 		],
 	],
 	'autocomplete' => [

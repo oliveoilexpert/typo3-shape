@@ -15,8 +15,6 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
-
-
 // todo: maybe make form and finisher models and keep form elements as records
 // todo: add more arguments to events
 // todo: all settings for plugin: disable server validation,
@@ -39,10 +37,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected ?Core\Domain\RecordInterface $contentRecord = null;
 	protected ?Core\Domain\RecordInterface $formRecord;
 	protected ?Domain\FormSession $session = null;
-	private string $formName = 'values';
-	protected string $fragmentType = '11510497112101';
 	protected ?Core\Resource\ResourceStorage $uploadStorage = null;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
+	private string $formDataArgumentName = 'values';
+	protected string $fragmentPageTypeNum = '11510497112101';
 
 	public function __construct(
 		protected Core\Resource\StorageRepository $storageRepository
@@ -51,7 +49,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function renderAction(): ResponseInterface
 	{
 		$pageType = $this->request->getQueryParams()['type'] ?? '';
-		if ($pageType !== $this->fragmentType && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
+		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
 			return $this->renderLazyLoader();
 		}
 		$this->session = new Domain\FormSession();
@@ -127,11 +125,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 
 		$this->session->id = $this->session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(32);
-		if (!isset($this->request->getArguments()[$this->formName])) {
+		if (!isset($this->request->getArguments()[$this->formDataArgumentName])) {
 			return;
 		}
 
-		$postValues = $this->request->getArguments()[$this->formName];
+		$postValues = $this->request->getArguments()[$this->formDataArgumentName];
 		$this->session->values = array_merge($this->session->values, $postValues);
 	}
 
@@ -162,8 +160,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		foreach ($this->formRecord->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
-				if ($field->has('identifier')) {
-					$field->setSessionValue($this->session->values[$field->has('identifier')] ?? null);
+				if ($field->has('name')) {
+					$field->setSessionValue($this->session->values[$field->get('name')] ?? null);
 				}
 				if ($field->has('display_condition') && $field->get('display_condition')) {
 					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));				}
@@ -178,7 +176,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			->reset()
 			->setNoCache(true)
 			->setCreateAbsoluteUri(true)
-			->setTargetPageType((int)$this->fragmentType)
+			->setTargetPageType((int)$this->fragmentPageTypeNum)
 			->setTargetPageUid((int)$this->settings['lazyLoadFragmentPage'])
 			->uriFor('render', ['pluginUid' => $contentData['uid']]);
 		$this->view->setTemplate('lazyLoadForm');
@@ -194,7 +192,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$viewVariables = [
 			'session' => $this->session,
 			'sessionJson' => json_encode($this->session),
-			'namespace' => $this->formName,
+			'namespace' => $this->formDataArgumentName,
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
 			'contentData' => $this->contentRecord,
 			'form' => $this->formRecord,
@@ -248,15 +246,14 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		);
 
 		foreach ($fields as $field) {
-			if (!$field->has('identifier')) {
+			if (!$field->has('name')) {
 				continue;
 			}
-			$id = $field->get('identifier');
-			$result = $validator->validate($field, $this->session->values[$id] ?? null);
+			$name = $field->get('name');
+			$result = $validator->validate($field, $this->session->values[$name] ?? null);
 			if ($result->hasErrors()) {
 				$this->session->hasErrors = true;
-				$this->session->fieldErrors[$id] = $result->getErrors();
-				//unset($this->session->values[$id]);
+				$this->session->fieldErrors[$name] = $result->getErrors();
 			}
 		}
 	}
@@ -266,34 +263,34 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$values = $this->session->values;
 		// todo: add FieldProcess Event
 		foreach($fields as $field) {
-			if (!$field->has('identifier')) {
+			if (!$field->has('name')) {
 				continue;
 			}
-			$id = $field->get('identifier');
-			if (!isset($values[$id])) {
+			$name = $field->get('name');
+			if (!isset($values[$name])) {
 				continue;
 			}
-			$value = $values[$id];
+			$value = $values[$name];
 			if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
-				$this->processUploadedFiles($value, $id);
+				$this->processUploadedFiles($value, $name);
 			}
 			if ($value instanceof Core\Http\UploadedFile) {
-				$this->processUploadedFiles([$value], $id);
+				$this->processUploadedFiles([$value], $name);
 			}
 			if ($field->get('type') === 'password') {
-				$this->session->values[$id] = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE')->getHashedPassword($value);
+				$this->session->values[$name] = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE')->getHashedPassword($value);
 			}
 		}
 	}
 
-	protected function processUploadedFiles(array $files, string $fieldId): void
+	protected function processUploadedFiles(array $files, string $fieldName): void
 	{
 		$folderPath = $this->getSessionUploadFolder();
 		if (!$this->getUploadStorage()->hasFolder($folderPath)) {
 			$this->getUploadStorage()->createFolder($folderPath);
 		}
-		$this->session->filenames[$fieldId] = [];
-		$this->session->values[$fieldId] = [];
+		$this->session->filenames[$fieldName] = [];
+		$this->session->values[$fieldName] = [];
 		foreach ($files as $file) {
 			// todo: file upload event
 			$newFile = $this->getUploadStorage()->addUploadedFile(
@@ -302,8 +299,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				$file->getClientFilename(),
 				Core\Resource\Enum\DuplicationBehavior::RENAME
 			);
-			$this->session->filenames[$fieldId][] = $newFile->getName();
-			$this->session->values[$fieldId][] = $this->getSessionUploadFolder() . $newFile->getName();
+			$this->session->filenames[$fieldName][] = $newFile->getName();
+			$this->session->values[$fieldName][] = $this->getSessionUploadFolder() . $newFile->getName();
 		}
 	}
 

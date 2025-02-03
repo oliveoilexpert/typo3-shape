@@ -7,7 +7,7 @@ namespace UBOS\Shape\Domain\Condition\Functions;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
-class FormConditionFunctionsProvider implements ExpressionFunctionProviderInterface
+class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 {
     public function getFunctions(): array
     {
@@ -28,21 +28,4 @@ class FormConditionFunctionsProvider implements ExpressionFunctionProviderInterf
         );
     }
 
-
-//    protected function getRootFormPropertyFunction(): ExpressionFunction
-//    {
-//        return new ExpressionFunction(
-//            'getRootFormProperty',
-//            static fn() => null, // Not implemented, we only use the evaluator
-//            static function ($arguments, $property) {
-//                $formDefinition = $arguments['formRuntime']->getFormDefinition();
-//                try {
-//                    $value = ObjectAccess::getPropertyPath($formDefinition, $property);
-//                } catch (\Exception) {
-//                    $value = null;
-//                }
-//                return $value;
-//            }
-//        );
-//    }
 }

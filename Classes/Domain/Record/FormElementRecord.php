@@ -103,6 +103,12 @@ class FormElementRecord extends Record
 		}
 		return $selectedOptions;
 	}
+
+	public function getDatalistArray(): array
+	{
+		return array_map('trim', explode(PHP_EOL, $this->properties['datalist'] ?? ''));
+	}
+
 	public function getCamelCaseType(): string
 	{
 		return ucFirst(str_replace('-', '', ucwords($this->get('type'), '-')));

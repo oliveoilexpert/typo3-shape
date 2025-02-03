@@ -14,10 +14,6 @@ final class RecordCreationListener
 		if ($event->isPropagationStopped()) {
 			return;
 		}
-		if ($event->getRawRecord()->getMainType() === 'tx_shape_field_datalist') {
-			$this->setRecord($event, Record\DatalistRecord::class);
-			return;
-		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_finisher') {
 			$this->setRecord($event, Record\FinisherRecord::class);
 			return;

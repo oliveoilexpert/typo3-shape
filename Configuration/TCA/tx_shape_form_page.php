@@ -51,6 +51,7 @@ $columns = [
 	],
 	'fields' => [
 		'label' => 'Fields',
+		'displayCond' => 'FIELD:type:!=:summary',
 		'config' => [
 			'type' => 'inline',
 			'allowed' => 'tx_shape_field',

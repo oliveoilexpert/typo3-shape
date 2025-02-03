@@ -42,7 +42,7 @@ $columns = [
 				'replacements' => [ '/' => '' ],
 			],
 			'appearance' => [
-				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getFieldIdentifierPrefix',
+				'prefix' => \UBOS\Shape\UserFunctions\Tca::class . '->getEmptySlugPrefix',
 			],
 			'fallbackCharacter' => '-',
 			'eval' => 'uniqueInSite',

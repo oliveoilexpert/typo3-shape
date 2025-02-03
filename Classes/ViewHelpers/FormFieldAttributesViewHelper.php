@@ -18,13 +18,13 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 	{
 		$record = $this->arguments['record'];
 		$attributes = [
-			'data-shape-field' => $record->get('identifier'),
+			'data-shape-field' => $record->get('name'),
 		];
 		if ($record->get('validation_message')) {
 			$attributes['data-shape-validity-message'] = $record->get('validation_message');
 		}
-		if ($record->get('list')) {
-			$attributes['list'] = $this->templateVariableContainer->get('fieldIdPrefix') . $record->get('identifier') . '--list';
+		if ($record->get('datalist')) {
+			$attributes['list'] = $this->templateVariableContainer->get('idPrefix') . $record->get('name') . '--list';
 		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {
 			$val = $record->get($attribute);

@@ -7,7 +7,6 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 
 class Tca
 {
-
 	public function getFormattedFieldLabel(array &$params): void
 	{
 		if (!isset($params['row'])) {
@@ -27,8 +26,7 @@ class Tca
 		}
 		$params['title'] = $label . ' <small>[' . $type . ']</small>';
 	}
-
-	public function getFieldIdentifierPrefix(array $parameters, TcaSlug $reference): string
+	public function getEmptySlugPrefix(array $parameters, TcaSlug $reference): string
 	{
 		return "";
 	}

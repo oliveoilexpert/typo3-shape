@@ -1,5 +1,5 @@
 <f:render partial="Element" contentAs="content" arguments="{_all}">
-	<f:variable name="id" value="{fieldIdPrefix}{field.identifier}"/>
+	<f:variable name="id" value="{idPrefix}{field.name}"/>
 
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
@@ -30,7 +30,7 @@
 <f:section name="RepeatableContainer">
 	<div class="{blockClass}__repeatable__item" data-shape-repeatable-item>
 		<div class="{blockClass}__repeatable__fieldset">
-			<f:alias map="{fields:fields, namespace:'{namespace}[{field.identifier}][{index}]'}">
+			<f:alias map="{fields:fields, namespace:'{namespace}[{field.name}][{index}]'}">
 				<f:render partial="Elements" arguments="{_all}"/>
 			</f:alias>
 		</div>

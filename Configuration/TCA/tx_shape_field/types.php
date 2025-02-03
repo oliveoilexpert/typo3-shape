@@ -273,6 +273,14 @@ return [
 			]
 		]
 	],
+	'country-select' => [
+		'showitem' => $showItem,
+		'columnsOverrides' => [
+			'datalist' => [
+				'label' => 'Allowed countries (short code)',
+			],
+		],
+	],
 	'header' => [
 		'showitem' => '
 				--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 

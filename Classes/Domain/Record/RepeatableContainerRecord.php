@@ -24,8 +24,8 @@ class RepeatableContainerRecord extends FormElementRecord
 		foreach ($this->getSessionValue() as $values) {
 			foreach($this->get('fields') as $childField) {
 				$newField = clone $childField;
-				if (isset($values[$newField->get('identifier')])) {
-					$newField->setSessionValue($values[$newField->get('identifier')]);
+				if (isset($values[$newField->get('name')])) {
+					$newField->setSessionValue($values[$newField->get('name')]);
 				}
 				$this->createdFieldsets[$index][] = $newField;
 			}

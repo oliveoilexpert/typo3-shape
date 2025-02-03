@@ -1,16 +1,16 @@
 <f:render partial="Element" contentAs="content" arguments="{_all}">
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.countrySelect
-			name="{namespace}[{field.identifier}]"
+			name="{namespace}[{field.name}]"
 			value="{field.sessionValue}"
-			id="{fieldIdPrefix}{field.identifier}"
+			id="{idPrefix}{field.name}"
 			additionalAttributes="{shape:formFieldAttributes(record:field)}"
 			class="{blockClass}__control {blockClass}__{field.type}-control"
 			prependOptionLabel=" "
 			prependOptionValue=""
 			sortByOptionLabel="true"
 			optionLabelField="localizedName"
-			onlyCountries="{field.list.0.listArray}"
+			onlyCountries="{field.datalistArray}"
 	/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>
