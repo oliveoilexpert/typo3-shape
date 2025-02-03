@@ -7,13 +7,13 @@ use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
 use UBOS\Shape\Domain\Record\RepeatableContainerRecord;
-use UBOS\Shape\Event\ElementValidationEvent;
-use UBOS\Shape\Validation\ElementValidator;
+use UBOS\Shape\Event\FieldValidationEvent;
+use UBOS\Shape\Validation\FieldValidator;
 
 final class RepeatableContainerValidationListener
 {
 	#[AsEventListener]
-	public function __invoke(ElementValidationEvent $event): void
+	public function __invoke(FieldValidationEvent $event): void
 	{
 
 		$field = $event->getFormControlRecord();
@@ -27,7 +27,7 @@ final class RepeatableContainerValidationListener
 			$event->setResult($errorAggregateResult);
 			return;
 		}
-		$validator = new ElementValidator(
+		$validator = new FieldValidator(
 			$event->getFormSession(),
 			$event->getUploadStorage(),
 			GeneralUtility::makeInstance(EventDispatcher::class)

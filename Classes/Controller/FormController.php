@@ -239,7 +239,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function validateFormValues($fields): void
 	{
-		$validator = new Validation\ElementValidator(
+		$validator = new Validation\FieldValidator(
 			$this->session,
 			$this->getUploadStorage(),
 			$this->eventDispatcher

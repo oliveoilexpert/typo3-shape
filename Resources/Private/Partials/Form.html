@@ -24,7 +24,7 @@
 					</f:if>
 					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
 						<f:alias map="{fields: page.fields}">
-							<f:render partial="Elements" arguments="{_all}"></f:render>
+							<f:render partial="FieldList" arguments="{_all}"></f:render>
 						</f:alias>
 					</fieldset>
 				</div>
@@ -37,7 +37,7 @@
 				</f:if>
 				<fieldset class="{blockClass}__fieldset">
 					<f:alias map="{fields: currentPage.fields}">
-						<f:render partial="Elements" arguments="{_all}"></f:render>
+						<f:render partial="FieldList" arguments="{_all}"></f:render>
 					</f:alias>
 				</fieldset>
 			</div>

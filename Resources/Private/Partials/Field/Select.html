@@ -1,0 +1,14 @@
+<f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:form.select name="{namespace}[{field.name}]"
+				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
+				   class="{blockClass}__control {blockClass}__{field.type}-control"
+				   id="{idPrefix}{field.name}">
+		<f:for each="{field.field_options}" as="option">
+			<f:form.select.option
+				selected="{field.sessionValue} === {option.value}"
+				value="{option.value}">{option.label}</f:form.select.option>
+		</f:for>
+	</f:form.select>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

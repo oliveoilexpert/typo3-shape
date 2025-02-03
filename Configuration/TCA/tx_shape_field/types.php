@@ -277,7 +277,7 @@ return [
 		'showitem' => $showItem,
 		'columnsOverrides' => [
 			'datalist' => [
-				'label' => 'Allowed countries (short code)',
+				'label' => 'Allowed countries list (ISO 3166-1 alpha-2)',
 			],
 		],
 	],

@@ -1,0 +1,13 @@
+<f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:for each="{field.field_options}" as="option">
+		<f:form.radio name="{namespace}[{field.name}]"
+					  checked="{field.sessionValue} == {option.value}"
+					  value="{option.value}"
+					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					  class="{blockClass}__control {blockClass}__{field.type}-control"
+					  id="{idPrefix}{field.name}-{option.value}"/>
+		<label class="{blockClass}__label" for="{idPrefix}{field.name}-{option.value}">{option.label}</label>
+	</f:for>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

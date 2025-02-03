@@ -2,7 +2,7 @@
 
 namespace UBOS\Shape\Domain\Record;
 
-class RepeatableContainerRecord extends FormElementRecord
+class RepeatableContainerRecord extends FieldRecord
 {
 	protected ?array $createdFieldsets = null;
 

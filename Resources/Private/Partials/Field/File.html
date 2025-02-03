@@ -1,0 +1,17 @@
+<f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:form.textfield
+			name="{namespace}[{field.name}][]"
+		    type="{field.type}"
+		    additionalAttributes="{shape:formFieldAttributes(record:field)}"
+			class="{blockClass}__control {blockClass}__{field.type}-control"
+			id="{idPrefix}{field.name}"/>
+	<f:if condition="{session.filenames.{field.name}}">
+		<div class="{blockClass}__filenames">
+			<f:for each="{session.filenames.{field.name}}" as="filename">
+				<div>{filename}</div>
+			</f:for>
+		</div>
+	</f:if>
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

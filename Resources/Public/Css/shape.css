@@ -15,7 +15,7 @@
 	margin: calc(var(--yform-gap) / -2);
 }
 
-.yform__element {
+.yform__field {
 	width: var(--yform-el-width);
 	padding: calc(var(--yform-gap) / 2);
 	box-sizing: border-box;

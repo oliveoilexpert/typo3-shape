@@ -23,7 +23,7 @@ final class RecordCreationListener
 				$this->setRecord($event, Record\RepeatableContainerRecord::class);
 				return;
 			}
-			$this->setRecord($event, Record\FormElementRecord::class);
+			$this->setRecord($event, Record\FieldRecord::class);
 		}
 	}
 
