@@ -3,7 +3,9 @@
 use UBOS\Shape\Utility\TcaUtility as Util;
 
 $ctrl = [
-	'label' => 'tstamp',
+	'label' => 'form',
+	'label_alt' => 'tstamp',
+	'label_alt_force' => 1,
 	'title' => Util::t('form_submission.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
@@ -27,6 +29,13 @@ $columns = [
 			'allowed' => 'tx_shape_form',
 			'size' => 1,
 			'maxitems' => 1,
+			//'readOnly' => true,
+			'hideSuggest' => true,
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				]
+			]
 		],
 	],
 	'plugin' => [
@@ -35,11 +44,34 @@ $columns = [
 			'allowed' => 'tt_content',
 			'size' => 1,
 			'maxitems' => 1,
+			//'readOnly' => true,
+			'hideSuggest' => true,
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				]
+			]
+		],
+	],
+	'fe_user' => [
+		'config' => [
+			'type' => 'group',
+			'allowed' => 'fe_users',
+			'size' => 1,
+			'maxitems' => 1,
+			//'readOnly' => true,
+			'hideSuggest' => true,
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				]
+			]
 		],
 	],
 	'form_values' => [
 		'config' => [
 			'type' => 'json',
+			'readOnly' => true,
 		],
 	],
 	'tstamp' => [
@@ -47,18 +79,45 @@ $columns = [
 		'config' => [
 			'type' => 'datetime',
 			'readOnly' => true,
+
+		],
+	],
+	'user_ip' => [
+		'config' => [
+			'type' => 'input',
+			'max' => 15,
+			'eval' => 'trim',
+			'readOnly' => true,
+		],
+	],
+	'user_agent' => [
+		'config' => [
+			'type' => 'text',
+			'eval' => 'trim',
+			'readOnly' => true,
 		],
 	],
 ];
 foreach ($columns as $key => $column) {
 	$columns[$key]['label'] = Util::t('form_submission.' . $key);
 }
-$palettes = [];
+$palettes = [
+	'general' => [
+		'showitem' => '
+		tstamp,
+		--linebreak--,
+		form, plugin,
+		--linebreak--,
+		fe_user,
+		--linebreak--,
+		form_values,
+		--linebreak--,
+		user_agent, user_ip,',
+	],
+];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-    	tstamp,
-        form, 
-        form_values,
+    	--palette--;;general,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, 
         hidden';
 

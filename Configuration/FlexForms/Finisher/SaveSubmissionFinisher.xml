@@ -20,13 +20,13 @@
                             <type>input</type>
                         </config>
                     </excludedFields>
-                    <saveIpAddress>
-                        <label>Save submitter IP-address</label>
+                    <saveUserData>
+                        <label>Save User Agent and IP-Address</label>
                         <config>
                             <type>check</type>
                             <renderType>checkboxToggle</renderType>
                         </config>
-                    </saveIpAddress>
+                    </saveUserData>
                 </el>
             </ROOT>
         </general>

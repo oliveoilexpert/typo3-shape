@@ -120,6 +120,10 @@
 			<trans-unit id="form_submission.plugin"><source>Plugin</source></trans-unit>
 			<trans-unit id="form_submission.form_values"><source>Form Values</source></trans-unit>
 			<trans-unit id="form_submission.tstamp"><source>Timestamp</source></trans-unit>
+			<trans-unit id="form_submission.fe_user"><source>Frontend User</source></trans-unit>
+			<trans-unit id="form_submission.user_ip"><source>User IP-Address</source></trans-unit>
+			<trans-unit id="form_submission.user_agent"><source>User Agent</source></trans-unit>
+
 		</body>
 	</file>
 </xliff>

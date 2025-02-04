@@ -47,6 +47,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	public function renderAction(): ResponseInterface
 	{
+		DebugUtility::debug($this->request);
 		$pageType = $this->request->getQueryParams()['type'] ?? '';
 		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
 			return $this->renderLazyLoader();
@@ -123,7 +124,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->session = new Domain\FormSession();
 		}
 
-		$this->session->id = $this->session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(32);
+		$this->session->id = $this->session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 		if (!isset($this->request->getArguments()[$this->formDataArgumentName])) {
 			return;
 		}
@@ -315,6 +316,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			if (!$willExecute) {
 				continue;
 			}
+			// todo: remove session values that do not belong to the form
 			try {
 				// execute finisher event
 				$response = $this->makeFinisherInstance($finisherRecord, $this->session->values)?->execute() ?? $response;

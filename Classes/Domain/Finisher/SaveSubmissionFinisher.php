@@ -15,17 +15,31 @@ class SaveSubmissionFinisher extends AbstractFinisher
 		$this->settings = array_merge([
 			'storagePage' => '',
 		], $this->settings);
+		$formValues = $this->formValues;
+		if ($this->settings['excludedFields']) {
+			$excludeFields = GeneralUtility::trimExplode(',', $this->settings['excludedFields'], true);
+			$formValues = array_filter($formValues, function($key) use ($excludeFields) {
+				return !in_array($key, $excludeFields);
+			}, ARRAY_FILTER_USE_KEY);
+		}
+		$values = [
+			'form' => $this->formRecord->getUid(),
+			'form_values' => json_encode($formValues),
+			'plugin' => $this->contentRecord->getUid(),
+			'pid' => (int)($this->settings['storagePage'][0]?->getUid() ?: $this->contentRecord->getPid() ?? $this->formRecord->getPid()),
+			'fe_user' => $this->request->getAttribute('frontend.user')->getUserId() ?: 0,
+			'crdate' => time(),
+			'tstamp' => time(),
+		];
+		if ($this->settings['saveUserData']) {
+			$values['user_agent'] = $this->request->getHeaderLine('User-Agent');
+			$values['user_ip'] = $this->request->getServerParams()['REMOTE_ADDR'];
+		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
 			->getQueryBuilderForTable($this->tableName);
-		$queryBuilder->insert($this->tableName)
-			->values([
-				'form' => $this->formRecord->getUid(),
-				'form_values' => json_encode($this->formValues),
-				'plugin' => $this->contentRecord->getUid(),
-				'pid' => (int)($this->settings['storagePage'] ?: $this->contentRecord->getPid() ?? $this->formRecord->getPid()),
-				'crdate' => time(),
-				'tstamp' => time(),
-			])
+		$queryBuilder
+			->insert($this->tableName)
+			->values($values)
 			->executeQuery();
 		return null;
 	}

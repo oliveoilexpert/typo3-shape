@@ -57,7 +57,14 @@
 }
 .yform__error {
 	display: none;
+	width: fit-content;
+	max-width: 100%;
 	margin-top: .5em;
+	font-size: smaller;
+	padding: .5em .75em;
+	background: #f8d7da;
+	color: #721c24;
+	border-radius: 5px;
 	&.-visible {
 		display: block;
 	}
@@ -83,19 +90,19 @@
 	align-items: flex-start;
 	width: 100%;
 }
-@keyframes fade-in {
+@keyframes show-repeatable-item {
 	from {
 		opacity: 0;
 	} to {
-		opacity: 1;
-	}
+			opacity: 1;
+		}
 }
 .yform__repeatable__item {
 	width: 100%;
 	padding: calc(var(--yform-gap) / 1);
 	border: 2px solid color-mix(in srgb, currentColor 50%, transparent 50%);
 	border-radius: 10px;
-	animation: fade-in 0.4s;
+	animation: show-repeatable-item 0.4s;
 	margin-block: calc(var(--yform-gap) / 2);
 }
 .yform__repeatable__fieldset {

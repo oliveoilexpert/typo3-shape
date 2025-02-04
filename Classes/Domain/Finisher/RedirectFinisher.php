@@ -23,8 +23,7 @@ class RedirectFinisher extends AbstractFinisher
 			ContentObjectRenderer::class,
 			$controller
 		);
-		// for record: $this->settings['uri']->instantiate()->url
-		$this->url = $cObj->typoLink_URL(['parameter' => $this->settings['uri'], 'forceAbsoluteUrl' => true]);
+		$this->url = $cObj->typoLink_URL(['parameter' => $this->settings['uri']->instantiate()->url, 'forceAbsoluteUrl' => true]);
 		if (!$this->url) {
 			return null;
 		}
