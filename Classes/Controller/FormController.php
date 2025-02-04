@@ -34,8 +34,8 @@ use UBOS\Shape\Event;
 
 class FormController extends Extbase\Mvc\Controller\ActionController
 {
-	protected ?Core\Domain\RecordInterface $contentRecord = null;
-	protected ?Core\Domain\RecordInterface $formRecord;
+	protected ?Core\Domain\RecordInterface $plugin = null;
+	protected ?Core\Domain\RecordInterface $form = null;
 	protected ?Domain\FormSession $session = null;
 	protected ?Core\Resource\ResourceStorage $uploadStorage = null;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
@@ -60,7 +60,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 //			->select('*')->from('tx_shape_form_submission')
 //			->where(
 //				'form_values->"$.mail" = "a.kiener@unibrand.de"',
-//				'plugin = ' . $this->contentRecord->getUid(),
+//				'plugin = ' . $this->plugin->getUid(),
 //			)
 //			->executeQuery()->fetchAllAssociative();
 //		DebugUtility::debug($jsonSelect);
@@ -75,7 +75,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			return $this->redirect('render');
 		}
 		$isStepBack = ($this->session->previousPageIndex ?? 1) > $pageIndex;
-		$previousPageRecord = $this->formRecord->get('pages')[$this->session->previousPageIndex-1];
+		$previousPageRecord = $this->form->get('pages')[$this->session->previousPageIndex-1];
 
 		if (!$isStepBack) {
 			$this->validatePage($previousPageRecord);
@@ -85,7 +85,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$pageIndex = $this->session->previousPageIndex;
 			DebugUtility::debug($this->session);
 		} else {
-			$this->processFormValues($previousPageRecord->get('fields'));
+			$this->processFieldValues($previousPageRecord->get('fields'));
 		}
 
 		return $this->renderForm($pageIndex);
@@ -99,7 +99,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			return $this->redirect('render');
 		}
 		// validate
-		$this->validateForm($this->formRecord);
+		$this->validateForm($this->form);
 		// if errors, go back to previous page
 		if ($this->session->hasErrors) {
 			return $this->renderForm($this->session->previousPageIndex);
@@ -107,8 +107,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		// maybe process entire form here? previousPageIndex can be manipulated client side and is not secure
 		// uploadedFiles could be validated but never saved if user manipulates previousPageIndex
-		$previousPageRecord = $this->formRecord->get('pages')[$this->session->previousPageIndex-1];
-		$this->processFormValues($previousPageRecord->get('fields'));
+		$previousPageRecord = $this->form->get('pages')[$this->session->previousPageIndex-1];
+		$this->processFieldValues($previousPageRecord->get('fields'));
 
 		return $this->executeFinishers();
 	}
@@ -146,19 +146,13 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				)
 				->executeQuery()->fetchAllAssociative()[0] ?? null;
 		}
-		$this->contentRecord = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
+		$this->plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 
-		$this->formRecord = $this->contentRecord->get('pi_flexform')->get('settings')['form'][0] ?? null;
-		$this->applyContextToForm();
-		$event = new Event\FormManipulationEvent($this->request, $this->session, $this->formRecord);
-		$this->eventDispatcher->dispatch($event);
-		$this->formRecord = $event->getFormRecord();
-	}
+		$this->form = $this->plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 
-	protected function applyContextToForm(): void
-	{
-		foreach ($this->formRecord->get('pages') as $page) {
+		// apply session values to form fields and check display conditions
+		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if ($field->has('name')) {
 					$field->setSessionValue($this->session->values[$field->get('name')] ?? null);
@@ -167,6 +161,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));				}
 			}
 		}
+		$event = new Event\FormManipulationEvent($this->request, $this->session, $this->form);
+		$this->eventDispatcher->dispatch($event);
+		$this->form = $event->getFormRecord();
 	}
 
 	protected function renderLazyLoader(): ResponseInterface
@@ -186,16 +183,17 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function renderForm(int $pageIndex = 1): ?ResponseInterface
 	{
-		$lastPageIndex = count($this->formRecord->get('pages'));
-		$currentPageRecord = $this->formRecord->get('pages')[$pageIndex - 1];
+		$lastPageIndex = count($this->form->get('pages'));
+		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
 
 		$viewVariables = [
 			'session' => $this->session,
 			'sessionJson' => json_encode($this->session),
 			'namespace' => $this->formDataArgumentName,
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
-			'contentData' => $this->contentRecord,
-			'form' => $this->formRecord,
+			'plugin' => $this->plugin,
+			'form' => $this->form,
+			'settings' => $this->settings,
 			'currentPage' => $currentPageRecord,
 			'pageIndex' => $pageIndex,
 			'backStepPageIndex' => $pageIndex - 1 ?: null,
@@ -218,7 +216,24 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$this->validateFormValues($page->get('fields'));
+
+		$validator = new Validation\FieldValidator(
+			$this->session,
+			$this->getUploadStorage(),
+			$this->eventDispatcher
+		);
+
+		foreach ($page->get('fields') as $field) {
+			if (!$field->has('name')) {
+				continue;
+			}
+			$name = $field->get('name');
+			$result = $validator->validate($field, $this->session->values[$name] ?? null);
+			if ($result->hasErrors()) {
+				$this->session->hasErrors = true;
+				$this->session->fieldErrors[$name] = $result->getErrors();
+			}
+		}
 	}
 
 	protected function validateForm(Core\Domain\RecordInterface $form): void
@@ -237,28 +252,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 	}
 
-	protected function validateFormValues($fields): void
-	{
-		$validator = new Validation\FieldValidator(
-			$this->session,
-			$this->getUploadStorage(),
-			$this->eventDispatcher
-		);
-
-		foreach ($fields as $field) {
-			if (!$field->has('name')) {
-				continue;
-			}
-			$name = $field->get('name');
-			$result = $validator->validate($field, $this->session->values[$name] ?? null);
-			if ($result->hasErrors()) {
-				$this->session->hasErrors = true;
-				$this->session->fieldErrors[$name] = $result->getErrors();
-			}
-		}
-	}
-
-	protected function processFormValues($fields): void
+	protected function processFieldValues($fields): void
 	{
 		$values = $this->session->values;
 		// todo: add FieldProcess Event
@@ -307,7 +301,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->contentRecord->get('pi_flexform')->get('settings')['finishers'] as $finisherRecord) {
+		foreach ($this->plugin->get('pi_flexform')->get('settings')['finishers'] as $finisherRecord) {
 			$willExecute = true;
 			if ($finisherRecord->get('condition') ?? false) {
 				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));
@@ -350,8 +344,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->request,
 			$this->view,
 			$this->settings,
-			$this->contentRecord,
-			$this->formRecord,
+			$this->plugin,
+			$this->form,
 			$finisherRecord,
 			$formValues,
 		);
@@ -383,7 +377,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'formValues' => $this->session->values,
 //			'stepIdentifier' => $page->getIdentifier(),
 //			'finisherIdentifier' => $finisherIdentifier,
-//			'contentObject' => $this->contentRecord,
+//			'contentObject' => $this->plugin,
 ////		'stepType' => $page->getType(),
 			//'isStepBack' => $isStepBack,
 			'frontendUser' => $this->getFrontendUser(),
@@ -409,7 +403,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	}
 	protected function getSessionKey(): stringx
 	{
-		return 'tx_shape_c' . $this->contentRecord?->getUid() . '_f' . $this->formRecord->getUid();
+		return 'tx_shape_c' . $this->plugin?->getUid() . '_f' . $this->form->getUid();
 	}
 
 	// use fe_session to store form session?

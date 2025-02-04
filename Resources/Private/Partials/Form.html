@@ -1,12 +1,12 @@
 
 <f:form class="{blockClass}__form"
-		id="c{contentData.uid}-f{form.uid}"
+		id="c{plugin.uid}-f{form.uid}"
 		action="{action}"
 		name="{namespace}"
 		autocomplete="on"
 		enctype="multipart/form-data"
 		data-shape-form="{form.identifier}"
-		pageUid="{contentData.pid}"
+		pageUid="{plugin.pid}"
 		arguments="{pageIndex:forwardStepPageIndex}">
 	<div>
 		<f:form.hidden name="session" value='{sessionJson}'/>
