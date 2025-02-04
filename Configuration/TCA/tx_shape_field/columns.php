@@ -41,7 +41,6 @@ return [
 	],
 	'placeholder' => [
 		'label' => 'Placeholder',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,number,tel,password,url,search',
 		'config' => [
 			'type' => 'text',
 			'rows' => 2,
@@ -86,9 +85,9 @@ return [
 
 				['Repeatable field container', 'repeatable-container', 'content-container', 'container'],
 
-				['Header', 'header', 'content-header', 'no-input'],
-				['Rich text content', 'rte', 'form-static-text', 'no-input'],
-				['Content element', 'content', 'form-content-element', 'no-input'],
+				['Header', 'content-header', 'content-header', 'no-input'],
+				['Rich text content', 'content-rte', 'form-static-text', 'no-input'],
+				['Content element', 'content-element', 'form-content-element', 'no-input'],
 			]),
 			'itemGroups' => [
 				'text-inputs' => 'Text fields',
@@ -107,7 +106,6 @@ return [
 	],
 	'default_value' => [
 		'label' => 'Default value',
-		'displayCond' => 'FIELD:type:!IN:select,multi-select,multi-checkbox,radio,password',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -167,7 +165,6 @@ return [
 	],
 	'field_options' => [
 		'label' => 'Options',
-		'displayCond' => 'FIELD:type:IN:select,multi-select,multi-checkbox,radio',
 		'config' => [
 			'type' => 'inline',
 			'foreign_table' => 'tx_shape_field_option',
@@ -262,14 +259,12 @@ return [
 	],
 	'multiple' => [
 		'label' => 'Multiple',
-		'displayCond' => 'FIELD:type:IN:file',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'pattern' => [
 		'label' => 'Regular expression pattern',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
@@ -277,7 +272,6 @@ return [
 	],
 	'accept' => [
 		'label' => 'Accepted MIME types',
-		'displayCond' => 'FIELD:type:IN:file',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
@@ -285,7 +279,6 @@ return [
 	],
 	'maxlength' => [
 		'label' => 'Maximum length',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url',
 		'config' => [
 			'type' => 'number',
 			'format' => 'integer',
@@ -296,7 +289,6 @@ return [
 	],
 	'min' => [
 		'label' => 'Minimum value',
-		'displayCond' => 'FIELD:type:IN:number,range,file,date,datetime-local,time,month,week',
 		'config' => [
 			'type' => 'input',
 			'eval' => 'is_in',
@@ -307,7 +299,6 @@ return [
 	],
 	'max' => [
 		'label' => 'Maximum value',
-		'displayCond' => 'FIELD:type:IN:number,range,file,date,datetime-local,time,month,week',
 		'config' => [
 			'type' => 'input',
 			'eval' => 'is_in',
@@ -318,7 +309,6 @@ return [
 	],
 	'step' => [
 		'label' => 'Increment step',
-		'displayCond' => 'FIELD:type:IN:number,range',
 		'config' => [
 			'type' => 'number',
 			'format' => 'decimal',
@@ -329,7 +319,6 @@ return [
 	],
 	'datalist' => [
 		'label' => 'Datalist',
-		'displayCond' => 'FIELD:type:IN:text,email,tel,search,url,date,datetime-local,time,month,week,range,color,country-select',
 		'config' => [
 			'type' => 'text',
 			'rows' => 5,
@@ -337,7 +326,6 @@ return [
 	],
 	'autocomplete' => [
 		'label' => 'Autocomplete',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url,date',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -423,7 +411,6 @@ return [
 	],
 	'autocomplete_modifier' => [
 		'label' => 'Autocomplete modifier',
-		'displayCond' => 'FIELD:type:IN:text,textarea,email,tel,password,search,url,date',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',

@@ -2,6 +2,9 @@
 .yform__form {
 	--yform-el-width: 100%;
 	--yform-gap: 1.5em;
+	* {
+		box-sizing: border-box;
+	}
 }
 .yform__page {
 	padding-bottom: var(--yform-gap);
@@ -13,6 +16,8 @@
 	display: flex;
 	flex-wrap: wrap;
 	margin: calc(var(--yform-gap) / -2);
+	padding: 0;
+	border: none;
 }
 
 .yform__field {
@@ -39,12 +44,23 @@
 
 .yform__label {
 	margin-bottom: .5em;
+	display: block;
+	&.-for-checkbox, &.-for-radio {
+		display: inline-block;
+	}
 }
 .yform__control {
 }
 .yform__description {
 	margin-top: .5em;
 	font-size: smaller;
+}
+.yform__error {
+	display: none;
+	margin-top: .5em;
+	&.-visible {
+		display: block;
+	}
 }
 
 .yform__navigation {

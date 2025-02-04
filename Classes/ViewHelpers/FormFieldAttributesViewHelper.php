@@ -18,27 +18,30 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 	{
 		$record = $this->arguments['record'];
 		$attributes = [
-			'data-shape-field' => $record->get('name'),
+			'data-shape-control' => $record->get('name'),
 		];
-		if ($record->get('validation_message')) {
+		if ($record->has('validation_message') && $record->get('validation_message')) {
 			$attributes['data-shape-validity-message'] = $record->get('validation_message');
 		}
-		if ($record->get('datalist')) {
+		if ($record->has('datalist') && $record->get('datalist')) {
 			$attributes['list'] = $this->templateVariableContainer->get('idPrefix') . $record->get('name') . '--list';
 		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {
+			if (!$record->has($attribute)) continue;
 			$val = $record->get($attribute);
 			if ($val) {
 				$attributes[$attribute] = '';
 			}
 		}
 		foreach (['step', 'pattern', 'maxlength', 'placeholder'] as $attribute) {
+			if (!$record->has($attribute)) continue;
 			$val = $record->get($attribute);
 			if ($val) {
 				$attributes[$attribute] = (string)$val;
 			}
 		}
 		foreach (['min', 'max'] as $attribute) {
+			if (!$record->has($attribute)) continue;
 			$val = $record->get($attribute);
 			if ($val || $val === 0) {
 				$attributes[$attribute] = (string)$val;

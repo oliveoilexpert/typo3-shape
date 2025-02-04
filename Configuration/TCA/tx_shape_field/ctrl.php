@@ -47,9 +47,9 @@ return [
 		'reset' => 'form-text',
 		'captcha' => 'form-text',
 		'hidden' => 'form-hidden',
-		'header' => 'content-header',
-		'rte' => 'form-static-text',
-		'content' => 'form-content-element',
+		'content-header' => 'content-header',
+		'content-rte' => 'form-static-text',
+		'content-element' => 'form-content-element',
 		'repeatable-container' => 'content-container',
 	],
 ];

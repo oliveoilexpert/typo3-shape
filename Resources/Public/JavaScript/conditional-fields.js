@@ -7,7 +7,7 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		fields.forEach(field => {
 			const cond = field.dataset.shapeCondition
 			if (!cond) return
-			const inputs = field.querySelectorAll('[data-shape-field]')
+			const inputs = field.querySelectorAll('[data-shape-control]')
 			if (jstin(cond)({
 				value: fId => data[`tx_shape_form[values][${fId}]`] ?? null,
 				formData: str => data['tx_shape_form[values]' + str] ?? null
@@ -22,7 +22,7 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 	}
 	const processNode = el => {
 		const form = el.closest('[data-shape-form]') ?? el.querySelector('[data-shape-form]')
-		el.querySelectorAll('[data-shape-field]').forEach(field => {
+		el.querySelectorAll('[data-shape-control]').forEach(field => {
 			field.addEventListener('change', () => evaluateConditions(form))
 		})
 		evaluateConditions(form)

@@ -56,7 +56,9 @@ class FieldRecord extends Record
 					$value[] = $option->get('value');
 				}
 			}
-			$this->properties['default_value'] = $value;
+			if ($value) {
+				$this->properties['default_value'] = $value;
+			}
 		} else {
 			foreach ($this->get('field_options') as $option) {
 				if ($option->get('selected')) {

@@ -9,7 +9,7 @@
 						 additionalAttributes="{shape:formFieldAttributes(record:field)}"
 						 class="{blockClass}__control {blockClass}__{field.type}-control"
 						 id="{idPrefix}{field.name}-{option.value}"/>
-		<label class="{blockClass}__label" for="{idPrefix}{field.name}-{option.value}">{option.label}</label>
+		<label class="{blockClass}__label -for-checkbox" for="{idPrefix}{field.name}-{option.value}">{option.label}</label>
 	</f:for>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

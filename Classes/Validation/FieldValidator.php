@@ -22,7 +22,6 @@ class FieldValidator
 		$type = $field->get('type');
 
 		// todo: PhoneNumberValidator, ColorValidator,
-
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
 		$event = new \UBOS\Shape\Event\FieldValidationEvent(
 			$this->formSession,
@@ -41,12 +40,12 @@ class FieldValidator
 			return $validator->validate($value);
 		}
 
-		if ($field->get('required') && $field->shouldDisplay) {
+		if ($field->has('required') && $field->get('required') && $field->shouldDisplay) {
 			$validator->addValidator($this->makeValidator(
 				Validator\NotEmptyValidator::class
 			));
 		}
-		if ($field->get('pattern') && $value) {
+		if ($field->has('pattern') && $field->get('pattern') && $value) {
 			$validator->addValidator($this->makeValidator(
 				Validator\RegularExpressionValidator::class,
 				['regularExpression' => $field->get('pattern')]
@@ -57,7 +56,7 @@ class FieldValidator
 				Validator\EmailAddressValidator::class
 			));
 		}
-		if ($field->get('maxlength') && $value) {
+		if ($field->has('maxlength') && $field->get('maxlength') && $value) {
 			$validator->addValidator($this->makeValidator(
 				Validator\StringLengthValidator::class,
 				['maximum' => $field->get('maxlength')],
@@ -70,9 +69,7 @@ class FieldValidator
 		}
 
 		if ($type === 'number' && $value !== null) {
-
 			$value = (int)$value;
-
 			if ($field->get('min') !== null || $field->get('max') !== null) {
 				$validator->addValidator($this->makeValidator(
 					Validator\NumberRangeValidator::class,
@@ -84,7 +81,7 @@ class FieldValidator
 			}
 		}
 
-		if ($field instanceof Domain\Record\SingleSelectOptionFieldRecord && $value) {
+		if ($field->has('field_options') && $value && !is_array($value)) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');
@@ -95,7 +92,7 @@ class FieldValidator
 			));
 		}
 
-		if ($field instanceof Domain\Record\MultiSelectOptionFieldRecord && $value) {
+		if ($field->has('field_options') && is_array($value)) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');
@@ -106,10 +103,8 @@ class FieldValidator
 			));
 		}
 
-		if ($field instanceof Domain\Record\DatetimeFieldRecord && $value) {
-
-			$format = Domain\Record\DatetimeFieldRecord::FORMATS[$type];
-
+		if (in_array($type, ['date','datetime-local','time','week','month']) && $value) {
+			$format = Domain\Record\FieldRecord::DATETIME_FORMATS[$type];
 			$min = $field->get('min');
 			$max = $field->get('max');
 			if ($format === 'Y-\WW') {
