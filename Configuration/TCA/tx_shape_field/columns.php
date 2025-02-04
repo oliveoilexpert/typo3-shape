@@ -184,8 +184,8 @@ $columns = [
 	'width' => [
 		'config' => [
 			'type' => 'number',
-			'format' => 'integer',
-			'default' => 100,
+			'format' => 'decimal',
+			'default' => 50,
 			'size' => 30,
 			'range' => [
 				'lower' => 20,
@@ -195,7 +195,7 @@ $columns = [
 				'items' => [
 					['20', 20],
 					['25', 25],
-					['33', 33],
+					['33.33', 33.33],
 					['50', 50],
 					['66', 66],
 					['75', 75],
