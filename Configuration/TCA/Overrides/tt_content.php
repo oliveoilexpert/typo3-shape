@@ -2,12 +2,13 @@
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use UBOS\Shape\Utility\TcaUtility as Util;
 
 defined('TYPO3') or die();
 
 
-$pluginLabel = 'Shape form';
-$pluginDescription = 'Plugin to render a shape form.';
+$pluginLabel = Util::t('plugin.form');
+$pluginDescription = Util::t('plugin.form.description');
 $pluginGroup = 'forms';
 $pluginIcon = 'content-form';
 

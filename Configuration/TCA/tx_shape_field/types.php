@@ -1,5 +1,7 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $showItemBase = '
 	--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
         sys_language_uid, 
@@ -10,11 +12,11 @@ $showItemBase = '
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
         --palette--;;general-default, 
-	--div--;Appearance,
+	--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
         --palette--;;appearance,
-    --div--;Advanced,
+    --div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 		--palette--;;advanced-default, 
-    --div--;Condition,
+    --div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
     	--palette--;;condition,' . $showItemBase;
 
 return [
@@ -25,33 +27,33 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'textarea' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'email' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'autocomplete' => [
@@ -65,11 +67,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'autocomplete' => [
@@ -83,11 +85,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-password, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'autocomplete' => [
@@ -101,22 +103,22 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'url' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-text-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'autocomplete' => [
@@ -130,11 +132,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-text-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-number-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -169,11 +171,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-number-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -208,15 +210,15 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
-				'label' => 'Checked',
+				'label' => Util::t('field.checked'),
 				'config' => [
 					'type' => 'check',
 				]
@@ -227,59 +229,59 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-option-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'radio' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-option-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'multi-select' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-option-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'multi-checkbox' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-option-input, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'country-select' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-country-select, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'datalist' => [
-				'label' => 'Allowed countries list (ISO 3166-1 alpha-2)',
+				'label' => Util::t('field.allowed_countries'),
 			],
 		],
 	],
@@ -287,11 +289,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-datetime-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -318,11 +320,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-datetime-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -349,11 +351,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-datetime-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -380,11 +382,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-datetime-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -411,11 +413,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-datetime-input, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
@@ -442,22 +444,22 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-file, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-file, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'min' => [
-				'label' => 'Minimum file size in kB',
+				'label' => Util::t('field.min_filesize'),
 				'config' => [
 					'type' => 'number',
 					'format' => 'integer',
 				]
 			],
 			'max' => [
-				'label' => 'Maximum file size in kB',
+				'label' => Util::t('field.max_filesize'),
 				'config' => [
 					'type' => 'number',
 					'format' => 'integer',
@@ -469,47 +471,47 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			label, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'hidden' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-default, 
-		--div--;Advanced,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default, 
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'captcha' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			label, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'content-header' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-content-header, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	],
 	'content-rte' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-content-rte, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'description' => [
@@ -523,11 +525,11 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-content-element,
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 		'columnsOverrides' => [
 			'default_value' => [
-				'label' => 'Content element',
+				'label' => Util::t('field.content_element'),
 				'config' => [
 					'type' => 'group',
 					'allowed' => 'tt_content',
@@ -541,9 +543,9 @@ return [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-repeatable-container, 
-		--div--;Appearance,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
-		--div--;Condition,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
 			--palette--;;condition,' . $showItemBase,
 	]
 ];

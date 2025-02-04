@@ -1,9 +1,11 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $ctrl = [
 	'label' => 'title',
 	'label_alt_force' => true,
-	'title' => 'Form page',
+	'title' => Util::t('form_page.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
 	'origUid' => 't3_origuid',
@@ -22,7 +24,6 @@ $ctrl = [
 $interface = [];
 $columns = [
 	'title' => [
-		'label' => 'Title',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -30,7 +31,6 @@ $columns = [
 		],
 	],
 	'type' => [
-		'label' => 'Type',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -41,7 +41,6 @@ $columns = [
 		],
 	],
 	'form_parent' => [
-		'label' => 'Form',
 		'config' => [
 			'type' => 'select',
 			'foreign_table' => 'tx_shape_form',
@@ -50,7 +49,6 @@ $columns = [
 		],
 	],
 	'fields' => [
-		'label' => 'Fields',
 		'displayCond' => 'FIELD:type:!=:summary',
 		'config' => [
 			'type' => 'inline',
@@ -76,14 +74,12 @@ $columns = [
 		],
 	],
 	'display_condition' => [
-		'label' => 'Display condition',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
 		],
 	],
 	'prev_label' => [
-		'label' => 'Previous button label',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -91,7 +87,6 @@ $columns = [
 		],
 	],
 	'next_label' => [
-		'label' => 'Next button label',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -99,6 +94,9 @@ $columns = [
 		],
 	],
 ];
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('form_page.' . $key);
+}
 $palettes = [
 	'title' => [
 		'showitem' => 'title, type',

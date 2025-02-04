@@ -19,7 +19,7 @@ final class FileExistsInStorageValidator extends AbstractValidator
 		// todo: throw exception if storage is not set correctly
 		if (!$value || !($storage instanceof \TYPO3\CMS\Core\Resource\ResourceStorageInterface)) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang.xlf:validator.uploadedfile.missing',
+				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.uploadedfile.missing',
 				// todo: find a better error code
 				1221565130
 			);
@@ -27,7 +27,7 @@ final class FileExistsInStorageValidator extends AbstractValidator
 		$file = $storage->getFile((string)$value);
 		if (!$file || $file->isMissing()) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang.xlf:validator.uploadedfile.missing',
+				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.uploadedfile.missing',
 				// todo: find a better error code
 				1221565130
 			);

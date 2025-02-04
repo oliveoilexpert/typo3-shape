@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:shape/Resources/Private/Language/locallang_db.xlf">
+		<header/>
+		<body>
+			<trans-unit id="tab.advanced"><source>Advanced</source></trans-unit>
+			<trans-unit id="tab.condition"><source>Condition</source></trans-unit>
+
+			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
+			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form record with individual Finishers</source></trans-unit>
+
+			<trans-unit id="form.ctrl.title"><source>Form</source></trans-unit>
+			<trans-unit id="form.title"><source>Title</source></trans-unit>
+			<trans-unit id="form.name"><source>Name</source></trans-unit>
+			<trans-unit id="form.pages"><source>Pages</source></trans-unit>
+
+			<trans-unit id="field.ctrl.title"><source>Form Field</source></trans-unit>
+			<trans-unit id="field.label"><source>Label</source></trans-unit>
+			<trans-unit id="field.name"><source>Name</source></trans-unit>
+			<trans-unit id="field.description"><source>Description</source></trans-unit>
+			<trans-unit id="field.placeholder"><source>Placeholder</source></trans-unit>
+
+			<trans-unit id="field.type"><source>Type</source></trans-unit>
+			<trans-unit id="field.type.item.text"><source>Text</source></trans-unit>
+			<trans-unit id="field.type.item.textarea"><source>Textarea</source></trans-unit>
+			<trans-unit id="field.type.item.email"><source>Email</source></trans-unit>
+			<trans-unit id="field.type.item.number"><source>Number</source></trans-unit>
+			<trans-unit id="field.type.item.tel"><source>Telephone</source></trans-unit>
+			<trans-unit id="field.type.item.password"><source>Password</source></trans-unit>
+			<trans-unit id="field.type.item.search"><source>Search</source></trans-unit>
+			<trans-unit id="field.type.item.url"><source>URL</source></trans-unit>
+
+			<trans-unit id="field.type.item.checkbox"><source>Checkbox</source></trans-unit>
+			<trans-unit id="field.type.item.select"><source>Select</source></trans-unit>
+			<trans-unit id="field.type.item.radio"><source>Radio Buttons</source></trans-unit>
+			<trans-unit id="field.type.item.multi-checkbox"><source>Multi Checkbox</source></trans-unit>
+			<trans-unit id="field.type.item.multi-select"><source>Multi Select</source></trans-unit>
+			<trans-unit id="field.type.item.country-select"><source>Country Select</source></trans-unit>
+
+			<trans-unit id="field.type.item.date"><source>Date</source></trans-unit>
+			<trans-unit id="field.type.item.datetime-local"><source>Date Time Local</source></trans-unit>
+			<trans-unit id="field.type.item.time"><source>Time</source></trans-unit>
+			<trans-unit id="field.type.item.month"><source>Month</source></trans-unit>
+			<trans-unit id="field.type.item.week"><source>Week</source></trans-unit>
+
+			<trans-unit id="field.type.item.file"><source>File Upload</source></trans-unit>
+			<trans-unit id="field.type.item.range"><source>Range</source></trans-unit>
+			<trans-unit id="field.type.item.color"><source>Color</source></trans-unit>
+			<trans-unit id="field.type.item.reset"><source>Reset</source></trans-unit>
+			<trans-unit id="field.type.item.captcha"><source>Captcha</source></trans-unit>
+			<trans-unit id="field.type.item.hidden"><source>Hidden</source></trans-unit>
+
+			<trans-unit id="field.type.item.repeatable-container"><source>Repeatable Field Container</source></trans-unit>
+
+			<trans-unit id="field.type.item.content-header"><source>Header</source></trans-unit>
+			<trans-unit id="field.type.item.content-rte"><source>RTE Content</source></trans-unit>
+			<trans-unit id="field.type.item.content-element"><source>Content Element</source></trans-unit>
+
+			<trans-unit id="field.default_value"><source>Default Value</source></trans-unit>
+			<trans-unit id="field.page_parents"><source>Page Parent</source></trans-unit>
+			<trans-unit id="field.field_parent"><source>Field Parent</source></trans-unit>
+			<trans-unit id="field.fields"><source>Fields</source></trans-unit>
+			<trans-unit id="field.required"><source>Required</source></trans-unit>
+			<trans-unit id="field.field_options"><source>Field Options</source></trans-unit>
+			<trans-unit id="field.layout"><source>Layout</source></trans-unit>
+			<trans-unit id="field.label_layout"><source>Label Layout</source></trans-unit>
+			<trans-unit id="field.width"><source>Width</source></trans-unit>
+			<trans-unit id="field.css_class"><source>CSS Class</source></trans-unit>
+			<trans-unit id="field.validation_message"><source>Custom Validation Message</source></trans-unit>
+			<trans-unit id="field.rte_label"><source>Rich-Text Label</source></trans-unit>
+			<trans-unit id="field.disabled"><source>Disabled</source></trans-unit>
+			<trans-unit id="field.readonly"><source>Readonly</source></trans-unit>
+			<trans-unit id="field.multiple"><source>Multiple</source></trans-unit>
+			<trans-unit id="field.pattern"><source>Regular Expression Pattern</source></trans-unit>
+			<trans-unit id="field.accept"><source>Accepted MIME Types</source></trans-unit>
+			<trans-unit id="field.maxlength"><source>Maximum length</source></trans-unit>
+			<trans-unit id="field.min"><source>Minimum</source></trans-unit>
+			<trans-unit id="field.max"><source>Maximum</source></trans-unit>
+			<trans-unit id="field.step"><source>Increment Step</source></trans-unit>
+			<trans-unit id="field.datalist"><source>Datalist</source></trans-unit>
+			<trans-unit id="field.autocomplete"><source>Autocomplete</source></trans-unit>
+			<trans-unit id="field.autocomplete_modifier"><source>Autocomplete Modifier</source></trans-unit>
+			<trans-unit id="field.display_condition"><source>Server-side Display Condition</source></trans-unit>
+			<trans-unit id="field.display_condition.description">
+				<source>Condition expression in Symfony Expression Language. Useful for multi-page forms and field variants.</source>
+			</trans-unit>
+			<trans-unit id="field.js_display_condition"><source>Client-side Display Condition</source></trans-unit>
+			<trans-unit id="field.js_display_condition.description">
+				<source>Condition expression in subscript. Useful for conditions based on field values on the same page.</source>
+			</trans-unit>
+			<trans-unit id="field.checked"><source>Checked</source></trans-unit>
+			<trans-unit id="field.allowed_countries"><source>Allowed countries list (ISO 3166-1 alpha-2)</source></trans-unit>
+			<trans-unit id="field.min_filesize"><source>Minimum file size in kB</source></trans-unit>
+			<trans-unit id="field.max_filesize"><source>Maximum file size in kB</source></trans-unit>
+			<trans-unit id="field.content_element"><source>Content element</source></trans-unit>
+
+			<trans-unit id="field_option.ctrl.title"><source>Form Field Option</source></trans-unit>
+			<trans-unit id="field_option.label"><source>Label</source></trans-unit>
+			<trans-unit id="field_option.value"><source>Value</source></trans-unit>
+			<trans-unit id="field_option.selected"><source>Selected</source></trans-unit>
+			<trans-unit id="field_option.field_parent"><source>Field Parent</source></trans-unit>
+
+			<trans-unit id="finisher.ctrl.title"><source>Finisher</source></trans-unit>
+			<trans-unit id="finisher.content_parent"><source>Content parent</source></trans-unit>
+			<trans-unit id="finisher.type"><source>Type</source></trans-unit>
+			<trans-unit id="finisher.condition"><source>Condition</source></trans-unit>
+			<trans-unit id="finisher.settings"><source>Settings</source></trans-unit>
+
+			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
+			<trans-unit id="form_page.title"><source>Title</source></trans-unit>
+			<trans-unit id="form_page.type"><source>Type</source></trans-unit>
+			<trans-unit id="form_page.fields"><source>Fields</source></trans-unit>
+			<trans-unit id="form_page.form_parent"><source>Form Parent</source></trans-unit>
+			<trans-unit id="form_page.display_condition"><source>Display Condition</source></trans-unit>
+			<trans-unit id="form_page.prev_label"><source>Back-Button Label</source></trans-unit>
+			<trans-unit id="form_page.next_label"><source>Next-Button Label</source></trans-unit>
+
+			<trans-unit id="form_submission.ctrl.title"><source>Form Submission</source></trans-unit>
+			<trans-unit id="form_submission.form"><source>Form</source></trans-unit>
+			<trans-unit id="form_submission.plugin"><source>Plugin</source></trans-unit>
+			<trans-unit id="form_submission.form_values"><source>Form Values</source></trans-unit>
+			<trans-unit id="form_submission.tstamp"><source>Timestamp</source></trans-unit>
+		</body>
+	</file>
+</xliff>

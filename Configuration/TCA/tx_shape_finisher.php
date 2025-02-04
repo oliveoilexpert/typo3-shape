@@ -1,5 +1,7 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $ctrl = [
 	'label' => 'type',
 	'title' => 'Form finisher',
@@ -25,7 +27,6 @@ $ctrl = [
 $interface = [];
 $columns = [
 	'content_parent' => [
-		'label' => 'Content element parent',
 		'config' => [
 			'type' => 'select',
 			'foreign_table' => 'tt_content',
@@ -34,7 +35,6 @@ $columns = [
 		],
 	],
 	'type' => [
-		'label' => 'Type',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -50,7 +50,6 @@ $columns = [
 		],
 	],
 	'condition' => [
-		'label' => 'Condition',
 		'description' => 'Condition in Symfony Expression Language.',
 		'config' => [
 			'type' => 'input',
@@ -66,7 +65,6 @@ $columns = [
 		],
 	],
 	'settings' => [
-		'label' => 'Settings',
 		'displayCond' => 'FIELD:type:REQ:true',
 		'config' => [
 			'type' => 'flex',
@@ -83,6 +81,9 @@ $columns = [
 		],
 	],
 ];
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('finisher.' . $key);
+}
 $palettes = [
 	'base' => [
 		'showitem' => 'type, --linebreak--, condition',

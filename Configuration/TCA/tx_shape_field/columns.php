@@ -1,13 +1,9 @@
 <?php
 
-use UBOS\Shape\Utility\TcaUtility;
+use UBOS\Shape\Utility\TcaUtility as Util;
 
-$ctrl = require __DIR__.'/ctrl.php';
-$typeIcons = $ctrl['typeicon_classes'];
-
-return [
+$columns = [
 	'label' => [
-		'label' => 'Label',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -16,7 +12,6 @@ return [
 		],
 	],
 	'name' => [
-		'label' => 'Name',
 		'config' => [
 			'type' => 'slug',
 			'generatorOptions' => [
@@ -33,69 +28,66 @@ return [
 		],
 	],
 	'description' => [
-		'label' => 'Description',
 		'config' => [
 			'type' => 'text',
 			'rows' => 2,
 		],
 	],
 	'placeholder' => [
-		'label' => 'Placeholder',
 		'config' => [
 			'type' => 'text',
 			'rows' => 2,
 		],
 	],
 	'type' => [
-		'label' => 'Type',
 		'onChange' => 'reload',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 
-				['Text', 'text', 'form-text', 'text-inputs'],
-				['Textarea', 'textarea', 'form-textarea', 'text-inputs'],
-				['Email', 'email', 'form-email', 'text-inputs'],
-				['Number', 'number', 'form-number', 'text-inputs'],
-				['Phone number', 'tel', 'form-telephone', 'text-inputs'],
-				['Password', 'password', 'form-password', 'text-inputs'],
-				['Search', 'search', 'form-text', 'text-inputs'],
-				['URL', 'url', 'form-url', 'text-inputs'],
+				[Util::t('field.type.item.text'), 'text', 'form-text', 'text-inputs'],
+				[Util::t('field.type.item.textarea'), 'textarea', 'form-textarea', 'text-inputs'],
+				[Util::t('field.type.item.email'), 'email', 'form-email', 'text-inputs'],
+				[Util::t('field.type.item.number'), 'number', 'form-number', 'text-inputs'],
+				[Util::t('field.type.item.tel'), 'tel', 'form-telephone', 'text-inputs'],
+				[Util::t('field.type.item.password'), 'password', 'form-password', 'text-inputs'],
+				[Util::t('field.type.item.search'), 'search', 'form-text', 'text-inputs'],
+				[Util::t('field.type.item.url'), 'url', 'form-url', 'text-inputs'],
 
-				['Checkbox', 'checkbox', 'form-checkbox', 'select-inputs'],
-				['Select', 'select', 'form-single-select', 'select-inputs'],
-				['Radio buttons', 'radio', 'form-radio-button', 'select-inputs'],
-				['Multiple checkboxes', 'multi-checkbox', 'form-multi-checkbox', 'select-inputs'],
-				['Multi-select', 'multi-select', 'form-multi-select', 'select-inputs'],
-				['Country select', 'country-select', 'form-single-select', 'select-inputs'],
+				[Util::t('field.type.item.checkbox'), 'checkbox', 'form-checkbox', 'select-inputs'],
+				[Util::t('field.type.item.select'), 'select', 'form-single-select', 'select-inputs'],
+				[Util::t('field.type.item.radio'), 'radio', 'form-radio-button', 'select-inputs'],
+				[Util::t('field.type.item.multi-checkbox'), 'multi-checkbox', 'form-multi-checkbox', 'select-inputs'],
+				[Util::t('field.type.item.multi-select'), 'multi-select', 'form-multi-select', 'select-inputs'],
+				[Util::t('field.type.item.country-select'), 'country-select', 'form-single-select', 'select-inputs'],
 
-				['Date', 'date', 'form-date-picker', 'datetime'],
-				['Datetime', 'datetime-local', 'form-date-picker', 'datetime'],
-				['Time', 'time', 'form-date-picker', 'datetime'],
-				['Month', 'month', 'form-date-picker', 'datetime'],
-				['Week', 'week', 'form-date-picker', 'datetime'],
+				[Util::t('field.type.item.date'), 'date', 'form-date-picker', 'datetime'],
+				[Util::t('field.type.item.datetime-local'), 'datetime-local', 'form-date-picker', 'datetime'],
+				[Util::t('field.type.item.time'), 'time', 'form-date-picker', 'datetime'],
+				[Util::t('field.type.item.month'), 'month', 'form-date-picker', 'datetime'],
+				[Util::t('field.type.item.week'), 'week', 'form-date-picker', 'datetime'],
 
-				['File', 'file', 'form-file-upload', 'special'],
-				['Range', 'range', 'form-text', 'special'],
-				['Color', 'color', 'form-text', 'special'],
-				['Reset', 'reset', 'form-text', 'special'],
-				['Captcha', 'captcha', 'form-text', 'special'],
-				['Hidden input', 'hidden', 'form-hidden', 'special'],
+				[Util::t('field.type.item.file'), 'file', 'form-file-upload', 'special'],
+				[Util::t('field.type.item.range'), 'range', 'form-text', 'special'],
+				[Util::t('field.type.item.color'), 'color', 'form-text', 'special'],
+				[Util::t('field.type.item.reset'), 'reset', 'form-text', 'special'],
+				[Util::t('field.type.item.captcha'), 'captcha', 'form-text', 'special'],
+				[Util::t('field.type.item.hidden'), 'hidden', 'form-hidden', 'special'],
 
-				['Repeatable field container', 'repeatable-container', 'content-container', 'container'],
+				[Util::t('field.type.item.repeatable-container'), 'repeatable-container', 'content-container', 'container'],
 
-				['Header', 'content-header', 'content-header', 'no-input'],
-				['Rich text content', 'content-rte', 'form-static-text', 'no-input'],
-				['Content element', 'content-element', 'form-content-element', 'no-input'],
+				[Util::t('field.type.item.content-header'), 'content-header', 'content-header', 'no-input'],
+				[Util::t('field.type.item.content-rte'), 'content-rte', 'form-static-text', 'no-input'],
+				[Util::t('field.type.item.content-element'), 'content-element', 'form-content-element', 'no-input'],
 			]),
 			'itemGroups' => [
-				'text-inputs' => 'Text fields',
-				'select-inputs' => 'Select fields',
-				'datetime' => 'Date and time',
-				'special' => 'Other',
-				'container' => 'Field container',
-				'no-input' => 'Content only / No input',
+				'text-inputs' => Util::t('field.type.itemGroup.text-inputs'),
+				'select-inputs' => Util::t('field.type.itemGroup.select-inputs'),
+				'datetime-inputs' => Util::t('field.type.itemGroup.datetime-inputs'),
+				'special' => Util::t('field.type.itemGroup.special'),
+				'container' => Util::t('field.type.itemGroup.container'),
+				'no-input' => Util::t('field.type.itemGroup.no-input'),
 			],
 //			'fieldWizard' => [
 //				'selectIcons' => [
@@ -105,7 +97,6 @@ return [
 		],
 	],
 	'default_value' => [
-		'label' => 'Default value',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -113,7 +104,6 @@ return [
 		],
 	],
 	'page_parents' => [
-		'label' => 'On page',
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_form_page',
@@ -129,7 +119,6 @@ return [
 		],
 	],
 	'field_parent' => [
-		'label' => 'Field parent',
 		'config' => [
 			'type' => 'select',
 			'foreign_table' => 'tx_shape_field',
@@ -138,7 +127,6 @@ return [
 		],
 	],
 	'fields' => [
-		'label' => 'Fields',
 		'config' => [
 			'type' => 'inline',
 			'foreign_table' => 'tx_shape_field',
@@ -158,13 +146,11 @@ return [
 		],
 	],
 	'required' => [
-		'label' => 'Required',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'field_options' => [
-		'label' => 'Options',
 		'config' => [
 			'type' => 'inline',
 			'foreign_table' => 'tx_shape_field_option',
@@ -177,28 +163,25 @@ return [
 		],
 	],
 	'layout' => [
-		'label' => 'Layout',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 				['Default', 'default'],
 			]),
 		],
 	],
 	'label_layout' => [
-		'label' => 'Label layout',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 				['Default', 'default'],
 				['Hidden', 'hidden'],
 			]),
 		],
 	],
 	'width' => [
-		'label' => 'Width (%)',
 		'config' => [
 			'type' => 'number',
 			'format' => 'integer',
@@ -222,21 +205,18 @@ return [
 		],
 	],
 	'css_class' => [
-		'label' => 'CSS Class',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
 		],
 	],
 	'validation_message' => [
-		'label' => 'Custom validation message',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
 		],
 	],
 	'rte_label' => [
-		'label' => 'Rich text label',
 		'config' => [
 			'type' => 'text',
 			'rows' => 1,
@@ -246,39 +226,33 @@ return [
 		]
 	],
 	'disabled' => [
-		'label' => 'Disabled',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'readonly' => [
-		'label' => 'Readonly',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'multiple' => [
-		'label' => 'Multiple',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'pattern' => [
-		'label' => 'Regular expression pattern',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
 		],
 	],
 	'accept' => [
-		'label' => 'Accepted MIME types',
 		'config' => [
 			'type' => 'input',
 			'size' => 40,
 		],
 	],
 	'maxlength' => [
-		'label' => 'Maximum length',
 		'config' => [
 			'type' => 'number',
 			'format' => 'integer',
@@ -288,7 +262,6 @@ return [
 		],
 	],
 	'min' => [
-		'label' => 'Minimum value',
 		'config' => [
 			'type' => 'input',
 			'eval' => 'is_in',
@@ -298,7 +271,6 @@ return [
 		],
 	],
 	'max' => [
-		'label' => 'Maximum value',
 		'config' => [
 			'type' => 'input',
 			'eval' => 'is_in',
@@ -308,7 +280,6 @@ return [
 		],
 	],
 	'step' => [
-		'label' => 'Increment step',
 		'config' => [
 			'type' => 'number',
 			'format' => 'decimal',
@@ -318,19 +289,17 @@ return [
 		],
 	],
 	'datalist' => [
-		'label' => 'Datalist',
 		'config' => [
 			'type' => 'text',
 			'rows' => 5,
 		],
 	],
 	'autocomplete' => [
-		'label' => 'Autocomplete',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'default' => '',
-			'items' => TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 				['','','','basic'],
 				['off', 'off', '', 'basic'],
 				['on', 'on', '', 'basic'],
@@ -397,14 +366,14 @@ return [
 				['one-time-code', 'one-time-code', '', 'password'],
 			]),
 			'itemGroups' => [
-				'basic' => 'Basic',
-				'name' => 'Name',
-				'address' => 'Address',
-				'digital-contact' => 'Digital contact',
-				'birthday' => 'Birthday',
-				'credit-card' => 'Credit card',
-				'password' => 'Password',
-				'other' => 'Other',
+				'basic' => Util::t('field.autocomplete.basic'),
+				'name' => Util::t('field.autocomplete.name'),
+				'address' => Util::t('field.autocomplete.address'),
+				'digital-contact' => Util::t('field.autocomplete.digital-contact'),
+				'birthday' => Util::t('field.autocomplete.birthday'),
+				'credit-card' => Util::t('field.autocomplete.credit-card'),
+				'password' => Util::t('field.autocomplete.password'),
+				'other' => Util::t('field.autocomplete.other'),
 
 			]
 		],
@@ -415,7 +384,7 @@ return [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'default' => '',
-			'items' => TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 				['', ''],
 				['shipping', 'shipping ', '', 'address-group'],
 				['billing', 'billing ', '', 'address-group'],
@@ -427,14 +396,13 @@ return [
 				['page', 'page ', '', 'contact-type'],
 			]),
 			'itemGroups' => [
-				'address-group' => 'Address group',
-				'contact-type' => 'Contact type',
+				'address-group' => Util::t('field.autocomplete_modifier.address-group'),
+				'contact-type' => Util::t('field.autocomplete_modifier.contact-type'),
 			]
 		]
 	],
 	'display_condition' => [
-		'label' => 'Server-side display condition',
-		'description' => 'Condition expression in Symfony Expression Language. Useful for multi-page forms and field variants.',
+		'description' => Util::t('field.display_condition.description'),
 		'config' => [
 			'type' => 'input',
 			'size' => 100,
@@ -447,8 +415,7 @@ return [
 		],
 	],
 	'js_display_condition' => [
-		'label' => 'Client-side display condition',
-		'description' => 'Condition expression in subscript. Useful for conditions based on field values on the same page.',
+		'description' => Util::t('field.js_display_condition.description'),
 		'config' => [
 			'type' => 'input',
 			'size' => 100,
@@ -461,3 +428,9 @@ return [
 		],
 	],
 ];
+
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('field.' . $key);
+}
+
+return $columns;

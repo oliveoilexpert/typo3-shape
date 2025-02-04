@@ -129,7 +129,6 @@ return [
 		min, max',
 	],
 	'appearance' => [
-		'label' => 'Appearance',
 		'showitem' => '
 		layout, css_class, 
 		--linebreak--, 
@@ -138,7 +137,6 @@ return [
 		rte_label',
 	],
 	'condition' => [
-		'label' => 'Display condition',
 		'showitem' => 'display_condition, --linebreak--, js_display_condition',
 	],
 ];

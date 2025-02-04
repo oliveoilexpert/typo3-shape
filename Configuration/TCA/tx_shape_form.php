@@ -1,8 +1,10 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $ctrl = [
 	'label' => 'title',
-	'title' => 'Form',
+	'title' => Util::t('form.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
 	'origUid' => 't3_origuid',
@@ -24,7 +26,6 @@ $ctrl = [
 $interface = [];
 $columns = [
 	'title' => [
-		'label' => 'Title',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -32,8 +33,7 @@ $columns = [
 			'required' => true,
 		],
 	],
-	'identifier' => [
-		'label' => 'Identifier',
+	'name' => [
 		'config' => [
 			'type' => 'slug',
 			'generatorOptions' => [
@@ -50,7 +50,6 @@ $columns = [
 		],
 	],
 	'pages' => [
-		'label' => 'Pages',
 		'config' => [
 			'type' => 'inline',
 			'foreign_table' => 'tx_shape_form_page',
@@ -63,9 +62,13 @@ $columns = [
 		],
 	],
 ];
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('form.' . $key);
+}
+
 $palettes = [
 	'base' => [
-		'showitem' => 'title, identifier',
+		'showitem' => 'title, name',
 	],
 ];
 $showItem = '

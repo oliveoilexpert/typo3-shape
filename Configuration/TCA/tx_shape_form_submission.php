@@ -1,5 +1,7 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $ctrl = [
 	'label' => 'tstamp',
 	'title' => 'Form submission',
@@ -20,7 +22,6 @@ $ctrl = [
 $interface = [];
 $columns = [
 	'form' => [
-		'label' => 'Form',
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_form',
@@ -29,7 +30,6 @@ $columns = [
 		],
 	],
 	'plugin' => [
-		'label' => 'Plugin',
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tt_content',
@@ -38,20 +38,21 @@ $columns = [
 		],
 	],
 	'form_values' => [
-		'label' => 'Field values',
 		'config' => [
 			'type' => 'json',
 		],
 	],
 	'tstamp' => [
 		'exclude' => true,
-		'label' => 'Timestamp',
 		'config' => [
 			'type' => 'datetime',
 			'readOnly' => true,
 		],
 	],
 ];
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('form_submission.' . $key);
+}
 $palettes = [];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 

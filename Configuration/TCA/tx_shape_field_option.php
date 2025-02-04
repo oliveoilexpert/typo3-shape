@@ -1,8 +1,10 @@
 <?php
 
+use UBOS\Shape\Utility\TcaUtility as Util;
+
 $ctrl = [
 	'label' => 'label',
-	'title' => 'Form field option',
+	'title' => Util::t('field_option.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
 	'origUid' => 't3_origuid',
@@ -21,7 +23,6 @@ $ctrl = [
 $interface = [];
 $columns = [
 	'label' => [
-		'label' => 'Label',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -29,7 +30,6 @@ $columns = [
 		],
 	],
 	'value' => [
-		'label' => 'Value',
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -37,13 +37,11 @@ $columns = [
 		],
 	],
 	'selected' => [
-		'label' => 'Selected',
 		'config' => [
 			'type' => 'check',
 		],
 	],
 	'field_parent' => [
-		'label' => 'Field parent',
 		'config' => [
 			'type' => 'select',
 			'foreign_table' => 'tx_shape_field',
@@ -52,6 +50,9 @@ $columns = [
 		],
 	],
 ];
+foreach ($columns as $key => $column) {
+	$columns[$key]['label'] = Util::t('field_option.' . $key);
+}
 $palettes = [
 	'base' => [
 		'showitem' => 'label, value, selected',

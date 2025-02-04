@@ -23,6 +23,14 @@ class TcaUtility
 		}, $items);
 	}
 
+	public static function t(
+		string $key,
+		string $file = 'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf'
+	): string
+	{
+		return $file . ':' . $key;
+	}
+
 	public static function addFieldType(
 		string $label,
 		string $value,
