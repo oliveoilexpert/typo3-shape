@@ -15,7 +15,6 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
-// todo: maybe make form and finisher models and keep form elements as records
 // todo: add more arguments to events
 // todo: all settings for plugin: disable server validation,
 // todo: powermail features: spam protection system, prefill from fe_user data, unique values,
@@ -28,7 +27,6 @@ use UBOS\Shape\Event;
 // todo: captcha field
 // todo: delete/move uploads finisher?
 // todo: disclaimer link
-// todo: helper function to create new field type like existing field type
 // todo: webhook finisher
 // note: upload and radio fields will not be in formValues if no value is set
 

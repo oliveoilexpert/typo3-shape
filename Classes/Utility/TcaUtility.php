@@ -2,6 +2,8 @@
 
 namespace UBOS\Shape\Utility;
 
+use TYPO3\CMS\Core;
+
 class TcaUtility
 {
 	public static function selectItemHelper(array $item): array
@@ -21,8 +23,46 @@ class TcaUtility
 		}, $items);
 	}
 
-	public static function addFieldType(): void
+	public static function addFieldType(
+		string $label,
+		string $value,
+		string $icon = 'form-text',
+		string $group = 'special',
+		array $typeDefinition = [],
+		string $baseType = ''
+	): void
 	{
+		$GLOBALS['TCA']['tx_shape_field']['columns']['type']['config']['items'][] = [
+			'label' => $label,
+			'value' => $value,
+			'icon' => $icon,
+			'group' => $group,
+		];
+		$GLOBALS['TCA']['tx_shape_field']['ctrl']['typeicon_classes'][$value] = $icon;
 
+		if ($baseType && $GLOBALS['TCA']['tx_shape_field']['types'][$baseType]) {
+			$typeDefinition = Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+				$GLOBALS['TCA']['tx_shape_field']['types'][$baseType],
+				$typeDefinition
+			);
+		}
+		if ($typeDefinition) {
+			$GLOBALS['TCA']['tx_shape_field']['types'][$value] = $typeDefinition;
+		}
+	}
+
+	public static function addFinisherType(
+		string $label,
+		string $value,
+		string $flexForm = '',
+	): void
+	{
+		$GLOBALS['TCA']['tx_shape_finisher']['columns']['type']['config']['items'][] = [
+			'label' => $label,
+			'value' => $value,
+		];
+		if ($flexForm) {
+			$GLOBALS['TCA']['tx_shape_finisher']['columns']['settings']['config']['ds'][$value] = $flexForm;
+		}
 	}
 }
