@@ -6,4 +6,7 @@
 		</f:then>
 		<f:else>{field.label}</f:else>
 	</f:if>
+	<f:if condition="{field.required}">
+		<span class="{blockClass}__label__required">*</span>
+	</f:if>
 </div>
