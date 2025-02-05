@@ -4,7 +4,7 @@ use UBOS\Shape\Utility\TcaUtility as Util;
 
 $ctrl = [
 	'label' => 'type',
-	'title' => 'Form finisher',
+	'title' => Util::t('finisher.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
 	'origUid' => 't3_origuid',
@@ -38,19 +38,19 @@ $columns = [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => \UBOS\Shape\Utility\TcaUtility::selectItemsHelper([
+			'items' => Util::selectItemsHelper([
 				['', ''],
-				['Save submission to database', 'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher'],
-				['Mail consent process', 'UBOS\Shape\Domain\Finisher\ConsentFinisher'],
-				['Save to any table', 'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher'],
-				['Send email', 'UBOS\Shape\Domain\Finisher\SendEmailFinisher'],
-				['Show content elements', 'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher'],
-				['Redirect', 'UBOS\Shape\Domain\Finisher\RedirectFinisher'],
+				[Util::t('finisher.type.item.save_submission'), 'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher'],
+				[Util::t('finisher.type.item.consent'), 'UBOS\Shape\Domain\Finisher\ConsentFinisher'],
+				[Util::t('finisher.type.item.save_to_any_table'), 'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher'],
+				[Util::t('finisher.type.item.send_email'), 'UBOS\Shape\Domain\Finisher\SendEmailFinisher'],
+				[Util::t('finisher.type.item.show_content_elements'), 'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher'],
+				[Util::t('finisher.type.item.redirect'), 'UBOS\Shape\Domain\Finisher\RedirectFinisher'],
 			]),
 		],
 	],
 	'condition' => [
-		'description' => 'Condition in Symfony Expression Language.',
+		'description' => Util::t('finisher.condition.description'),
 		'config' => [
 			'type' => 'input',
 			'size' => 100,

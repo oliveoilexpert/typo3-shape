@@ -14,6 +14,15 @@
 			<trans-unit id="form.name"><source>Name</source></trans-unit>
 			<trans-unit id="form.pages"><source>Pages</source></trans-unit>
 
+			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
+			<trans-unit id="form_page.title"><source>Title</source></trans-unit>
+			<trans-unit id="form_page.type"><source>Type</source></trans-unit>
+			<trans-unit id="form_page.fields"><source>Fields</source></trans-unit>
+			<trans-unit id="form_page.form_parent"><source>Form Parent</source></trans-unit>
+			<trans-unit id="form_page.display_condition"><source>Display Condition</source></trans-unit>
+			<trans-unit id="form_page.prev_label"><source>Back-Button Label</source></trans-unit>
+			<trans-unit id="form_page.next_label"><source>Next-Button Label</source></trans-unit>
+
 			<trans-unit id="field.ctrl.title"><source>Form Field</source></trans-unit>
 			<trans-unit id="field.label"><source>Label</source></trans-unit>
 			<trans-unit id="field.name"><source>Name</source></trans-unit>
@@ -100,20 +109,18 @@
 			<trans-unit id="field_option.selected"><source>Selected</source></trans-unit>
 			<trans-unit id="field_option.field_parent"><source>Field Parent</source></trans-unit>
 
-			<trans-unit id="finisher.ctrl.title"><source>Finisher</source></trans-unit>
+			<trans-unit id="finisher.ctrl.title"><source>Form Finisher</source></trans-unit>
 			<trans-unit id="finisher.content_parent"><source>Content parent</source></trans-unit>
 			<trans-unit id="finisher.type"><source>Type</source></trans-unit>
+			<trans-unit id="finisher.type.item.save_submission"><source>Save submission to database</source></trans-unit>
+			<trans-unit id="finisher.type.item.consent"><source>Mail consent (Double-Opt-in)</source></trans-unit>
+			<trans-unit id="finisher.type.item.save_to_any_table"><source>Save to any table</source></trans-unit>
+			<trans-unit id="finisher.type.item.send_email"><source>Send email</source></trans-unit>
+			<trans-unit id="finisher.type.item.show_content_elements"><source>Show content elements</source></trans-unit>
+			<trans-unit id="finisher.type.item.redirect"><source>Redirect</source></trans-unit>
 			<trans-unit id="finisher.condition"><source>Condition</source></trans-unit>
+			<trans-unit id="finisher.condition.description"><source>Condition in Symfony Expression Language.</source></trans-unit>
 			<trans-unit id="finisher.settings"><source>Settings</source></trans-unit>
-
-			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
-			<trans-unit id="form_page.title"><source>Title</source></trans-unit>
-			<trans-unit id="form_page.type"><source>Type</source></trans-unit>
-			<trans-unit id="form_page.fields"><source>Fields</source></trans-unit>
-			<trans-unit id="form_page.form_parent"><source>Form Parent</source></trans-unit>
-			<trans-unit id="form_page.display_condition"><source>Display Condition</source></trans-unit>
-			<trans-unit id="form_page.prev_label"><source>Back-Button Label</source></trans-unit>
-			<trans-unit id="form_page.next_label"><source>Next-Button Label</source></trans-unit>
 
 			<trans-unit id="form_submission.ctrl.title"><source>Form Submission</source></trans-unit>
 			<trans-unit id="form_submission.form"><source>Form</source></trans-unit>
