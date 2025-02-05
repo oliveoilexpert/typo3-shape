@@ -1,13 +1,13 @@
 import jstin from './lib/subscript-9.0.0/justin.min.js'
 {
 	const evaluateConditions = form => {
-		const fields = form.querySelectorAll(`[data-shape-condition]`)
+		const fields = form.querySelectorAll(`[data-yf-condition]`)
 		if (!fields.length) return
 		let data = Object.fromEntries(new FormData(form))
 		fields.forEach(field => {
-			const cond = field.dataset.shapeCondition
+			const cond = field.dataset.yfCondition
 			if (!cond) return
-			const inputs = field.querySelectorAll('[data-shape-control]')
+			const inputs = field.querySelectorAll('[data-yf-control]')
 			if (jstin(cond)({
 				value: fId => data[`tx_shape_form[values][${fId}]`] ?? null,
 				formData: str => data['tx_shape_form[values]' + str] ?? null
@@ -21,12 +21,12 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		})
 	}
 	const processNode = el => {
-		const form = el.closest('[data-shape-form]') ?? el.querySelector('[data-shape-form]')
-		el.querySelectorAll('[data-shape-control]').forEach(field => {
+		const form = el.closest('[data-yf-form]') ?? el.querySelector('[data-yf-form]')
+		el.querySelectorAll('[data-yf-control]').forEach(field => {
 			field.addEventListener('change', () => evaluateConditions(form))
 		})
 		evaluateConditions(form)
 	}
 	window.__tx_shape.processors.conditionalFields = processNode
-	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
+	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

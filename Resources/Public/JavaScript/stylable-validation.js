@@ -1,15 +1,14 @@
 {
 	const processNode = el => {
-		const form = el.closest('[data-shape-form]') ?? el.querySelector('[data-shape-form]')
-		el.querySelectorAll('[data-shape-control]').forEach(control => {
-			const error = control.closest('[data-shape-field]').querySelector(`[data-shape-error]`)
+		const form = el.closest('[data-yf-form]') ?? el.querySelector('[data-yf-form]')
+		el.querySelectorAll('[data-yf-control]').forEach(control => {
+			const error = control.closest('[data-yf-field]').querySelector(`[data-yf-error]`)
 			if (!error) return
 			control.addEventListener('invalid', e => {
-				form.querySelector('[data-shape-control]:invalid').focus()
 				e.preventDefault()
-				let message = control.dataset.shapeValidityMessage || control.validationMessage
+				form.querySelector('[data-yf-control]:invalid').focus()
 				error.classList.add('-visible')
-				error.innerHTML = `<div>${message}</div>`
+				error.innerHTML = `<div>${control.dataset.yfValidityMessage || control.validationMessage}</div>`
 			})
 			control.addEventListener('change', () => {
 				if (control.validity.valid) {
@@ -19,5 +18,5 @@
 		})
 	}
 	window.__tx_shape.processors.stylableValidation = processNode
-	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
+	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

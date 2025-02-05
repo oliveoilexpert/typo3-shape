@@ -1,13 +1,13 @@
 
 .yform__form {
-	--yform-el-width: 100%;
-	--yform-gap: 1.5em;
+	--yf-field-width: 100%;
+	--yf-gap: 1.5em;
 	* {
 		box-sizing: border-box;
 	}
 }
 .yform__page {
-	padding-bottom: var(--yform-gap);
+	padding-bottom: var(--yf-gap);
 }
 .yform__page__header {
 	width: 100%;
@@ -15,20 +15,20 @@
 .yform__fieldset {
 	display: flex;
 	flex-wrap: wrap;
-	margin: calc(var(--yform-gap) / -2);
+	margin: calc(var(--yf-gap) / -2);
 	padding: 0;
 	border: none;
 }
 
 .yform__field {
-	width: var(--yform-el-width);
-	padding: calc(var(--yform-gap) / 2);
+	width: var(--yf-field-width);
+	padding: calc(var(--yf-gap) / 2);
 	box-sizing: border-box;
 	@media(max-width: 768px) {
 		min-width: 50%;
 	}
 	&.-type-header {
-		margin-top: var(--yform-gap);
+		margin-top: var(--yf-gap);
 	}
 	&.-type-repeatable-container {
 		width: 100%;
@@ -89,8 +89,8 @@
 
 .yform__navigation {
 	display: flex;
-	margin-top: var(--yform-gap);
-	gap: var(--yform-gap);
+	margin-top: var(--yf-gap);
+	gap: var(--yf-gap);
 }
 .yform__navigation__button.-next {
 	margin-left: auto;
@@ -116,22 +116,22 @@
 }
 .yform__repeatable__item {
 	width: 100%;
-	padding: calc(var(--yform-gap) / 1);
+	padding: calc(var(--yf-gap) / 1);
 	border: 1px solid color-mix(in srgb, currentColor 50%, transparent 50%);
 	border-radius: 5px;
 	animation: show-repeatable-item 0.4s;
-	margin-block: calc(var(--yform-gap) / 2);
+	margin-block: calc(var(--yf-gap) / 2);
 }
 .yform__repeatable__fieldset {
 	display: flex;
 	flex-wrap: wrap;
-	margin: calc(var(--yform-gap) / -2);
+	margin: calc(var(--yf-gap) / -2);
 }
 .yform__repeatable__add {
-	margin-top: calc(var(--yform-gap) / 2);
+	margin-top: calc(var(--yf-gap) / 2);
 }
 .yform__repeatable__remove {
 	display: block;
-	margin-top: var(--yform-gap);
+	margin-top: var(--yf-gap);
 	margin-left: auto;
 }

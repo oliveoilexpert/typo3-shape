@@ -5,16 +5,16 @@
 			btn.setAttribute('disabled', '')
 			setTimeout(() => btn.removeAttribute('disabled'), 500)
 		}
-		const container = document.getElementById(btn.dataset.shapeRepeatableAdd)
+		const container = document.getElementById(btn.dataset.yfRepeatableAdd)
 		if (!container) return
 		const tmpl = container.querySelector('template')
 		if (!tmpl) return
 		const i = tmpl.dataset.iteration
 		let clone = tmpl.content.cloneNode(true)
-		clone.querySelectorAll('[data-shape-condition]').forEach(wrap => {
-			const cond = wrap.dataset.shapeCondition
+		clone.querySelectorAll('[data-yf-condition]').forEach(wrap => {
+			const cond = wrap.dataset.yfCondition
 			if (!cond) return
-			wrap.setAttribute('data-shape-condition', cond.replaceAll(`[__INDEX]`, `[${i}]`))
+			wrap.setAttribute('data-yf-condition', cond.replaceAll(`[__INDEX]`, `[${i}]`))
 		})
 		clone.querySelectorAll('input, textarea, select').forEach(input => {
 			input.name = input.name.replaceAll(`[__INDEX]`, `[${i}]`)
@@ -30,16 +30,16 @@
 		tmpl.dataset.iteration = (parseInt(i) + 1).toString()
 	}
 	const removeButtonHandler = e => {
-		e.currentTarget.closest('[data-shape-repeatable-item]')?.remove()
+		e.currentTarget.closest('[data-yf-repeatable-item]')?.remove()
 	}
 	const processNode = el => {
-		el.querySelectorAll('[data-shape-repeatable-add]').forEach(btn => {
+		el.querySelectorAll('[data-yf-repeatable-add]').forEach(btn => {
 			btn.addEventListener('click', addButtonHandler)
 		})
-		el.querySelectorAll('[data-shape-repeatable-remove]').forEach(btn => {
+		el.querySelectorAll('[data-yf-repeatable-remove]').forEach(btn => {
 			btn.addEventListener('click', removeButtonHandler)
 		})
 	}
 	window.__tx_shape.processors.repeatableContainer = processNode
-	document.querySelectorAll('[data-shape-form]').forEach(form => processNode(form))
+	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

@@ -3,7 +3,7 @@
 	<f:form.select name="{namespace}[{field.name}]"
 				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
 				   class="{blockClass}__control {blockClass}__{field.type}-control"
-				   id="{idPrefix}{field.name}">
+				   id="{idPrefix}-co{field.uid}">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
 				selected="{field.sessionValue} === {option.value}"

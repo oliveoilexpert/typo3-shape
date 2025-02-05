@@ -1,14 +1,12 @@
 <f:variable name="fieldWidthStyle"
-			value="--yform-el-width:{field.width}%;"/>
+			value="--yf-field-width:{field.width}%;"/>
 
-<div class="{blockClass}__field -type-{field.type} -{currentPage.type}-step {field.css_class}{f:if(condition:'{field.js_display_condition}',then:' -hidden')}{f:if(condition:'{session.fieldErrors.{field.name}}', then:' -has-errors')}"
-	 data-shape-field="{field.name}"
-	 data-shape-condition="{field.js_display_condition}"
+<div class="{blockClass}__field -type-{field.type} -layout-{field.layout} -{currentPage.type}-step {field.css_class}{f:if(condition:'{field.js_display_condition}',then:' -hidden')}"
+	 data-yf-field="{field.name}"
+	 data-yf-condition="{field.js_display_condition}"
 	 style="{fieldWidthStyle}">
 
 	{content -> f:format.raw()}
 
-	<f:if condition="{field.name}">
-		<f:render partial="Control/Errors" arguments="{_all}"/>
-	</f:if>
+	<f:render partial="Control/Errors" arguments="{_all}"/>
 </div>

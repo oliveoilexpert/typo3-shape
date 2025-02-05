@@ -4,9 +4,7 @@
 			<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>
 			{field.rte_label -> f:format.html() -> f:format.stripTags(allowedTags:allowedTags)}
 		</f:then>
-		<f:else>{field.label}</f:else>
+		<f:else>{field.label -> f:format.trim()}</f:else>
 	</f:if>
-	<f:if condition="{field.required}">
-		<span class="{blockClass}__label__required">*</span>
-	</f:if>
+	<f:render partial="Control/Required" arguments="{_all}"/>
 </div>

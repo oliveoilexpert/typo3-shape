@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="id" value="{idPrefix}{field.name}"/>
+	<f:variable name="id" value="{idPrefix}-co{field.uid}"/>
 
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
@@ -22,13 +22,13 @@
 
 	<button class="{blockClass}__repeatable__add {buttonClass}"
 			type="button"
-			data-shape-repeatable-add="{id}">
+			data-yf-repeatable-add="{id}">
 		Add fieldset
 	</button>
 </f:render>
 
 <f:section name="RepeatableContainer">
-	<div class="{blockClass}__repeatable__item" data-shape-repeatable-item>
+	<div class="{blockClass}__repeatable__item" data-yf-repeatable-item>
 		<div class="{blockClass}__repeatable__fieldset">
 			<f:alias map="{fields:fields, namespace:'{namespace}[{field.name}][{index}]'}">
 				<f:render partial="FieldList" arguments="{_all}"/>
@@ -36,7 +36,7 @@
 		</div>
 		<button class="{blockClass}__repeatable__remove {buttonClass}"
 				type="button"
-				data-shape-repeatable-remove>
+				data-yf-repeatable-remove>
 			Remove fieldset
 		</button>
 	</div>

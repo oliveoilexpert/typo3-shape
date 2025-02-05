@@ -5,9 +5,9 @@
 					  value="{field.sessionValue}"
 					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
 					  class="{blockClass}__control {blockClass}__{field.type}-control"
-					  id="{idPrefix}{field.name}"/>
+					  id="{idPrefix}-co{field.uid}"/>
 	<f:if condition="{field.datalist}">
-		<datalist id="{idPrefix}{field.name}--list">
+		<datalist id="{idPrefix}-co{field.uid}-datalist">
 			<f:for each="{field.datalistArray}" as="item">
 				<option value="{item}"/>
 			</f:for>

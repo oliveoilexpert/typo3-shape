@@ -17,7 +17,7 @@ use UBOS\Shape\Event;
 
 // todo: add more arguments to events
 // todo: all settings for plugin: disable server validation,
-// todo: powermail features: spam protection system, prefill from fe_user data, unique values,
+// todo: powermail features: spam protection system, prefill from fe_user data, unique values, rate limiter
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
 // todo: consent finisher
