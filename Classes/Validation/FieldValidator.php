@@ -10,6 +10,7 @@ class FieldValidator
 {
 	public function __construct(
 		protected Domain\FormSession $formSession,
+		protected Core\Domain\RecordInterface $plugin,
 		protected Core\Resource\ResourceStorageInterface $uploadStorage,
 		protected EventDispatcherInterface $eventDispatcher
 	)
@@ -25,6 +26,7 @@ class FieldValidator
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
 		$event = new \UBOS\Shape\Event\FieldValidationEvent(
 			$this->formSession,
+			$this->plugin,
 			$this->uploadStorage,
 			$field,
 			$validator,

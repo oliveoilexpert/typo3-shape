@@ -1,5 +1,5 @@
 <f:if condition="{field.name}">
-    <div class="{blockClass}__error{f:if(condition:'{session.fieldErrors.{field.name}}', then:' -visible')}" data-yf-error>
+    <div class="{blockClass}__error{f:if(condition:'{session.fieldErrors.{field.name}}', then:' --visible')}" data-yf-error>
         <f:for each="{session.fieldErrors.{field.name}}" as="error">
             <div>{error.message}</div>
         </f:for>

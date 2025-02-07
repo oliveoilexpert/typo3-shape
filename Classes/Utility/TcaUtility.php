@@ -4,6 +4,8 @@ namespace UBOS\Shape\Utility;
 
 use TYPO3\CMS\Core;
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 class TcaUtility
 {
 	public static function selectItemHelper(array $item): array
@@ -29,6 +31,20 @@ class TcaUtility
 	): string
 	{
 		return $file . ':' . $key;
+	}
+
+	public static function addToFields(
+		string $newFields,
+		string $typeList = '',
+			   $position = 'after:--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.extended,'
+	): void
+	{
+		ExtensionManagementUtility::addToAllTCAtypes(
+			'tx_shape_field',
+			$newFields,
+			$typeList,
+			$position
+		);
 	}
 
 	public static function addFieldType(

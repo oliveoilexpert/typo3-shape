@@ -6,7 +6,6 @@ namespace UBOS\Shape\Event;
 
 use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Validation\Validator;
-use TYPO3\CMS\Form;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 
@@ -14,8 +13,9 @@ final class FieldValidationEvent
 {
 	public function __construct(
 		protected Domain\FormSession $formSession,
+		protected Core\Domain\RecordInterface $plugin,
 		protected Core\Resource\ResourceStorageInterface $uploadStorage,
-		protected Core\Domain\RecordInterface $formControlRecord,
+		protected Core\Domain\RecordInterface $field,
 		protected Validator\ConjunctionValidator $validator,
 		protected $value,
 		protected ?Result $result = null,
@@ -49,14 +49,19 @@ final class FieldValidationEvent
 		return $this->formSession;
 	}
 
+	public function getPlugin(): Core\Domain\RecordInterface
+	{
+		return $this->plugin;
+	}
+
 	public function getUploadStorage(): Core\Resource\ResourceStorageInterface
 	{
 		return $this->uploadStorage;
 	}
 
-	public function getFormControlRecord(): Core\Domain\RecordInterface
+	public function getField(): Core\Domain\RecordInterface
 	{
-		return $this->formControlRecord;
+		return $this->field;
 	}
 
 	public function getValidator(): Validator\ConjunctionValidator

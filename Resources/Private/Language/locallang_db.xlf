@@ -4,6 +4,7 @@
 		<header/>
 		<body>
 			<trans-unit id="tab.advanced"><source>Advanced</source></trans-unit>
+			<trans-unit id="tab.extended"><source>Extended</source></trans-unit>
 			<trans-unit id="tab.condition"><source>Condition</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>

@@ -12,6 +12,8 @@ $columns = [
 		],
 	],
 	'name' => [
+		'l10n_mode' => 'exclude',
+		'l10n_display' => 'defaultAsReadonly',
 		'config' => [
 			'type' => 'slug',
 			'generatorOptions' => [
@@ -97,6 +99,7 @@ $columns = [
 		],
 	],
 	'default_value' => [
+
 		'config' => [
 			'type' => 'input',
 			'size' => 30,
@@ -163,6 +166,9 @@ $columns = [
 		],
 	],
 	'layout' => [
+		'behaviour' => [
+			'allowLanguageSynchronization' => true,
+		],
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -228,6 +234,14 @@ $columns = [
 	'disabled' => [
 		'config' => [
 			'type' => 'check',
+			'fieldWizard' => [
+				'localizationStateSelector' => [
+					'disabled' => false,
+				]
+			],
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
 		],
 	],
 	'readonly' => [
@@ -429,8 +443,45 @@ $columns = [
 	],
 ];
 
+$langSyncColumns = [
+	'name',
+	'type',
+	'default_value',
+	'required',
+	'layout',
+	'label_layout',
+	'css_class',
+	'width',
+	'disabled',
+	'readonly',
+	'multiple',
+	'pattern',
+	'maxlength',
+	'min',
+	'max',
+	'step',
+	'accept',
+	'autocomplete',
+	'autocomplete_modifier',
+	'datalist',
+	'display_condition',
+	'js_display_condition'
+];
+
 foreach ($columns as $key => $column) {
 	$columns[$key]['label'] = Util::t('field.' . $key);
+	if (in_array($key, $langSyncColumns)) {
+		if (!isset($columns[$key]['config']['behaviour'])) {
+			$columns[$key]['config']['behaviour'] = [];
+		}
+		$columns[$key]['config']['behaviour']['allowLanguageSynchronization'] = true;
+		if (!isset($columns[$key]['config']['fieldWizard'])) {
+			$columns[$key]['config']['fieldWizard'] = [];
+		}
+		$columns[$key]['config']['fieldWizard']['localizationStateSelector'] = [
+			'disabled' => false,
+		];
+	}
 }
 
 return $columns;

@@ -16,7 +16,7 @@ final class SubsetOfArrayValidator extends AbstractValidator
 	{
 		if (array_diff($value, $this->options['array'])) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.subsetofarray.false',
+				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.subset_of_array.false',
 				// todo: find a better error code
 				1221565130
 			);

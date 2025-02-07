@@ -37,7 +37,7 @@ class SendEmailFinisher extends AbstractFinisher
 			->setTemplate($this->settings['mailTemplate'] ?: $this->templateName)
 			->assignMultiple([
 				'formValues' => $this->formValues,
-				'formRecord' => $this->formRecord,
+				'form' => $this->form,
 				'settings' => $this->settings,
 				'interpolatedMailBody' => $this->interpolateStringWithFormValues($this->settings['mailBody']),
 			]);

@@ -34,11 +34,27 @@ $columns = [
 			'type' => 'input',
 			'size' => 30,
 			'eval' => 'trim',
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'fieldWizard' => [
+				'localizationStateSelector' => [
+					'disabled' => false,
+				],
+			],
 		],
 	],
 	'selected' => [
 		'config' => [
 			'type' => 'check',
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'fieldWizard' => [
+				'localizationStateSelector' => [
+					'disabled' => false,
+				],
+			],
 		],
 	],
 	'field_parent' => [

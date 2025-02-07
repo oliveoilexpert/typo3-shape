@@ -23,15 +23,15 @@ class SaveSubmissionFinisher extends AbstractFinisher
 			}, ARRAY_FILTER_USE_KEY);
 		}
 		$values = [
-			'form' => $this->formRecord->getUid(),
+			'form' => $this->form->getUid(),
 			'form_values' => json_encode($formValues),
-			'plugin' => $this->contentRecord->getUid(),
-			'pid' => (int)($this->settings['storagePage'][0]?->getUid() ?: $this->contentRecord->getPid() ?? $this->formRecord->getPid()),
+			'plugin' => $this->plugin->getUid(),
+			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
 			'fe_user' => $this->request->getAttribute('frontend.user')->getUserId() ?: 0,
 			'crdate' => time(),
 			'tstamp' => time(),
 		];
-		if ($this->settings['saveUserData']) {
+		if ($this->settings['saveUserData'] && $this->settings['saveUserData'] !== '0') {
 			$values['user_agent'] = $this->request->getHeaderLine('User-Agent');
 			$values['user_ip'] = $this->request->getServerParams()['REMOTE_ADDR'];
 		}

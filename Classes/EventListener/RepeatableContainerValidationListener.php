@@ -17,7 +17,7 @@ final class RepeatableContainerValidationListener
 	public function __invoke(FieldValidationEvent $event): void
 	{
 
-		$field = $event->getFormControlRecord();
+		$field = $event->getField();
 		if (!($field instanceof RepeatableContainerRecord)) {
 			return;
 		}

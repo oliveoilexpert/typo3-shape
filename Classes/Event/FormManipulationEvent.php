@@ -13,7 +13,7 @@ final class FormManipulationEvent
 	public function __construct(
 		protected readonly RequestInterface $request,
 		protected readonly FormSession $formSession,
-		protected RecordInterface $formRecord,
+		protected RecordInterface $form,
 	) {}
 
 	public function getFormSession(): FormSession
@@ -26,13 +26,13 @@ final class FormManipulationEvent
 		return $this->request;
 	}
 
-	public function getFormRecord(): RecordInterface
+	public function getForm(): RecordInterface
 	{
-		return $this->formRecord;
+		return $this->form;
 	}
 
-	public function setFormRecord(RecordInterface $formRecord): void
+	public function setForm(RecordInterface $form): void
 	{
-		$this->formRecord = $formRecord;
+		$this->form = $form;
 	}
 }

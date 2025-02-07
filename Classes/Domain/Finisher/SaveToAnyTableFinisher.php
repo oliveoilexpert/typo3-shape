@@ -22,7 +22,7 @@ class SaveToAnyTableFinisher extends AbstractFinisher
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
 			->getQueryBuilderForTable($this->settings['table']);
 		$values = [
-			'pid' => (int)($this->settings['storagePage'] ?: $this->contentRecord->getPid() ?? $this->formRecord->getPid()),
+			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
 		];
 
 		foreach ($this->settings['mapping'] as $column => $field) {
@@ -30,7 +30,7 @@ class SaveToAnyTableFinisher extends AbstractFinisher
 		}
 		$queryBuilder->insert($this->settings['table'])
 			->values($values)
-			->executeQuery();
+			->executeStatement();
 		return null;
 	}
 }

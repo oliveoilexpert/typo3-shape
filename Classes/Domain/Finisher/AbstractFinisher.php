@@ -13,14 +13,14 @@ abstract class AbstractFinisher
 		protected Extbase\Mvc\RequestInterface $request,
 		protected Core\View\ViewInterface $view,
 		protected array $pluginSettings,
-		protected Core\Domain\Record $contentRecord,
-		protected Core\Domain\Record $formRecord,
+		protected Core\Domain\Record $plugin,
+		protected Core\Domain\Record $form,
 		protected Core\Domain\Record $finisherRecord,
 		protected array $formValues,
 	)
 	{
-		$settings = $this->finisherRecord->get('settings');
-		$this->settings = is_array($settings) ? $settings : $settings->toArray();
+		$this->settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
+			->convertFlexFormContentToArray($this->finisherRecord->getRawRecord()->get('settings'));
 	}
 
 	abstract public function execute(): ?ResponseInterface;

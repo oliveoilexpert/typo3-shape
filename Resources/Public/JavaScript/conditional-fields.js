@@ -12,10 +12,10 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 				value: fId => data[`tx_shape_form[values][${fId}]`] ?? null,
 				formData: str => data['tx_shape_form[values]' + str] ?? null
 			})) {
-				field.classList.remove('-hidden')
+				field.classList.remove('--hidden')
 				inputs.forEach(inp => inp.disabled = false)
 			} else {
-				field.classList.add('-hidden')
+				field.classList.add('--hidden')
 				inputs.forEach(inp => inp.disabled = true)
 			}
 		})

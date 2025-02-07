@@ -32,15 +32,12 @@
 	}
 	&.-type-repeatable-container {
 		width: 100%;
-		&.-summary-step button {
-			display: none;
-		}
 	}
 	&.-summary-step {
 		opacity: 0.8;
 		pointer-events: none;
 	}
-	&.-hidden {
+	&.--hidden {
 		display: none;
 	}
 }
@@ -74,7 +71,7 @@
 	font-size: smaller;
 	padding: .5em .75em;
 	border-radius: 5px;
-	&.-visible {
+	&.--visible {
 		display: block;
 	}
 	@media(prefers-color-scheme: dark) {
@@ -129,9 +126,15 @@
 }
 .yform__repeatable__add {
 	margin-top: calc(var(--yf-gap) / 2);
+	.-summary-step & {
+		display: none;
+	}
 }
 .yform__repeatable__remove {
 	display: block;
 	margin-top: var(--yf-gap);
 	margin-left: auto;
+	.-summary-step & {
+		display: none;
+	}
 }

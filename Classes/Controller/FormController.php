@@ -15,18 +15,21 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
+// todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter
+// todo: create FormContext that contains plugin, form, session etc for finishers and validators and events to use
 // todo: add more arguments to events
-// todo: all settings for plugin: disable server validation,
-// todo: powermail features: spam protection system, prefill from fe_user data, unique values, rate limiter
+// todo: powermail features: spam protection system
 // todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
-// todo: consent finisher
-// todo: dispatch events: before prefill, on upload process
+// todo: dispatch events: on upload process
 // todo: exceptions
 // todo: captcha field
-// todo: delete/move uploads finisher?
 // todo: disclaimer link
-// todo: webhook finisher
+// todo: consent finisher
+// todo: delete/move uploads finisher?
+// todo: webhook finisher?
+// todo: rate limiter finisher?
+// todo: all settings for plugin: disable server validation?,
 
 // note: upload and radio fields will not be in formValues if no value is set
 
@@ -52,16 +55,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->session = new Domain\FormSession();
 		$this->initializeRecords();
-//		$pool = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class);
-//		$query = $pool->getQueryBuilderForTable('tx_shape_form_submission');
-//		$jsonSelect = $query
-//			->select('*')->from('tx_shape_form_submission')
-//			->where(
-//				'form_values->"$.mail" = "a.kiener@unibrand.de"',
-//				'plugin = ' . $this->plugin->getUid(),
-//			)
-//			->executeQuery()->fetchAllAssociative();
-//		DebugUtility::debug($jsonSelect);
 		return $this->renderForm();
 	}
 
@@ -161,7 +154,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$event = new Event\FormManipulationEvent($this->request, $this->session, $this->form);
 		$this->eventDispatcher->dispatch($event);
-		$this->form = $event->getFormRecord();
+		$this->form = $event->getForm();
 	}
 
 	protected function renderLazyLoader(): ResponseInterface
@@ -217,6 +210,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 		$validator = new Validation\FieldValidator(
 			$this->session,
+			$this->plugin,
 			$this->getUploadStorage(),
 			$this->eventDispatcher
 		);
