@@ -13,6 +13,9 @@
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
 
+	<f:for each="{form.finishers}" as="fin">
+		<f:debug>{fin.settings}</f:debug>
+	</f:for>
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
 	<f:if condition="{currentPage.type} == 'summary'">

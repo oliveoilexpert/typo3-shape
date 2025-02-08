@@ -14,6 +14,7 @@ $ctrl = [
 	'languageField' => 'sys_language_uid',
 	'transOrigPointerField' => 'l10n_parent',
 	'transOrigDiffSourceField' => 'l10n_diffsource',
+	'translationSource' => 'l10n_source',
 	'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/form/form-finisher.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
@@ -26,15 +27,25 @@ $ctrl = [
 ];
 $interface = [];
 $columns = [
-	'content_parent' => [
+	'form_parents' => [
 		'config' => [
-			'type' => 'select',
-			'foreign_table' => 'tt_content',
+			'type' => 'group',
+			'allowed' => 'tx_shape_form',
+			'foreign_table' => 'tx_shape_form',
+			//'foreign_field' => 'finishers',
 			'size' => 1,
-			'maxitems' => 1
+			'localizeReferences' => true,
+//			'foreign_table_where' => 'AND {#tx_shape_form_page}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
 		],
 	],
 	'type' => [
+		'l10n_mode' => 'exclude',
+		'l10n_display' => 'defaultAsReadonly',
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -50,6 +61,8 @@ $columns = [
 		],
 	],
 	'condition' => [
+		'l10n_mode' => 'exclude',
+		'l10n_display' => 'defaultAsReadonly',
 		'description' => Util::t('finisher.condition.description'),
 		'config' => [
 			'type' => 'input',
@@ -67,6 +80,17 @@ $columns = [
 	'settings' => [
 		'displayCond' => 'FIELD:type:REQ:true',
 		'config' => [
+			'behaviour' => [
+				//'allowLanguageSynchronization' => true,
+			],
+			'fieldWizard' => [
+//				'localizationStateSelector' => [
+//					'disabled' => false,
+//				],
+				'otherLanguageContent' => [
+					'disabled' => false,
+				],
+			],
 			'type' => 'flex',
 			'ds' => [
 				'default' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/Default.xml',
@@ -86,13 +110,19 @@ foreach ($columns as $key => $column) {
 }
 $palettes = [
 	'base' => [
-		'showitem' => 'type, --linebreak--, condition',
+		'showitem' => 'form_parents, --linebreak--, type, --linebreak--, condition',
 	],
 ];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 		--palette--;;base,
-        settings,';
+		settings,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
+        sys_language_uid, 
+        l10n_parent, 
+        l10n_diffsource, 
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, 
+        hidden';
 
 return [
 	'ctrl' => $ctrl,
@@ -103,5 +133,21 @@ return [
 		'0' => [
 			'showitem' => $showItem,
 		],
+		'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher' => [
+			'showitem' => $showItem,
+			'columnsOverrides' => [
+				'settings' => [
+					'l10n_mode' => 'exclude',
+				]
+			]
+		],
+		'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher' => [
+			'showitem' => $showItem,
+			'columnsOverrides' => [
+				'settings' => [
+					'l10n_mode' => 'exclude',
+				]
+			]
+		]
 	],
 ];

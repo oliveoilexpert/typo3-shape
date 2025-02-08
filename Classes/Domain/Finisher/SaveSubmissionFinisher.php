@@ -23,13 +23,14 @@ class SaveSubmissionFinisher extends AbstractFinisher
 			}, ARRAY_FILTER_USE_KEY);
 		}
 		$values = [
-			'form' => $this->form->getUid(),
-			'form_values' => json_encode($formValues),
-			'plugin' => $this->plugin->getUid(),
-			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
-			'fe_user' => $this->request->getAttribute('frontend.user')->getUserId() ?: 0,
 			'crdate' => time(),
 			'tstamp' => time(),
+			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
+			'form' => $this->form->getUid(),
+			'plugin' => $this->plugin->getUid(),
+			'fe_user' => $this->request->getAttribute('frontend.user')->getUserId() ?: 0,
+			'site_lang' => $this->request->getAttribute('language')->getLanguageId(),
+			'form_values' => json_encode($formValues),
 		];
 		if ($this->settings['saveUserData'] && $this->settings['saveUserData'] !== '0') {
 			$values['user_agent'] = $this->request->getHeaderLine('User-Agent');

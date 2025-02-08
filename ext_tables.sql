@@ -1,5 +1,5 @@
 CREATE TABLE tx_shape_field (
-    page_parents int UNSIGNED DEFAULT '0' NOT NULL,
+    page_parents varchar(1024) DEFAULT NULL,
     field_parent int UNSIGNED DEFAULT '0' NOT NULL,
     default_value varchar(1024) DEFAULT NULL,
     min varchar(255) DEFAULT NULL,
@@ -12,7 +12,13 @@ CREATE TABLE tx_shape_field_option (
 
 CREATE TABLE tx_shape_form_page (
     form_parent int UNSIGNED DEFAULT '0' NOT NULL,
+    fields VARCHAR(1024) DEFAULT '',
 );
+
+CREATE TABLE tx_shape_finisher (
+    form_parents varchar(1024) DEFAULT NULL,
+);
+
 
 CREATE TABLE tx_shape_form_submission (
      form int UNSIGNED DEFAULT '0' NOT NULL,

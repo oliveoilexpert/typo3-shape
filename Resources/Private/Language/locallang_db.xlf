@@ -6,6 +6,7 @@
 			<trans-unit id="tab.advanced"><source>Advanced</source></trans-unit>
 			<trans-unit id="tab.extended"><source>Extended</source></trans-unit>
 			<trans-unit id="tab.condition"><source>Condition</source></trans-unit>
+			<trans-unit id="tab.finishers"><source>Finishers</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form record with individual Finishers</source></trans-unit>
@@ -14,6 +15,7 @@
 			<trans-unit id="form.title"><source>Title</source></trans-unit>
 			<trans-unit id="form.name"><source>Name</source></trans-unit>
 			<trans-unit id="form.pages"><source>Pages</source></trans-unit>
+			<trans-unit id="form.finishers"><source>Finishers</source></trans-unit>
 
 			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
 			<trans-unit id="form_page.title"><source>Title</source></trans-unit>
@@ -67,7 +69,7 @@
 			<trans-unit id="field.type.item.content-element"><source>Content Element</source></trans-unit>
 
 			<trans-unit id="field.default_value"><source>Default Value</source></trans-unit>
-			<trans-unit id="field.page_parents"><source>Page Parent</source></trans-unit>
+			<trans-unit id="field.page_parents"><source>Used on</source></trans-unit>
 			<trans-unit id="field.field_parent"><source>Field Parent</source></trans-unit>
 			<trans-unit id="field.fields"><source>Fields</source></trans-unit>
 			<trans-unit id="field.required"><source>Required</source></trans-unit>
@@ -111,7 +113,7 @@
 			<trans-unit id="field_option.field_parent"><source>Field Parent</source></trans-unit>
 
 			<trans-unit id="finisher.ctrl.title"><source>Form Finisher</source></trans-unit>
-			<trans-unit id="finisher.content_parent"><source>Content parent</source></trans-unit>
+			<trans-unit id="finisher.form_parents"><source>Used on</source></trans-unit>
 			<trans-unit id="finisher.type"><source>Type</source></trans-unit>
 			<trans-unit id="finisher.type.item.save_submission"><source>Save submission to database</source></trans-unit>
 			<trans-unit id="finisher.type.item.consent"><source>Mail consent (Double-Opt-in)</source></trans-unit>

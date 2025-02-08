@@ -19,6 +19,7 @@ $ctrl = [
 		'disabled' => 'hidden',
 	],
 	'searchFields' => 'label',
+	'hideTable' => true,
 ];
 $interface = [];
 $columns = [

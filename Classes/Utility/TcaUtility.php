@@ -78,7 +78,7 @@ class TcaUtility
 	public static function addFinisherType(
 		string $label,
 		string $value,
-		string $flexForm = '',
+		string $flexForm = ''
 	): void
 	{
 		$GLOBALS['TCA']['tx_shape_finisher']['columns']['type']['config']['items'][] = [

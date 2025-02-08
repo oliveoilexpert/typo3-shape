@@ -1,0 +1,34 @@
+<?php
+
+namespace UBOS\Shape\Command;
+
+use Symfony\Component\Console;
+use Symfony\Component\Console\Command\Command;
+use UBOS\Shape\Service\DatabaseService;
+
+
+#[Console\Attribute\AsCommand(
+	name: 'shape:mirror-form-finisher-relations',
+	description: 'Mirror form finisher relation fields based on current tx_shape_form.finishers config type.',
+)]
+class MirrorFormFinisherRelationsCommand extends Command
+{
+	public function __construct(
+		private readonly DatabaseService $databaseService
+	) {
+		parent::__construct();
+	}
+
+	protected function configure(): void
+	{
+		$this->setHelp('Mirror form finisher relation fields based on current tx_shape_form.finishers config type.');
+	}
+
+	protected function execute(
+		Console\Input\InputInterface $input,
+		Console\Output\OutputInterface $output,
+	): int {
+		$this->databaseService->mirrorCurrentFormFinisherRelations();
+		return Command::SUCCESS;
+	}
+}

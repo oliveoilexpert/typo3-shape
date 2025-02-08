@@ -24,7 +24,7 @@
                     </storagePage>
                     <mapping>
                         <label>Table-Form-Mapping</label>
-                        <description>JSON-String mapping table columns to form fields</description>
+                        <description>JSON mapping table columns to form fields ("columName": "fieldName")</description>
                         <config>
                             <type>json</type>
                         </config>

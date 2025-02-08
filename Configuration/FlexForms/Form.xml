@@ -12,8 +12,11 @@
                             <type>group</type>
                             <allowed>tx_shape_form</allowed>
                             <size>1</size>
-                            <minitems>1</minitems>
+                            <minitems>0</minitems>
                             <maxitems>1</maxitems>
+                            <localizeReferencesAtParentLocalization>1</localizeReferencesAtParentLocalization>
+                            <foreign_table>tx_shape_form</foreign_table>
+                            <foreign_table_where>AND {#tx_shape_form}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###</foreign_table_where>
                         </config>
 
                     </settings.form>
@@ -59,28 +62,6 @@
                 </el>
             </ROOT>
         </lazyLoad>
-        <finishers>
-            <ROOT>
-                <sheetTitle>Finishers</sheetTitle>
-                <type>array</type>
-                <el>
-                    <settings.finishers>
 
-                        <label>Finishers</label>
-                        <config>
-                            <type>inline</type>
-                            <foreign_table>tx_shape_finisher</foreign_table>
-                            <foreign_field>content_parent</foreign_field>
-                            <foreign_sortby>sorting</foreign_sortby>
-                            <appearance>
-                                <useSortable>1</useSortable>
-                                <expandSingle>1</expandSingle>
-                            </appearance>
-                        </config>
-
-                    </settings.finishers>
-                </el>
-            </ROOT>
-        </finishers>
     </sheets>
 </T3DataStructure>

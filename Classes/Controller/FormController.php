@@ -141,7 +141,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 
 		$this->form = $this->plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
-
+		if (!$this->form) {
+			throw new \Exception('No form found');
+		}
 		// apply session values to form fields and check display conditions
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
@@ -293,7 +295,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->plugin->get('pi_flexform')->get('settings')['finishers'] as $finisherRecord) {
+		foreach ($this->form->get('finishers') as $finisherRecord) {
 			$willExecute = true;
 			if ($finisherRecord->get('condition') ?? false) {
 				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));

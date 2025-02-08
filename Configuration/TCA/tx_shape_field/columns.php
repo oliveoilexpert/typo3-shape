@@ -110,10 +110,11 @@ $columns = [
 		'config' => [
 			'type' => 'group',
 			'allowed' => 'tx_shape_form_page',
-			'MM' => 'tx_shape_page_field_mm',
 			'foreign_table' => 'tx_shape_form_page',
-			'MM_opposite_field' => 'fields',
+			//'foreign_field' => 'fields',
 			'size' => 1,
+			'localizeReferences' => true,
+			'foreign_table_where' => 'AND {#tx_shape_form_page}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
 			'fieldWizard' => [
 				'tableList' => [
 					'disabled' => true,

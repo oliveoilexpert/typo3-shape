@@ -26,6 +26,7 @@ class SaveToAnyTableFinisher extends AbstractFinisher
 		];
 
 		foreach ($this->settings['mapping'] as $column => $field) {
+			if (!$field) continue;
 			$values[$column] = $this->formValues[$field] ?? '';
 		}
 		$queryBuilder->insert($this->settings['table'])

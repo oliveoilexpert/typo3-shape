@@ -43,26 +43,32 @@ $columns = [
 	],
 	'form_parent' => [
 		'config' => [
-			'type' => 'select',
+			'type' => 'group',
+			'allowed' => 'tx_shape_form',
 			'foreign_table' => 'tx_shape_form',
-			'minitems' => 0,
-			'maxitems' => 1,
+			'size' => 1,
+			'localizeReferences' => true,
+			'foreign_table_where' => 'AND {#tx_shape_form}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
+			'fieldWizard' => [
+				'tableList' => [
+					'disabled' => true,
+				],
+			]
 		],
 	],
 	'fields' => [
 		'displayCond' => 'FIELD:type:!=:summary',
 		'config' => [
 			'type' => 'inline',
+			'foreign_field' => 'page_parents',
+			//'type' => 'select',
+			//'renderType' => 'selectMultipleSideBySide',
+			//'type' => 'group',
 			'allowed' => 'tx_shape_field',
-			'MM' => 'tx_shape_page_field_mm',
 			'foreign_table' => 'tx_shape_field',
-			'appearance' => [
-				'useCombination' => true,
-				'suppressCombinationWarning' => true,
-				'showPossibleLocalizationRecords' => true,
-				'showAllLocalizationLink' => true,
-				//'showSynchronizationLink' => true,
-			],
+			'foreign_table_where' => 'AND {#tx_shape_field}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
+			'localizeReferences' => true,
+			'localizeReferencesAtParentLocalization' => true,
 			'fieldControl' => [
 				'editPopup' => [
 					'disabled' => false,
@@ -73,10 +79,13 @@ $columns = [
 			],
 			'fieldWizard' => [
 				'recordsOverview' => [
-					'disabled' => false,
+					'disabled' => true,
 				],
 				'tableList' => [
 					'disabled' => true,
+				],
+				'selectIcons' => [
+					'disabled' => false,
 				],
 			]
 		],
@@ -102,12 +111,29 @@ $columns = [
 		],
 	],
 ];
+$langSyncColumns = [
+	'type',
+	'display_condition',
+];
+
 foreach ($columns as $key => $column) {
 	$columns[$key]['label'] = Util::t('form_page.' . $key);
+	if (in_array($key, $langSyncColumns)) {
+		if (!isset($columns[$key]['config']['behaviour'])) {
+			$columns[$key]['config']['behaviour'] = [];
+		}
+		$columns[$key]['config']['behaviour']['allowLanguageSynchronization'] = true;
+		if (!isset($columns[$key]['config']['fieldWizard'])) {
+			$columns[$key]['config']['fieldWizard'] = [];
+		}
+		$columns[$key]['config']['fieldWizard']['localizationStateSelector'] = [
+			'disabled' => false,
+		];
+	}
 }
 $palettes = [
 	'title' => [
-		'showitem' => 'title, type',
+		'showitem' => 'form_parent, --linebreak--, title, type',
 	],
 	'button-labels' => [
 		'showitem' => 'prev_label, next_label',

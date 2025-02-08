@@ -25,8 +25,9 @@ $interface = [];
 $columns = [
 	'form' => [
 		'config' => [
-			'type' => 'group',
-			'allowed' => 'tx_shape_form',
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'foreign_table' => 'tx_shape_form',
 			'size' => 1,
 			'maxitems' => 1,
 			//'readOnly' => true,
@@ -35,22 +36,26 @@ $columns = [
 				'tableList' => [
 					'disabled' => true,
 				]
-			]
+			],
+			'readOnly' => true,
 		],
 	],
 	'plugin' => [
 		'config' => [
-			'type' => 'group',
-			'allowed' => 'tt_content',
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'foreign_table' => 'tt_content',
 			'size' => 1,
 			'maxitems' => 1,
 			//'readOnly' => true,
 			'hideSuggest' => true,
+			'foreign_table_where' => 'AND {#tt_content}.{#CType}=\'shape_form\'',
 			'fieldWizard' => [
 				'tableList' => [
 					'disabled' => true,
 				]
-			]
+			],
+			'readOnly' => true,
 		],
 	],
 	'fe_user' => [
@@ -65,7 +70,8 @@ $columns = [
 				'tableList' => [
 					'disabled' => true,
 				]
-			]
+			],
+			'readOnly' => true,
 		],
 	],
 	'form_values' => [
@@ -75,11 +81,16 @@ $columns = [
 		],
 	],
 	'tstamp' => [
-		'exclude' => true,
 		'config' => [
 			'type' => 'datetime',
 			'readOnly' => true,
 
+		],
+	],
+	'site_lang' => [
+		'config' => [
+			'type' => 'language',
+			'readOnly' => true,
 		],
 	],
 	'user_ip' => [
@@ -108,7 +119,7 @@ $palettes = [
 		--linebreak--,
 		form, plugin,
 		--linebreak--,
-		fe_user,
+		fe_user, site_lang,
 		--linebreak--,
 		form_values,
 		--linebreak--,
