@@ -20,7 +20,7 @@ class FieldValidator
 	public function validate($field, $value): \TYPO3\CMS\Extbase\Error\Result
 	{
 
-		$type = $field->get('type');
+		$type = $field->getType();
 
 		// todo: PhoneNumberValidator, ColorValidator,
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);

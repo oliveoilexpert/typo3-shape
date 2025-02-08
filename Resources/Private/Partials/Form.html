@@ -13,25 +13,22 @@
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
 
-	<f:for each="{form.finishers}" as="fin">
-		<f:debug>{fin.settings}</f:debug>
-	</f:for>
 	<h2 class="{blockClass}__form__header">{form.title}</h2>
 
 	<f:if condition="{currentPage.type} == 'summary'">
 		<f:then>
+			<div class="{blockClass}__page">
+			<f:if condition="{currentPage.title}">
+				<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+			</f:if>
 			<f:for each="{form.pages}" as="page">
-				<div class="{blockClass}__page">
-					<f:if condition="{page.title}">
-						<h3 class="{blockClass}__page__header">{page.title}</h3>
-					</f:if>
-					<fieldset class="{blockClass}__fieldset -summary-step" disabled>
-						<f:alias map="{fields: page.fields}">
-							<f:render partial="FieldList" arguments="{_all}"></f:render>
-						</f:alias>
-					</fieldset>
-				</div>
+				<fieldset class="{blockClass}__fieldset -summary-step" disabled>
+					<f:alias map="{fields: page.fields}">
+						<f:render partial="FieldList" arguments="{_all}"></f:render>
+					</f:alias>
+				</fieldset>
 			</f:for>
+			</div>
 		</f:then>
 		<f:else>
 			<div class="{blockClass}__page">

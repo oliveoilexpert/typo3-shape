@@ -43,13 +43,13 @@ class FieldRecord extends Record
 			if (!$this->has($key) || !($this->get($key) instanceof \DateTimeInterface)) {
 				continue;
 			}
-			$this->properties[$key] = $this->properties[$key]->format(self::DATETIME_FORMATS[$this->get('type')] ?? 'Y-m-d H:i:s');
+			$this->properties[$key] = $this->properties[$key]->format(self::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
 		}
 		// Set default value for fields with options
 		if (!$this->has('field_options')) {
 			return;
 		}
-		if (str_starts_with($this->get('type'),'multi-')) {
+		if (str_starts_with($this->getType(),'multi-')) {
 			$value = [];
 			foreach ($this->get('field_options') as $option) {
 				if ($option->get('selected')) {
@@ -68,16 +68,23 @@ class FieldRecord extends Record
 			}
 		}
 	}
-	public function setSessionValue(mixed $value): void
+	public function getName(): string
 	{
-		$this->sessionValue = $value;
-		$this->selectedOptions = null;
+		return $this->properties['name'] ?? '';
+	}
+	public function getType(): string
+	{
+		return $this->properties['type'] ?? '';
 	}
 	public function getSessionValue(): mixed
 	{
 		return $this->sessionValue ?? $this->get('default_value');
 	}
-
+	public function setSessionValue(mixed $value): void
+	{
+		$this->sessionValue = $value;
+		$this->selectedOptions = null;
+	}
 	public function set($key, $value): void
 	{
 		$this->properties[$key] = $value;
@@ -113,6 +120,6 @@ class FieldRecord extends Record
 
 	public function getCamelCaseType(): string
 	{
-		return ucFirst(str_replace('-', '', ucwords($this->get('type'), '-')));
+		return ucFirst(str_replace('-', '', ucwords($this->getType(), '-')));
 	}
 }

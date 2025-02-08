@@ -16,7 +16,6 @@ final class FormSubmissionDownloadListener
 		}
 
 		$records = [];
-		$additionalHeaders = [];
 		$format = $event->getFormat();
 
 		if ($format === 'json') {
@@ -28,6 +27,7 @@ final class FormSubmissionDownloadListener
 		}
 
 		if ($format === 'csv') {
+			$additionalHeaders = [];
 			foreach ($event->getRecords() as $record) {
 				$formValues = json_decode($record['form_values'], true);
 				foreach ($formValues as $key => $value) {

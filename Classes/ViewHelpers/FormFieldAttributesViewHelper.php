@@ -24,7 +24,7 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 			$attributes['data-yf-validity-message'] = $record->get('validation_message');
 		}
 		if ($record->has('datalist') && $record->get('datalist')) {
-			$attributes['list'] = $this->templateVariableContainer->get('idPrefix') . $record->get('name') . '-datalist';
+			$attributes['list'] = $this->templateVariableContainer->get('idPrefix') . 'co' . $record->getUid() . '-datalist';
 		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {
 			if (!$record->has($attribute)) continue;

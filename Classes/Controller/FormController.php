@@ -15,16 +15,15 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
-// todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter
 // todo: create FormContext that contains plugin, form, session etc for finishers and validators and events to use
 // todo: add more arguments to events
 // todo: powermail features: spam protection system
-// todo: language/translation stuff, translation behavior, language tca column configuration/inheritance
 // todo: confirmation fields, like for passwords
 // todo: dispatch events: on upload process
 // todo: exceptions
 // todo: captcha field
 // todo: disclaimer link
+// todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter
 // todo: consent finisher
 // todo: delete/move uploads finisher?
 // todo: webhook finisher?
@@ -38,7 +37,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected ?Core\Domain\RecordInterface $plugin = null;
 	protected ?Core\Domain\RecordInterface $form = null;
 	protected ?Domain\FormSession $session = null;
-	protected ?Core\Resource\ResourceStorage $uploadStorage = null;
+
+	protected Domain\FormContext $context;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
 	private string $formDataArgumentName = 'values';
 	protected string $fragmentPageTypeNum = '11510497112101';
@@ -57,6 +57,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->initializeRecords();
 		return $this->renderForm();
 	}
+
+
 
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
@@ -104,6 +106,64 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->executeFinishers();
 	}
 
+	protected function createContext(): void
+	{
+		$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
+		try {
+			$session = new Domain\FormSession(...$sessionData);
+			$session->hasErrors = false;
+			$session->fieldErrors = [];
+		} catch (\Exception $e) {
+			$session = new Domain\FormSession();
+		}
+
+		if (!$this->request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
+			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
+		}
+		$session->values = array_merge(
+			$session->values,
+			$this->request->getArguments()[$this->formDataArgumentName]
+		);
+
+		$contentData = $this->request->getAttribute('currentContentObject')?->data;
+		if (!($contentData['CType'] ?? false)) {
+			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+			$contentData = $queryBuilder
+				->select('*')
+				->from('tt_content')
+				->where(
+					$queryBuilder->expr()->eq('uid', (int)$this->request->getArgument('pluginUid') ?? $this->settings['pluginUid'] ?? 0)
+				)
+				->executeQuery()->fetchAllAssociative()[0] ?? null;
+		}
+		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
+			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
+
+		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
+		if (!$form) {
+			throw new \Exception('No form found');
+		}
+		// apply session values to form fields and check display conditions
+		foreach ($form->get('pages') as $page) {
+			foreach ($page->get('fields') as $field) {
+				if ($field->has('name')) {
+					$field->setSessionValue($session->values[$field->getName()] ?? null);
+				}
+				if ($field->has('display_condition') && $field->get('display_condition')) {
+					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));
+				}
+			}
+		}
+		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
+		$this->context = new Domain\FormContext(
+			$this->request,
+			$plugin,
+			$form,
+			$session,
+			$uploadStorage
+		);
+	}
+
 	protected function initializeSession(): void
 	{
 		$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
@@ -148,7 +208,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if ($field->has('name')) {
-					$field->setSessionValue($this->session->values[$field->get('name')] ?? null);
+					$field->setSessionValue($this->session->values[$field->getName()] ?? null);
 				}
 				if ($field->has('display_condition') && $field->get('display_condition')) {
 					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));				}
@@ -221,7 +281,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			if (!$field->has('name')) {
 				continue;
 			}
-			$name = $field->get('name');
+			$name = $field->getName();
 			$result = $validator->validate($field, $this->session->values[$name] ?? null);
 			if ($result->hasErrors()) {
 				$this->session->hasErrors = true;
@@ -254,7 +314,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			if (!$field->has('name')) {
 				continue;
 			}
-			$name = $field->get('name');
+			$name = $field->getName();
 			if (!isset($values[$name])) {
 				continue;
 			}
@@ -265,7 +325,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			if ($value instanceof Core\Http\UploadedFile) {
 				$this->processUploadedFiles([$value], $name);
 			}
-			if ($field->get('type') === 'password') {
+			if ($field->getType() === 'password') {
 				$this->session->values[$name] = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE')->getHashedPassword($value);
 			}
 		}
@@ -356,10 +416,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function getUploadStorage(): Core\Resource\ResourceStorage
 	{
-		if ($this->uploadStorage) {
-			return $this->uploadStorage;
-		}
-		return $this->uploadStorage = $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
+		return $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
 	}
 
 	protected function getConditionResolver(): Core\ExpressionLanguage\Resolver

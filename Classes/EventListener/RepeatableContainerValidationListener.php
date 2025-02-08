@@ -34,7 +34,7 @@ final class RepeatableContainerValidationListener
 			GeneralUtility::makeInstance(EventDispatcher::class)
 		);
 		foreach ($fieldTemplate as $repField) {
-			$repId = $repField->get('name');
+			$repId = $repField->getName();
 			foreach ($valueSets as $index => $values) {
 				$result = $validator->validate($repField, $values[$repId] ?? null);
 				foreach ($result->getErrors() as $error) {

@@ -11,12 +11,13 @@ final class UniqueInSubmissionFieldValidationListener
 	#[AsEventListener]
 	public function __invoke(FieldValidationEvent $event): void
 	{
-		if ($event->getField()->get('name') !== 'mail') {
+		$field = $event->getField();
+		if (! $field->has('unique_in_submission') || ! $field->get('unique_in_submission')) {
 			return;
 		}
 		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Validation\UniqueInSubmissionsValidator::class);
 		$validator->setOptions([
-			'fieldName' => 'mail',
+			'fieldName' => $field->getName(),
 			'pluginUid' => $event->getPlugin()->getUid(),
 			'formUid' => $event->getPlugin()->get('pi_flexform')
 					->get('settings')['form'][0]->getUid() ?? 0,

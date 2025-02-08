@@ -24,8 +24,8 @@ class RepeatableContainerRecord extends FieldRecord
 		foreach ($this->getSessionValue() as $values) {
 			foreach($this->get('fields') as $childField) {
 				$newField = clone $childField;
-				if (isset($values[$newField->get('name')])) {
-					$newField->setSessionValue($values[$newField->get('name')]);
+				if (isset($values[$newField->getName()])) {
+					$newField->setSessionValue($values[$newField->getName()]);
 				}
 				$this->createdFieldsets[$index][] = $newField;
 			}

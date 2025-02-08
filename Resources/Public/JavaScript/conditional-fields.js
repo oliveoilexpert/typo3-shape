@@ -4,6 +4,7 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		const fields = form.querySelectorAll(`[data-yf-condition]`)
 		if (!fields.length) return
 		let data = Object.fromEntries(new FormData(form))
+		console.log(data)
 		fields.forEach(field => {
 			const cond = field.dataset.yfCondition
 			if (!cond) return

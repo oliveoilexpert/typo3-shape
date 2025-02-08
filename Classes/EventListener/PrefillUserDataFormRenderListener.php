@@ -4,12 +4,12 @@ namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
-use UBOS\Shape\Event\FormManipulationEvent;
+use UBOS\Shape\Event\FormRenderEvent;
 
-final class PrefillUserDataFormManipulationListener
+final class PrefillUserDataFormRenderListener
 {
 	#[AsEventListener]
-	public function __invoke(FormManipulationEvent $event): void
+	public function __invoke(FormRenderEvent $event): void
 	{
 		$feAuth = $event->getRequest()->getAttribute('frontend.user');
 		if (!$feAuth->getUserId()) {
@@ -24,7 +24,7 @@ final class PrefillUserDataFormManipulationListener
 		if (!$userData) {
 			return;
 		}
-		$form = $event->getForm();
+		$form = $event->getVariables()['form'];
 		foreach ($form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if (!$field->has('user_prefill_column')) {
@@ -36,6 +36,6 @@ final class PrefillUserDataFormManipulationListener
 				}
 			}
 		}
-		$event->setForm($form);
+		$event->setVariable('form', $form);
 	}
 }
