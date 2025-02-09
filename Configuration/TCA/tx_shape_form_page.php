@@ -21,6 +21,12 @@ $ctrl = [
 		'disabled' => 'hidden',
 	],
 	'searchFields' => 'title',
+	'typeicon_column' => 'type',
+	'typeicon_classes' => [
+		'default' => 'form-page',
+		'page' => 'form-page',
+		'summary' => 'form-summary-page',
+	],
 ];
 $interface = [];
 $columns = [
@@ -36,8 +42,8 @@ $columns = [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'items' => [
-				['Page', 'page'],
-				['Summary', 'summary'],
+				['Page', 'page', 'form-page'],
+				['Summary', 'summary', 'form-summary-page'],
 			],
 		],
 	],

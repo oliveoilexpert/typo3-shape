@@ -7,7 +7,7 @@ use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase;
 
-class SaveToAnyTableFinisher extends AbstractFinisher
+class SaveToDatabaseFinisher extends AbstractFinisher
 {
 	public function execute(): ?ResponseInterface
 	{

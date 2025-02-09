@@ -1,49 +1,5 @@
 <T3DataStructure>
     <sheets>
-        <recipient>
-            <ROOT>
-                <sheetTitle>Recipient</sheetTitle>
-                <type>array</type>
-                <el>
-                    <recipientAddressField>
-                        <label>Recipient email address field</label>
-                        <description>Identifier of form field that contains email addresses to send to</description>
-                        <config>
-                            <type>input</type>
-                        </config>
-                    </recipientAddressField>
-                    <recipientAddress>
-                        <label>Recipient email address</label>
-                        <description>Comma separated list of email addresses to send to</description>
-                        <config>
-                            <type>input</type>
-                        </config>
-                    </recipientAddress>
-                </el>
-            </ROOT>
-        </recipient>
-        <sender>
-            <ROOT>
-                <sheetTitle>Sender</sheetTitle>
-                <type>array</type>
-                <el>
-                    <senderAddress>
-                        <label>Sender email address</label>
-                        <description>Optional, falls back to [MAIL][defaultMailFromAddress]</description>
-                        <config>
-                            <type>email</type>
-                        </config>
-                    </senderAddress>
-                    <senderName>
-                        <label>Sender name</label>
-                        <description>Optional, falls back to [MAIL][defaultMailFromName]</description>
-                        <config>
-                            <type>input</type>
-                        </config>
-                    </senderName>
-                </el>
-            </ROOT>
-        </sender>
         <mail>
             <ROOT>
                 <sheetTitle>Mail</sheetTitle>
@@ -57,6 +13,7 @@
                     </mailSubject>
                     <mailBody>
                         <label>Body</label>
+                        <description>Mail bodytext. Form values can be used with "{field-name}".</description>
                         <config>
                             <type>text</type>
                             <enableRichtext>1</enableRichtext>
@@ -71,5 +28,50 @@
                 </el>
             </ROOT>
         </mail>
+        <recipient>
+            <ROOT>
+                <sheetTitle>Recipient</sheetTitle>
+                <type>array</type>
+                <description>What do</description>
+                <el>
+                    <recipientAddress>
+                        <label>Recipient email address</label>
+                        <description>Comma separated list of email addresses to send to. If neither addresses nor an address field are provided, email will be sent to address of first email field found in form, if possible.</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </recipientAddress>
+                    <recipientAddressField>
+                        <label>Recipient email address field</label>
+                        <description>Name of form field that contains email addresses to send to.</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </recipientAddressField>
+                </el>
+            </ROOT>
+        </recipient>
+        <sender>
+            <ROOT>
+                <sheetTitle>Sender</sheetTitle>
+                <type>array</type>
+                <el>
+                    <senderAddress>
+                        <label>Sender email address</label>
+                        <description>Falls back to [MAIL][defaultMailFromAddress].</description>
+                        <config>
+                            <type>email</type>
+                        </config>
+                    </senderAddress>
+                    <senderName>
+                        <label>Sender name</label>
+                        <description>Falls back to [MAIL][defaultMailFromName].</description>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </senderName>
+                </el>
+            </ROOT>
+        </sender>
     </sheets>
 </T3DataStructure>

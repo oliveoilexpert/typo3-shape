@@ -76,6 +76,11 @@ $columns = [
 			'foreign_table_where' => 'AND {#tx_shape_finisher}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
 			'localizeReferences' => true,
 			'localizeReferencesAtParentLocalization' => true,
+			'appearance' => [
+				'collapseAll' => true,
+				'expandSingle' => true,
+				'useSortable' => true,
+			],
 			'fieldControl' => [
 				'editPopup' => [
 					'disabled' => false,

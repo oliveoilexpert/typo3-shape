@@ -3,7 +3,8 @@
 use UBOS\Shape\Utility\TcaUtility as Util;
 
 $ctrl = [
-	'label' => 'type',
+	'label' => 'title',
+	'label_alt' => 'type',
 	'title' => Util::t('finisher.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',
@@ -27,12 +28,12 @@ $ctrl = [
 	'typeicon_column' => 'type',
 	'typeicon_classes' => [
 		'default' => 'form-finisher',
-		'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher' => 'shape-form-finisher-save-submission',
+		'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher' => 'content-elements-mailform',
 		'UBOS\Shape\Domain\Finisher\ConsentFinisher' => 'shape-form-finisher-consent',
-		'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher' => 'shape-form-finisher-save-to-database',
-		'UBOS\Shape\Domain\Finisher\SendEmailFinisher' => 'shape-form-finisher-send-email',
-		'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher' => 'shape-form-finisher-show-content-elements',
-		'UBOS\Shape\Domain\Finisher\RedirectFinisher' => 'shape-form-finisher-redirect',
+		'UBOS\Shape\Domain\Finisher\SaveToDatabaseFinisher' => 'content-database',
+		'UBOS\Shape\Domain\Finisher\SendEmailFinisher' => 'content-message',
+		'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher' => 'form-content-element',
+		'UBOS\Shape\Domain\Finisher\RedirectFinisher' => 'apps-pagetree-page-shortcut-external',
 	],
 ];
 $interface = [];
@@ -53,6 +54,13 @@ $columns = [
 			]
 		],
 	],
+	'title' => [
+		'config' => [
+			'type' => 'input',
+			'size' => 30,
+			'eval' => 'trim',
+		],
+	],
 	'type' => [
 		'l10n_mode' => 'exclude',
 		'l10n_display' => 'defaultAsReadonly',
@@ -63,22 +71,22 @@ $columns = [
 				['', ''],
 				[Util::t('finisher.type.item.save_submission'),
 					'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher',
-					'shape-form-finisher-save-submission'],
+					'content-elements-mailform'],
 				[Util::t('finisher.type.item.consent'),
 					'UBOS\Shape\Domain\Finisher\ConsentFinisher',
 					'shape-form-finisher-consent'],
-				[Util::t('finisher.type.item.save_to_any_table'),
-					'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher',
-					'shape-form-finisher-save-to-database'],
+				[Util::t('finisher.type.item.save_to_database'),
+					'UBOS\Shape\Domain\Finisher\SaveToDatabaseFinisher',
+					'content-database'],
 				[Util::t('finisher.type.item.send_email'),
 					'UBOS\Shape\Domain\Finisher\SendEmailFinisher',
-					'shape-form-finisher-send-email'],
+					'content-message'],
 				[Util::t('finisher.type.item.show_content_elements'),
 					'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher',
-					'shape-form-finisher-show-content-elements'],
+					'form-content-element'],
 				[Util::t('finisher.type.item.redirect'),
 					'UBOS\Shape\Domain\Finisher\RedirectFinisher',
-					'shape-form-finisher-redirect'],
+					'apps-pagetree-page-shortcut-external'],
 			]),
 		],
 	],
@@ -118,7 +126,7 @@ $columns = [
 				'default' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/Default.xml',
 				'UBOS\Shape\Domain\Finisher\ConsentFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/ConsentFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SaveSubmissionFinisher.xml',
-				'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SaveToAnyTableFinisher.xml',
+				'UBOS\Shape\Domain\Finisher\SaveToDatabaseFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SaveToDatabaseFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\SendEmailFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SendEmailFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\RedirectFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/RedirectFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/ShowContentElementsFinisher.xml',
@@ -132,13 +140,15 @@ foreach ($columns as $key => $column) {
 }
 $palettes = [
 	'base' => [
-		'showitem' => 'form_parents, --linebreak--, type, --linebreak--, condition',
+		'showitem' => 'form_parents, --linebreak--, title, type',
 	],
 ];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 		--palette--;;base,
 		settings,
+	--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.condition,
+    	condition,	
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
         sys_language_uid, 
         l10n_parent, 
@@ -163,7 +173,7 @@ return [
 				]
 			]
 		],
-		'UBOS\Shape\Domain\Finisher\SaveToAnyTableFinisher' => [
+		'UBOS\Shape\Domain\Finisher\SaveToDatabaseFinisher' => [
 			'showitem' => $showItem,
 			'columnsOverrides' => [
 				'settings' => [

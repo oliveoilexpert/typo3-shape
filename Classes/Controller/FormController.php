@@ -19,6 +19,8 @@ use UBOS\Shape\Event;
 // todo: add more arguments to events
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
+// todo: translate flexform labels
+// todo: improve valuePicker for conditions
 // todo: dispatch events: on upload process
 // todo: exceptions
 // todo: captcha field

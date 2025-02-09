@@ -28,9 +28,13 @@ class SendEmailFinisher extends AbstractFinisher
 		], $this->settings);
 
 		$email = new Core\Mail\FluidEmail();
+		$recipientAddresses = $this->resolveRecipientAddresses();
+		if (! $recipientAddresses) {
+			return null;
+		}
 		$email
 			->from($this->resolveSenderAddress())
-			->to(...$this->resolveRecipientAddresses())
+			->to(...$recipientAddresses)
 			->subject($this->settings['mailSubject'] ?: $this->subjectFallback)
 			->setRequest($this->request)
 			->format($this->mailFormat)
@@ -61,6 +65,17 @@ class SendEmailFinisher extends AbstractFinisher
 		}
 		if ($this->settings['recipientAddressField'] && isset($this->formValues[$this->settings['recipientAddressField']])) {
 			$addresses[] = $this->formValues[$this->settings['recipientAddressField']];
+		}
+		// If no recipient addresses are set, send to the first email field found in the form
+		if (! $addresses) {
+			foreach ($this->form->get('pages') as $page) {
+				foreach ($page->get('fields') as $field) {
+					if ($field->get('type') === 'email' && isset($this->formValues[$field->get('name')]) && $this->formValues[$field->get('name')]) {
+						$addresses[] = $this->formValues[$field->get('name')];
+						break 2;
+					}
+				}
+			}
 		}
 		return $addresses;
 	}

@@ -7,7 +7,7 @@
                 <el>
                     <recipientAddressField>
                         <label>Recipient email address field</label>
-                        <description>Identifier of form field that contains email address to send to</description>
+                        <description>Name of form field that contains email address to send to</description>
                         <config>
                             <type>input</type>
                             <required>1</required>
