@@ -8,7 +8,6 @@ class FormSession
 		public array $values = [],
 		public array $filenames = [],
 		public bool $hasErrors = false,
-		public array $fieldErrors = [],
 		public int $previousPageIndex = 1,
 	)
 	{}

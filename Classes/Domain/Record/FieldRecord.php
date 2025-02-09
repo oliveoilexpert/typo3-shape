@@ -6,6 +6,7 @@ use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Domain\Record\SystemProperties;
+use TYPO3\CMS\Extbase\Error\Result;
 
 class FieldRecord extends Record
 {
@@ -23,6 +24,7 @@ class FieldRecord extends Record
 	protected mixed $sessionValue = null;
 	protected ?array $selectedOptions = null;
 	public bool $shouldDisplay = true;
+	public ?Result $validationResult = null;
 
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,

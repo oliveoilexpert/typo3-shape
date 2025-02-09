@@ -24,10 +24,10 @@ final class UniqueInSubmissionsValidator extends AbstractValidator
 			'form_values->"$.' . $this->options['fieldName'] .'"' . ' = ' . $query->createNamedParameter($value),
 		];
 		if ($this->options['pluginUid']) {
-			$where[] = $query->expr()->eq('plugin', $query->createNamedParameter($this->options['pluginUid']));
+			$where[] = $query->expr()->eq('plugin', $query->createNamedParameter((int)$this->options['pluginUid']));
 		}
 		if ($this->options['formUid']) {
-			$where[] = $query->expr()->eq('form', $query->createNamedParameter($this->options['formUid']));
+			$where[] = $query->expr()->eq('form', $query->createNamedParameter((int)$this->options['formUid']));
 		}
 		$count = $query
 			->count('uid')
@@ -37,9 +37,11 @@ final class UniqueInSubmissionsValidator extends AbstractValidator
 			->executeQuery()->fetchOne();
 		if ($count) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.unique_in_submission.error',
-				// todo: find a better error code
-				1221565130
+				$this->translateErrorMessage(
+					'validation.error.unique_in_submissions',
+					'shape',
+				),
+				1739105515
 			);
 		}
 	}

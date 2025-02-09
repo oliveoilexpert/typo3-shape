@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:shape/Resources/Private/Language/locallang.xlf">
+		<header/>
+		<body>
+			<trans-unit id="validation.error.date_range.type"><source>Value must be a valid DateTime.</source></trans-unit>
+			<trans-unit id="validation.error.date_range.minimum"><source>Value must be %s or later.</source></trans-unit>
+			<trans-unit id="validation.error.date_range.maximum"><source>Value must be %s or earlier.</source></trans-unit>
+			<trans-unit id="validation.error.file_exists_in_storage"><source>Uploaded file could not be found.</source></trans-unit>
+			<trans-unit id="validation.error.in_array"><source>Value must be one of the provided options.</source></trans-unit>
+			<trans-unit id="validation.error.subset_of_array"><source>Values must be one of the provided options.</source></trans-unit>
+			<trans-unit id="validation.error.unique_in_submissions"><source>This value has already been used.</source></trans-unit>
+			<trans-unit id="validation.error.unique_in_table"><source>This value has already been used.</source></trans-unit>
+
+		</body>
+	</file>
+</xliff>

@@ -21,7 +21,7 @@ class FormFieldAttributesViewHelper extends AbstractViewHelper
 			'data-yf-control' => $record->get('name'),
 		];
 		if ($record->has('validation_message') && $record->get('validation_message')) {
-			$attributes['data-yf-validity-message'] = $record->get('validation_message');
+			$attributes['data-yf-validation-message'] = $record->get('validation_message');
 		}
 		if ($record->has('datalist') && $record->get('datalist')) {
 			$attributes['list'] = $this->templateVariableContainer->get('idPrefix') . 'co' . $record->getUid() . '-datalist';

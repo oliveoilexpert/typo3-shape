@@ -23,26 +23,26 @@ final class RepeatableContainerValidationListener
 		}
 		$fieldTemplate = $field->get('fields');
 		$valueSets = $event->getValue();
-		$errorAggregateResult = new Result();
+		$parentResult = new Result();
 		if (!$valueSets) {
-			$event->setResult($errorAggregateResult);
+			$event->setResult($parentResult);
 			return;
 		}
 		$validator = new FieldValidator(
 			$event->getFormSession(),
+			$event->getPlugin(),
 			$event->getUploadStorage(),
 			GeneralUtility::makeInstance(EventDispatcher::class)
 		);
-		foreach ($fieldTemplate as $repField) {
-			$repId = $repField->getName();
-			foreach ($valueSets as $index => $values) {
+		foreach ($valueSets as $index => $values) {
+			$parentResult->forProperty($index);
+			foreach ($fieldTemplate as $repField) {
+				$repId = $repField->getName();
 				$result = $validator->validate($repField, $values[$repId] ?? null);
-				foreach ($result->getErrors() as $error) {
-					$errorAggregateResult->addError($error);
-				}
+				$parentResult->forProperty($index)->forProperty($repId)->merge($result);
 			}
 		}
-		$event->setResult($errorAggregateResult);
+		$event->setResult($parentResult);
 	}
 
 }

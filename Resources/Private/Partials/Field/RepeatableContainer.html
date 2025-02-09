@@ -28,7 +28,7 @@
 </f:render>
 
 <f:section name="RepeatableContainer">
-	<div class="{blockClass}__repeatable__item" data-yf-repeatable-item>
+	<div class="{blockClass}__repeatable__item" data-yf-repeatable-item="{index}">
 		<div class="{blockClass}__repeatable__fieldset">
 			<f:alias map="{fields:fields, namespace:'{namespace}[{field.name}][{index}]'}">
 				<f:render partial="FieldList" arguments="{_all}"/>

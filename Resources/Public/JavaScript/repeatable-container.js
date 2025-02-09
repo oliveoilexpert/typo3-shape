@@ -11,6 +11,7 @@
 		if (!tmpl) return
 		const i = tmpl.dataset.iteration
 		let clone = tmpl.content.cloneNode(true)
+		console.log(clone)
 		clone.querySelectorAll('[data-yf-condition]').forEach(wrap => {
 			const cond = wrap.dataset.yfCondition
 			if (!cond) return
@@ -22,6 +23,10 @@
 			clone.querySelector(`label[for="${input.id}"]`)?.setAttribute('for', newId)
 			input.id = newId
 		});
+		const repeatableItem = clone.querySelector('[data-yf-repeatable-item]')
+		if (repeatableItem) {
+			repeatableItem.dataset.yfRepeatableItem = i
+		}
 		let nodes = [...clone.childNodes]
 		container.appendChild(clone)
 		nodes.forEach(node => {
@@ -33,6 +38,11 @@
 		e.currentTarget.closest('[data-yf-repeatable-item]')?.remove()
 	}
 	const processNode = el => {
+		el.querySelectorAll('[data-yf-repeatable-item]').forEach(repeatableItem => {
+			repeatableItem.querySelectorAll('[data-yf-condition*="[__INDEX]"]').forEach(field => {
+				field.setAttribute('data-yf-condition', field.dataset.yfCondition.replaceAll(`[__INDEX]`, `[${repeatableItem.dataset.yfRepeatableItem}]`))
+			})
+		})
 		el.querySelectorAll('[data-yf-repeatable-add]').forEach(btn => {
 			btn.addEventListener('click', addButtonHandler)
 		})

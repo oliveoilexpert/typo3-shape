@@ -112,7 +112,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		try {
 			$session = new Domain\FormSession(...$sessionData);
 			$session->hasErrors = false;
-			$session->fieldErrors = [];
 		} catch (\Exception $e) {
 			$session = new Domain\FormSession();
 		}
@@ -170,7 +169,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		try {
 			$this->session = new Domain\FormSession(...$sessionData);
 			$this->session->hasErrors = false;
-			$this->session->fieldErrors = [];
 		} catch (\Exception $e) {
 			$this->session = new Domain\FormSession();
 		}
@@ -282,10 +280,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				continue;
 			}
 			$name = $field->getName();
-			$result = $validator->validate($field, $this->session->values[$name] ?? null);
-			if ($result->hasErrors()) {
+			$field->validationResult = $validator->validate($field, $this->session->values[$name] ?? null);
+			if ($field->validationResult->hasErrors()) {
 				$this->session->hasErrors = true;
-				$this->session->fieldErrors[$name] = $result->getErrors();
 			}
 		}
 	}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Validation;
 
+use TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 final class InArrayValidator extends AbstractValidator
@@ -15,11 +16,17 @@ final class InArrayValidator extends AbstractValidator
 
 	public function isValid(mixed $value): void
 	{
-		if (!in_array($value, $this->options['array'], $this->options['strict'])) {
+		if (!is_array($this->options['array'])) {
+			$message = sprintf('Option "array" must be of type array');
+			throw new InvalidValidationOptionsException($message, 1739105353);
+		}
+		if (!in_array($value, $this->options['array'], (bool)$this->options['strict'])) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.in_array.false',
-				// todo: find a better error code
-				1221565130
+				$this->translateErrorMessage(
+					'validation.error.in_array',
+					'shape',
+				),
+				1739105354
 			);
 		}
 	}

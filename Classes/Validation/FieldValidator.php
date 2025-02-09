@@ -17,7 +17,7 @@ class FieldValidator
 	{
 	}
 
-	public function validate($field, $value): \TYPO3\CMS\Extbase\Error\Result
+	public function validate(Domain\Record\FieldRecord $field, mixed $value): \TYPO3\CMS\Extbase\Error\Result
 	{
 
 		$type = $field->getType();
@@ -136,7 +136,7 @@ class FieldValidator
 			// todo: doesnt work for time, need to implement DateTimeRangeValidator
 			$value = \DateTime::createFromFormat($format, $value);
 			$validator->addValidator($this->makeValidator(
-				\TYPO3\CMS\Form\Mvc\Validation\DateRangeValidator::class,
+				DateRangeValidator::class,
 				[
 					'minimum' => $min,
 					'maximum' => $max,

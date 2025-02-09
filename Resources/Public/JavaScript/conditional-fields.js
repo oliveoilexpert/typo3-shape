@@ -26,7 +26,7 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		el.querySelectorAll('[data-yf-control]').forEach(field => {
 			field.addEventListener('change', () => evaluateConditions(form))
 		})
-		evaluateConditions(form)
+		window.requestAnimationFrame(() => evaluateConditions(form))
 	}
 	window.__tx_shape.processors.conditionalFields = processNode
 	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))

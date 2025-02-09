@@ -55,6 +55,8 @@ return [
 	],
 	'general-content-rte' => [
 		'showitem' => '
+		page_parents,
+		--linebreak--,
 		type,
 		--linebreak--, 
 		label, 
@@ -63,12 +65,16 @@ return [
 	],
 	'general-content-header' => [
 		'showitem' => '
+		page_parents,
+		--linebreak--,
 		type,
 		--linebreak--, 
 		label',
 	],
 	'general-content-element' => [
 		'showitem' => '
+		page_parents,
+		--linebreak--,
 		type,
 		--linebreak--, 
 		label,
@@ -77,6 +83,8 @@ return [
 	],
 	'general-repeatable-container' => [
 		'showitem' => '
+		page_parents,
+		--linebreak--,
 		type, 
 		--linebreak--, 
 		label, name, 

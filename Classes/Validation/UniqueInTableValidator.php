@@ -14,7 +14,6 @@ final class UniqueInTableValidator extends AbstractValidator
 		'table' => ['', 'Name of the table', 'string', true],
 		'column' => ['', 'Name of the column to look for value in', 'string', true],
 		'where' => [[], 'Additional where clauses', 'array', false],
-
 	];
 
 	public function isValid(mixed $value): void
@@ -32,9 +31,11 @@ final class UniqueInTableValidator extends AbstractValidator
 			->executeQuery()->fetchOne();
 		if ($count) {
 			$this->addError(
-				'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:validator.unique_in_table.error',
-				// todo: find a better error code
-				1221565130
+				$this->translateErrorMessage(
+					'validation.error.unique_in_table',
+					'shape',
+				),
+				1739105516
 			);
 		}
 	}

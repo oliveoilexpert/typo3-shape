@@ -1,8 +1,8 @@
 {
 	const processNode = el => {
-		el.querySelectorAll('[data-yf-validity-message]').forEach(input => {
+		el.querySelectorAll('[data-yf-validation-message]').forEach(input => {
 			input.addEventListener('invalid', () => {
-				input.setCustomValidity(input.dataset.yfValidityMessage)
+				input.setCustomValidity(input.dataset.yfValidationMessage)
 			})
 			input.addEventListener('change', () => {
 				input.setCustomValidity('')

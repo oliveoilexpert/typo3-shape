@@ -15,7 +15,7 @@ final class FieldValidationEvent
 		protected Domain\FormSession $formSession,
 		protected Core\Domain\RecordInterface $plugin,
 		protected Core\Resource\ResourceStorageInterface $uploadStorage,
-		protected Domain\FieldRecord $field,
+		protected Domain\Record\FieldRecord $field,
 		protected Validator\ConjunctionValidator $validator,
 		protected $value,
 		protected ?Result $result = null,
@@ -59,7 +59,7 @@ final class FieldValidationEvent
 		return $this->uploadStorage;
 	}
 
-	public function getField(): Domain\FieldRecord
+	public function getField(): Domain\Record\FieldRecord
 	{
 		return $this->field;
 	}
