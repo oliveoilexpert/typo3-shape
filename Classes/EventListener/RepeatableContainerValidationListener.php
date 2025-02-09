@@ -16,22 +16,19 @@ final class RepeatableContainerValidationListener
 	#[AsEventListener]
 	public function __invoke(FieldValidationEvent $event): void
 	{
-
-		$field = $event->getField();
+		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
 			return;
 		}
 		$fieldTemplate = $field->get('fields');
-		$valueSets = $event->getValue();
+		$valueSets = $event->value;
 		$parentResult = new Result();
 		if (!$valueSets) {
-			$event->setResult($parentResult);
+			$event->result = $parentResult;
 			return;
 		}
 		$validator = new FieldValidator(
-			$event->getFormSession(),
-			$event->getPlugin(),
-			$event->getUploadStorage(),
+			$event->context,
 			GeneralUtility::makeInstance(EventDispatcher::class)
 		);
 		foreach ($valueSets as $index => $values) {
@@ -42,7 +39,7 @@ final class RepeatableContainerValidationListener
 				$parentResult->forProperty($index)->forProperty($repId)->merge($result);
 			}
 		}
-		$event->setResult($parentResult);
+		$event->result = $parentResult;
 	}
 
 }

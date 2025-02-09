@@ -169,7 +169,11 @@ return [
 			'showitem' => $showItem,
 			'columnsOverrides' => [
 				'settings' => [
-					'l10n_mode' => 'exclude',
+					//'l10n_mode' => 'exclude',
+					//'l10n_display' => 'defaultAsReadonly',
+					'behaviour' => [
+						'allowLanguageSynchronization' => true,
+					],
 				]
 			]
 		],
@@ -177,7 +181,11 @@ return [
 			'showitem' => $showItem,
 			'columnsOverrides' => [
 				'settings' => [
-					'l10n_mode' => 'exclude',
+					//'l10n_mode' => 'exclude',
+					//'l10n_display' => 'defaultAsReadonly',
+					'behaviour' => [
+						'allowLanguageSynchronization' => true,
+					],
 				]
 			]
 		]

@@ -11,7 +11,7 @@ final class PrefillUserDataFormRenderListener
 	#[AsEventListener]
 	public function __invoke(FormRenderEvent $event): void
 	{
-		$feAuth = $event->getRequest()->getAttribute('frontend.user');
+		$feAuth = $event->context->request->getAttribute('frontend.user');
 		if (!$feAuth->getUserId()) {
 			return;
 		}

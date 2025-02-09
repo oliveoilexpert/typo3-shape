@@ -24,9 +24,15 @@
                         <label>Save User Agent and IP-Address</label>
                         <config>
                             <type>check</type>
-                            <renderType>checkboxToggle</renderType>
                         </config>
                     </saveUserData>
+                    <connectToLanguageParentForm>
+                        <label>Connect to original language form</label>
+                        <description>Submissions are connected to the form and plugin they were submitted from. When enabled, this will connect them to the original language version of form and plugin, if possible.</description>
+                        <config>
+                            <type>check</type>
+                        </config>
+                    </connectToLanguageParentForm>
                 </el>
             </ROOT>
         </general>

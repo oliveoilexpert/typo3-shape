@@ -103,7 +103,7 @@ $columns = [
 	],
 	'user_agent' => [
 		'config' => [
-			'type' => 'text',
+			'type' => 'input',
 			'eval' => 'trim',
 			'readOnly' => true,
 		],
@@ -121,9 +121,9 @@ $palettes = [
 		--linebreak--,
 		fe_user, site_lang,
 		--linebreak--,
-		form_values,
+		user_agent, user_ip,
 		--linebreak--,
-		user_agent, user_ip,',
+		form_values,',
 	],
 ];
 $showItem = '

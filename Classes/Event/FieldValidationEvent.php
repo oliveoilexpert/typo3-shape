@@ -12,14 +12,12 @@ use UBOS\Shape\Domain;
 final class FieldValidationEvent
 {
 	public function __construct(
-		protected Domain\FormSession $formSession,
-		protected Core\Domain\RecordInterface $plugin,
-		protected Core\Resource\ResourceStorageInterface $uploadStorage,
-		protected Domain\Record\FieldRecord $field,
-		protected Validator\ConjunctionValidator $validator,
-		protected $value,
-		protected ?Result $result = null,
-		protected bool $buildDefaultValidators = true
+		public readonly Domain\FormContext $context,
+		public readonly Domain\Record\FieldRecord $field,
+		public readonly Validator\ConjunctionValidator $validator,
+		public $value,
+		public ?Result $result = null,
+		public bool $buildDefaultValidators = true
 	) {}
 
 	public function isPropagationStopped(): bool
@@ -27,61 +25,8 @@ final class FieldValidationEvent
 		return $this->result !== null;
 	}
 
-	public function getValue()
-	{
-		return $this->value;
-	}
-	public function setValue($value): void
-	{
-		$this->value = $value;
-	}
-	public function getResult(): ?Result
-	{
-		return $this->result;
-	}
-	public function setResult(Result $result): void
-	{
-		$this->result = $result;
-	}
-
-	public function getFormSession(): Domain\FormSession
-	{
-		return $this->formSession;
-	}
-
-	public function getPlugin(): Core\Domain\RecordInterface
-	{
-		return $this->plugin;
-	}
-
-	public function getUploadStorage(): Core\Resource\ResourceStorageInterface
-	{
-		return $this->uploadStorage;
-	}
-
-	public function getField(): Domain\Record\FieldRecord
-	{
-		return $this->field;
-	}
-
-	public function getValidator(): Validator\ConjunctionValidator
-	{
-		return $this->validator;
-	}
-
-	public function addValidator($validator): void
+	public function addValidator(Validator\ValidatorInterface $validator): void
 	{
 		$this->validator->addValidator($validator);
 	}
-
-	public function getBuildDefaultValidators(): bool
-	{
-		return $this->buildDefaultValidators;
-	}
-
-	public function setBuildDefaultValidators(bool $buildDefaultValidators): void
-	{
-		$this->buildDefaultValidators = $buildDefaultValidators;
-	}
-
 }

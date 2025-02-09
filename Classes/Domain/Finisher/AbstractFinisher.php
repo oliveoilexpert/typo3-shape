@@ -4,6 +4,7 @@ namespace UBOS\Shape\Domain\Finisher;
 
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase;
 
 abstract class AbstractFinisher

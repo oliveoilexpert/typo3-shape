@@ -31,22 +31,18 @@ use UBOS\Shape\Event;
 // todo: webhook finisher?
 // todo: rate limiter finisher?
 // todo: all settings for plugin: disable server validation?,
-
+// todo: repeatable container server side conditions?
 // note: upload and radio fields will not be in formValues if no value is set
 
 class FormController extends Extbase\Mvc\Controller\ActionController
 {
-	protected ?Core\Domain\RecordInterface $plugin = null;
-	protected ?Core\Domain\RecordInterface $form = null;
-	protected ?Domain\FormSession $session = null;
-
 	protected Domain\FormContext $context;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
 	private string $formDataArgumentName = 'values';
 	protected string $fragmentPageTypeNum = '11510497112101';
 
 	public function __construct(
-		protected Core\Resource\StorageRepository $storageRepository
+		protected Core\Resource\StorageRepository $storageRepository,
 	) {}
 
 	public function renderAction(): ResponseInterface
@@ -55,30 +51,26 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
 			return $this->renderLazyLoader();
 		}
-		$this->session = new Domain\FormSession();
-		$this->initializeRecords();
+		$this->createContext();
 		return $this->renderForm();
 	}
 
-
-
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
-		$this->initializeSession();
-		$this->initializeRecords();
-		if (!$this->session->values) {
+		$this->createContext();
+		if (!$this->getSession()->values) {
 			return $this->redirect('render');
 		}
-		$isStepBack = ($this->session->previousPageIndex ?? 1) > $pageIndex;
-		$previousPageRecord = $this->form->get('pages')[$this->session->previousPageIndex-1];
+		$isStepBack = ($this->getSession()->previousPageIndex ?? 1) > $pageIndex;
+		$previousPageRecord = $this->getForm()->get('pages')[$this->getSession()->previousPageIndex-1];
 
 		if (!$isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}
 
-		if ($this->session->hasErrors) {
-			$pageIndex = $this->session->previousPageIndex;
-			DebugUtility::debug($this->session);
+		if ($this->getSession()->hasErrors) {
+			$pageIndex = $this->getSession()->previousPageIndex;
+			DebugUtility::debug($this->getSession());
 		} else {
 			$this->processFieldValues($previousPageRecord->get('fields'));
 		}
@@ -88,21 +80,20 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	public function submitAction(): ResponseInterface
 	{
-		$this->initializeSession();
-		$this->initializeRecords();
-		if (!$this->session->values) {
+		$this->createContext();
+		if (!$this->getSession()->values) {
 			return $this->redirect('render');
 		}
 		// validate
-		$this->validateForm($this->form);
+		$this->validateForm($this->getForm());
 		// if errors, go back to previous page
-		if ($this->session->hasErrors) {
-			return $this->renderForm($this->session->previousPageIndex);
+		if ($this->getSession()->hasErrors) {
+			return $this->renderForm($this->getSession()->previousPageIndex);
 		}
 
 		// maybe process entire form here? previousPageIndex can be manipulated client side and is not secure
 		// uploadedFiles could be validated but never saved if user manipulates previousPageIndex
-		$previousPageRecord = $this->form->get('pages')[$this->session->previousPageIndex-1];
+		$previousPageRecord = $this->getForm()->get('pages')[$this->getSession()->previousPageIndex-1];
 		$this->processFieldValues($previousPageRecord->get('fields'));
 
 		return $this->executeFinishers();
@@ -110,21 +101,22 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function createContext(): void
 	{
-		$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
-		try {
-			$session = new Domain\FormSession(...$sessionData);
-			$session->hasErrors = false;
-		} catch (\Exception $e) {
+		if (!$this->request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
+			$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
+			try {
+				$session = new Domain\FormSession(...$sessionData);
+				$session->hasErrors = false;
+			} catch (\Exception $e) {
+				$session = new Domain\FormSession();
+			}
+			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
+			$session->values = array_merge(
+				$session->values,
+				$this->request->getArguments()[$this->formDataArgumentName] ?? []
+			);
+		} else {
 			$session = new Domain\FormSession();
 		}
-
-		if (!$this->request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
-			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
-		}
-		$session->values = array_merge(
-			$session->values,
-			$this->request->getArguments()[$this->formDataArgumentName]
-		);
 
 		$contentData = $this->request->getAttribute('currentContentObject')?->data;
 		if (!($contentData['CType'] ?? false)) {
@@ -137,6 +129,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				)
 				->executeQuery()->fetchAllAssociative()[0] ?? null;
 		}
+		if (!$contentData) {
+			throw new \Exception('No content data found');
+		}
 		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 
@@ -144,6 +139,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$form) {
 			throw new \Exception('No form found');
 		}
+
 		// apply session values to form fields and check display conditions
 		foreach ($form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
@@ -155,6 +151,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				}
 			}
 		}
+
 		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
 		$this->context = new Domain\FormContext(
 			$this->request,
@@ -165,59 +162,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		);
 	}
 
-	protected function initializeSession(): void
-	{
-		$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
-		try {
-			$this->session = new Domain\FormSession(...$sessionData);
-			$this->session->hasErrors = false;
-		} catch (\Exception $e) {
-			$this->session = new Domain\FormSession();
-		}
-
-		$this->session->id = $this->session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
-		if (!isset($this->request->getArguments()[$this->formDataArgumentName])) {
-			return;
-		}
-
-		$postValues = $this->request->getArguments()[$this->formDataArgumentName];
-		$this->session->values = array_merge($this->session->values, $postValues);
-	}
-
-	protected function initializeRecords(): void
-	{
-		$contentData = $this->request->getAttribute('currentContentObject')?->data;
-		if (!($contentData['CType'] ?? false)) {
-			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-			$contentData = $queryBuilder
-				->select('*')
-				->from('tt_content')
-				->where(
-					$queryBuilder->expr()->eq('uid', (int)$this->request->getArgument('pluginUid') ?? $this->settings['pluginUid'] ?? 0)
-				)
-				->executeQuery()->fetchAllAssociative()[0] ?? null;
-		}
-		$this->plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
-			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
-
-		$this->form = $this->plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
-		if (!$this->form) {
-			throw new \Exception('No form found');
-		}
-		// apply session values to form fields and check display conditions
-		foreach ($this->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if ($field->has('name')) {
-					$field->setSessionValue($this->session->values[$field->getName()] ?? null);
-				}
-				if ($field->has('display_condition') && $field->get('display_condition')) {
-					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));				}
-			}
-		}
-		$event = new Event\FormManipulationEvent($this->request, $this->session, $this->form);
-		$this->eventDispatcher->dispatch($event);
-		$this->form = $event->getForm();
-	}
 
 	protected function renderLazyLoader(): ResponseInterface
 	{
@@ -236,16 +180,16 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function renderForm(int $pageIndex = 1): ?ResponseInterface
 	{
-		$lastPageIndex = count($this->form->get('pages'));
-		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
+		$lastPageIndex = count($this->getForm()->get('pages'));
+		$currentPageRecord = $this->getForm()->get('pages')[$pageIndex - 1];
 
 		$viewVariables = [
-			'session' => $this->session,
-			'sessionJson' => json_encode($this->session),
+			'session' => $this->getSession(),
+			'sessionJson' => json_encode($this->getSession()),
 			'namespace' => $this->formDataArgumentName,
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
-			'plugin' => $this->plugin,
-			'form' => $this->form,
+			'plugin' => $this->getPlugin(),
+			'form' => $this->getForm(),
 			'settings' => $this->settings,
 			'currentPage' => $currentPageRecord,
 			'pageIndex' => $pageIndex,
@@ -255,7 +199,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'isLastPage' => $pageIndex === $lastPageIndex,
 		];
 
-		$event = new Event\FormRenderEvent($this->request, $viewVariables);
+		$event = new Event\FormRenderEvent($this->context, $viewVariables);
 		$this->eventDispatcher->dispatch($event);
 		$viewVariables = $event->getVariables();
 
@@ -271,9 +215,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 
 		$validator = new Validation\FieldValidator(
-			$this->session,
-			$this->plugin,
-			$this->getUploadStorage(),
+			$this->context,
 			$this->eventDispatcher
 		);
 
@@ -282,9 +224,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				continue;
 			}
 			$name = $field->getName();
-			$field->validationResult = $validator->validate($field, $this->session->values[$name] ?? null);
+			$field->validationResult = $validator->validate($field, $this->getSession()->values[$name] ?? null);
 			if ($field->validationResult->hasErrors()) {
-				$this->session->hasErrors = true;
+				$this->getSession()->hasErrors = true;
 			}
 		}
 	}
@@ -297,8 +239,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$index = 1;
 		foreach ($form->get('pages') as $page) {
 			$this->validatePage($page);
-			if ($this->session->hasErrors) {
-				$this->session->previousPageIndex = $index;
+			if ($this->getSession()->hasErrors) {
+				$this->getSession()->previousPageIndex = $index;
 				break;
 			}
 			$index++;
@@ -307,7 +249,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function processFieldValues($fields): void
 	{
-		$values = $this->session->values;
+		$values = $this->getSession()->values;
 		// todo: add FieldProcess Event
 		foreach($fields as $field) {
 			if (!$field->has('name')) {
@@ -325,7 +267,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				$this->processUploadedFiles([$value], $name);
 			}
 			if ($field->getType() === 'password') {
-				$this->session->values[$name] = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE')->getHashedPassword($value);
+				$this->getSession()->values[$name] = GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE')->getHashedPassword($value);
 			}
 		}
 	}
@@ -336,8 +278,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$this->getUploadStorage()->hasFolder($folderPath)) {
 			$this->getUploadStorage()->createFolder($folderPath);
 		}
-		$this->session->filenames[$fieldName] = [];
-		$this->session->values[$fieldName] = [];
+		$this->getSession()->filenames[$fieldName] = [];
+		$this->getSession()->values[$fieldName] = [];
 		foreach ($files as $file) {
 			// todo: file upload event
 			$newFile = $this->getUploadStorage()->addUploadedFile(
@@ -346,15 +288,15 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				$file->getClientFilename(),
 				Core\Resource\Enum\DuplicationBehavior::RENAME
 			);
-			$this->session->filenames[$fieldName][] = $newFile->getName();
-			$this->session->values[$fieldName][] = $this->getSessionUploadFolder() . $newFile->getName();
+			$this->getSession()->filenames[$fieldName][] = $newFile->getName();
+			$this->getSession()->values[$fieldName][] = $this->getSessionUploadFolder() . $newFile->getName();
 		}
 	}
 
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->form->get('finishers') as $finisherRecord) {
+		foreach ($this->getForm()->get('finishers') as $finisherRecord) {
 			$willExecute = true;
 			if ($finisherRecord->get('condition') ?? false) {
 				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));
@@ -362,7 +304,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 					$willExecute = false;
 				}
 			}
-//			$event = new Event\FinisherExecutionEvent($finisherRecord, $this->session, $willExecute);
+//			$event = new Event\FinisherExecutionEvent($finisherRecord, $this->getSession(), $willExecute);
 //			$this->eventDispatcher->dispatch($event);
 //			$finisherRecord = $event->getFinisherRecord();
 //			$willExecute = $event->willExecute();
@@ -372,9 +314,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			// todo: remove session values that do not belong to the form
 			try {
 				// execute finisher event
-				$response = $this->makeFinisherInstance($finisherRecord, $this->session->values)?->execute() ?? $response;
+				$response = $this->makeFinisherInstance($finisherRecord, $this->getSession()->values)?->execute() ?? $response;
 			} catch (\Exception $e) {
-				DebugUtility::debug($e);
+				throw $e;
 				continue;
 			}
 		}
@@ -398,8 +340,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->request,
 			$this->view,
 			$this->settings,
-			$this->plugin,
-			$this->form,
+			$this->getPlugin(),
+			$this->getForm(),
 			$finisherRecord,
 			$formValues,
 		);
@@ -407,15 +349,30 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function getSessionUploadFolder(): string
 	{
-		if (!$this->session) {
+		if (!$this->getSession()) {
 			return '';
 		}
-		return explode(':', $this->settings['uploadFolder'])[1] . $this->session->id . '/';
+		return explode(':', $this->settings['uploadFolder'])[1] . $this->getSession()->id . '/';
 	}
 
 	protected function getUploadStorage(): Core\Resource\ResourceStorage
 	{
-		return $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
+		return $this->context->uploadStorage;
+	}
+
+	protected function getPlugin(): Core\Domain\RecordInterface
+	{
+		return $this->context->plugin;
+	}
+
+	protected function getForm(): Core\Domain\RecordInterface
+	{
+		return $this->context->form;
+	}
+
+	protected function getSession(): Domain\FormSession
+	{
+		return $this->context->session;
 	}
 
 	protected function getConditionResolver(): Core\ExpressionLanguage\Resolver
@@ -425,19 +382,14 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 
 		$variables = [
-			'formValues' => $this->session->values,
-//			'stepIdentifier' => $page->getIdentifier(),
-//			'finisherIdentifier' => $finisherIdentifier,
-//			'contentObject' => $this->plugin,
-////		'stepType' => $page->getType(),
-			//'isStepBack' => $isStepBack,
+			'formValues' => $this->getSession()->values,
 			'frontendUser' => $this->getFrontendUser(),
 			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
 			'site' => $this->request->getAttribute('site'),
 			'siteLanguage' => $this->request->getAttribute('language'),
 		];
 
-		$event = new Event\ConditionResolverCreationEvent($this->request, $variables);
+		$event = new Event\ConditionResolverCreationEvent($this->context, $variables);
 		$this->eventDispatcher->dispatch($event);
 		$variables = $event->getVariables();
 
@@ -454,12 +406,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	}
 	protected function getSessionKey(): stringx
 	{
-		return 'tx_shape_c' . $this->plugin?->getUid() . '_f' . $this->form->getUid();
+		return 'tx_shape_c' . $this->getPlugin()?->getUid() . '_f' . $this->getForm()->getUid();
 	}
 
 	// use fe_session to store form session?
 	// how to handle garbage collection?
 	// Core\Session\UserSessionManager::create('FE')->collectGarbage(10);
-	// $this->getFrontendUser()->setKey('ses', $this->getSessionKey(), $this->session);
+	// $this->getFrontendUser()->setKey('ses', $this->getSessionKey(), $this->getSession());
 	// DebugUtility::debug($this->getFrontendUser()->getKey('ses', $this->getSessionKey()));
 }

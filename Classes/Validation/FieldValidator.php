@@ -2,16 +2,15 @@
 
 namespace UBOS\Shape\Validation;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator;
 use UBOS\Shape\Domain;
-use Psr\EventDispatcher\EventDispatcherInterface;
+
 class FieldValidator
 {
 	public function __construct(
-		protected Domain\FormSession $formSession,
-		protected Core\Domain\RecordInterface $plugin,
-		protected Core\Resource\ResourceStorageInterface $uploadStorage,
+		protected Domain\FormContext $context,
 		protected EventDispatcherInterface $eventDispatcher
 	)
 	{
@@ -25,20 +24,18 @@ class FieldValidator
 		// todo: PhoneNumberValidator, ColorValidator,
 		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
 		$event = new \UBOS\Shape\Event\FieldValidationEvent(
-			$this->formSession,
-			$this->plugin,
-			$this->uploadStorage,
+			$this->context,
 			$field,
 			$validator,
 			$value
 		);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
-			return $event->getResult();
+			return $event->result;
 		}
-		$value = $event->getValue();
-		$validator = $event->getValidator();
-		if (!$event->getBuildDefaultValidators()) {
+		$value = $event->value;
+		$validator = $event->validator;
+		if (!$event->buildDefaultValidators) {
 			return $validator->validate($value);
 		}
 
@@ -151,7 +148,7 @@ class FieldValidator
 			if ($value && is_string(reset($value))) {
 				$fileValidator->addValidator($this->makeValidator(
 					FileExistsInStorageValidator::class,
-					['storage' => $this->uploadStorage]
+					['storage' => $this->context->uploadStorage]
 				));
 			} else {
 				if ($field->get('accept')) {

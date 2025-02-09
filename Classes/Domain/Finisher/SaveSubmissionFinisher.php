@@ -14,6 +14,9 @@ class SaveSubmissionFinisher extends AbstractFinisher
 	{
 		$this->settings = array_merge([
 			'storagePage' => '',
+			'connectToLanguageParentForm' => false,
+			'saveUserData' => false,
+			'excludedFields' => '',
 		], $this->settings);
 		$formValues = $this->formValues;
 		if ($this->settings['excludedFields']) {
@@ -26,8 +29,6 @@ class SaveSubmissionFinisher extends AbstractFinisher
 			'crdate' => time(),
 			'tstamp' => time(),
 			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
-			'form' => $this->form->getUid(),
-			'plugin' => $this->plugin->getUid(),
 			'fe_user' => $this->request->getAttribute('frontend.user')->getUserId() ?: 0,
 			'site_lang' => $this->request->getAttribute('language')->getLanguageId(),
 			'form_values' => json_encode($formValues),
@@ -35,6 +36,13 @@ class SaveSubmissionFinisher extends AbstractFinisher
 		if ($this->settings['saveUserData'] && $this->settings['saveUserData'] !== '0') {
 			$values['user_agent'] = $this->request->getHeaderLine('User-Agent');
 			$values['user_ip'] = $this->request->getServerParams()['REMOTE_ADDR'];
+		}
+		if ($this->settings['connectToLanguageParentForm'] && $this->settings['connectToLanguageParentForm'] !== '0') {
+			$values['form'] = $this->form->getRawRecord()->get('l10n_parent') ?: $this->form->getUid();
+			$values['plugin'] = $this->plugin->getRawRecord()->get('l18n_parent') ?: $this->plugin->getUid();
+		} else {
+			$values['form'] = $this->form->getUid();
+			$values['plugin'] = $this->plugin->getUid();
 		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
 			->getQueryBuilderForTable($this->tableName);

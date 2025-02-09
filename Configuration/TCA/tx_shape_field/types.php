@@ -508,5 +508,18 @@ return [
 			--palette--;;general-repeatable-container, 
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,' . $showItemBase,
+		'columnsOverrides' => [
+			'fields' => [
+				'config' => [
+					'overrideChildTca' => [
+						'columns' => [
+							'display_condition' => [
+								'displayCond' => 'FIELD:type:=:666666',
+							]
+						]
+					]
+				]
+			]
+		]
 	]
 ];

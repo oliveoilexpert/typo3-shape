@@ -11,7 +11,7 @@ final class UniqueInSubmissionFieldValidationListener
 	#[AsEventListener]
 	public function __invoke(FieldValidationEvent $event): void
 	{
-		$field = $event->getField();
+		$field = $event->field;
 		if (! $field->has('unique_in_submission') || ! $field->get('unique_in_submission')) {
 			return;
 		}
