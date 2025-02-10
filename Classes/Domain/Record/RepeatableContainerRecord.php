@@ -27,7 +27,6 @@ class RepeatableContainerRecord extends FieldRecord
 				if (isset($values[$newField->getName()])) {
 					$newField->setSessionValue($values[$newField->getName()]);
 				}
-//				$newField->validationResult = $this->validationResult->getSubResults()[$index]->getSubResults()[$newField->getName()] ?? null;
 				$this->createdFieldsets[$index][] = $newField;
 			}
 			$index++;

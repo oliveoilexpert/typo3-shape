@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 final class FieldProcessEvent
 {
 	public function __construct(
-		public readonly Domain\FormContext $context,
+		public readonly Domain\FormRuntime\FormContext $context,
 		public readonly Domain\Record\FieldRecord $field,
 		public readonly mixed $value,
 		public mixed $processedValue = null,

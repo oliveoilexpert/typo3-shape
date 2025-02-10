@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Domain;
+namespace UBOS\Shape\Domain\FormRuntime;
 class FormSession
 {
 	public function __construct(

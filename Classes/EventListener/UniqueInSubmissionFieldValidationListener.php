@@ -15,7 +15,7 @@ final class UniqueInSubmissionFieldValidationListener
 		if (! $field->has('unique_in_submission') || ! $field->get('unique_in_submission')) {
 			return;
 		}
-		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Validation\UniqueInSubmissionsValidator::class);
+		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Domain\Validator\UniqueInSubmissionsValidator::class);
 		$validator->setOptions([
 			'fieldName' => $field->getName(),
 			'pluginUid' => $event->getPlugin()->getUid(),

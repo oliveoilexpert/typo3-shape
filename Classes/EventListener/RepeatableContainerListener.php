@@ -9,9 +9,8 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
 use UBOS\Shape\Domain\Record\RepeatableContainerRecord;
-use UBOS\Shape\Event\FieldValidationEvent;
-use UBOS\Shape\Event\FieldResolveConditionEvent;
-use UBOS\Shape\Validation\FieldValidator;
+use UBOS\Shape\Event;
+use UBOS\Shape\Domain\FormRuntime;
 
 final class RepeatableContainerListener
 {
@@ -33,7 +32,7 @@ final class RepeatableContainerListener
 	}
 
 	#[AsEventListener]
-	public function fieldResolveCondition(FieldResolveConditionEvent $event): void
+	public function fieldResolveCondition(Event\FieldResolveConditionEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -46,45 +45,35 @@ final class RepeatableContainerListener
 		if (!$event->result) {
 			return;
 		}
+		$fieldResolver = new FormRuntime\FieldConditionResolver(
+			$event->context,
+			$event->resolver,
+			GeneralUtility::makeInstance(EventDispatcher::class)
+		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			foreach ($fields as $childField) {
 				if (! $childField->has('display_condition')) {
 					continue;
 				}
 				$childField->set('display_condition', str_replace('__INDEX', $index, $childField->get('display_condition')));
-
-				$childEvent = new FieldResolveConditionEvent(
-					$event->context,
-					$childField,
-					$event->resolver
-				);
-				GeneralUtility::makeInstance(EventDispatcher::class)->dispatch($childEvent);
-				if (! $childEvent->isPropagationStopped()) {
-					if (! $childField->get('display_condition')) {
-						continue;
-					}
-					$childField->conditionResult = $childEvent->resolver->evaluate($childField->get('display_condition'));
-				} else {
-					$childField->conditionResult = $childEvent->result;
-				}
+				$childField->conditionResult = $fieldResolver->evaluate($childField);
 			}
 		}
 	}
 
 	#[AsEventListener]
-	public function fieldValidation(FieldValidationEvent $event): void
+	public function fieldValidation(Event\FieldValidationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
 			return;
 		}
-		$valueSets = $event->value;
 		$result = new Result();
-		if (!$valueSets) {
+		if (!$event->value) {
 			$event->result = $result;
 			return;
 		}
-		$validator = new FieldValidator(
+		$validator = new FormRuntime\FieldValidator(
 			$event->context,
 			GeneralUtility::makeInstance(EventDispatcher::class)
 		);
@@ -95,8 +84,35 @@ final class RepeatableContainerListener
 				$result->forProperty($index)->forProperty($childField->getName())->merge($childField->validationResult);
 			}
 		}
-
 		$event->result = $result;
+	}
+
+	#[AsEventListener]
+	public function fieldProcess(Event\FieldProcessEvent $event): void
+	{
+		$field = $event->field;
+		if (!($field instanceof RepeatableContainerRecord)) {
+			return;
+		}
+		$processedValue = [];
+		if (!$event->value) {
+			$event->processedValue = $processedValue;
+			return;
+		}
+		$processor = new FormRuntime\FieldProcessor(
+			$event->context,
+			GeneralUtility::makeInstance(EventDispatcher::class)
+		);
+		foreach ($field->getCreatedFieldsets() as $index => $fields) {
+			$processedValue[$index] = [];
+			foreach ($fields as $childField) {
+				$processedValue[$index][$childField->getName()] = $processor->process(
+					$childField,
+					$childField->getSessionValue() ?? null
+				);
+			}
+		}
+		$event->processedValue = $processedValue;
 	}
 
 }

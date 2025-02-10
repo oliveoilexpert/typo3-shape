@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace UBOS\Shape\Validation;
+namespace UBOS\Shape\Domain\Validator;
 
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException;

@@ -1,16 +1,18 @@
 <?php
 
-namespace UBOS\Shape\Validation;
+namespace UBOS\Shape\Domain\FormRuntime;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Extbase\Validation\Validator;
+use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Domain;
+use UBOS\Shape\Domain\Validator;
+use UBOS\Shape\Event\FieldValidationEvent;
 
 class FieldValidator
 {
 	public function __construct(
-		protected Domain\FormContext $context,
+		protected Domain\FormRuntime\FormContext $context,
 		protected EventDispatcherInterface $eventDispatcher
 	)
 	{
@@ -22,8 +24,8 @@ class FieldValidator
 		$type = $field->getType();
 
 		// todo: PhoneNumberValidator, ColorValidator,
-		$validator = Core\Utility\GeneralUtility::makeInstance(Validator\ConjunctionValidator::class);
-		$event = new \UBOS\Shape\Event\FieldValidationEvent(
+		$validator = Core\Utility\GeneralUtility::makeInstance(ExtbaseValidator\ConjunctionValidator::class);
+		$event = new FieldValidationEvent(
 			$this->context,
 			$field,
 			$validator,
@@ -41,29 +43,29 @@ class FieldValidator
 
 		if ($field->has('required') && $field->get('required') && $field->conditionResult) {
 			$validator->addValidator($this->makeValidator(
-				Validator\NotEmptyValidator::class
+				ExtbaseValidator\NotEmptyValidator::class
 			));
 		}
 		if ($field->has('pattern') && $field->get('pattern') && $value) {
 			$validator->addValidator($this->makeValidator(
-				Validator\RegularExpressionValidator::class,
+				ExtbaseValidator\RegularExpressionValidator::class,
 				['regularExpression' => $field->get('pattern')]
 			));
 		}
 		if ($type === 'email' && $value) {
 			$validator->addValidator($this->makeValidator(
-				Validator\EmailAddressValidator::class
+				ExtbaseValidator\EmailAddressValidator::class
 			));
 		}
 		if ($field->has('maxlength') && $field->get('maxlength') && $value) {
 			$validator->addValidator($this->makeValidator(
-				Validator\StringLengthValidator::class,
+				ExtbaseValidator\StringLengthValidator::class,
 				['maximum' => $field->get('maxlength')],
 			));
 		}
 		if ($type === 'url' && $value) {
 			$validator->addValidator($this->makeValidator(
-				Validator\UrlValidator::class
+				ExtbaseValidator\UrlValidator::class
 			));
 		}
 
@@ -71,7 +73,7 @@ class FieldValidator
 			$value = (int)$value;
 			if ($field->get('min') !== null || $field->get('max') !== null) {
 				$validator->addValidator($this->makeValidator(
-					Validator\NumberRangeValidator::class,
+					ExtbaseValidator\NumberRangeValidator::class,
 					[
 						'minimum' => $field->get('min') ?? 0,
 						'maximum' => $field->get('max') ?? PHP_INT_MAX
@@ -86,7 +88,7 @@ class FieldValidator
 				$optionValues[] = $option->get('value');
 			}
 			$validator->addValidator($this->makeValidator(
-				InArrayValidator::class,
+				Validator\InArrayValidator::class,
 				['array' => $optionValues]
 			));
 		}
@@ -97,7 +99,7 @@ class FieldValidator
 				$optionValues[] = $option->get('value');
 			}
 			$validator->addValidator($this->makeValidator(
-				SubsetOfArrayValidator::class,
+				Validator\SubsetOfArrayValidator::class,
 				['array' => $optionValues]
 			));
 		}
@@ -133,7 +135,7 @@ class FieldValidator
 			// todo: doesnt work for time, need to implement DateTimeRangeValidator
 			$value = \DateTime::createFromFormat($format, $value);
 			$validator->addValidator($this->makeValidator(
-				DateRangeValidator::class,
+				Validator\DateRangeValidator::class,
 				[
 					'minimum' => $min,
 					'maximum' => $max,
@@ -144,16 +146,16 @@ class FieldValidator
 
 		if ($type === 'file' && is_array($value)) {
 			// todo: throw exception if value isnt array?
-			$fileValidator = Core\Utility\GeneralUtility::makeInstance(ArrayValuesConjunctionValidator::class);
+			$fileValidator = Core\Utility\GeneralUtility::makeInstance(Validator\ArrayValuesConjunctionValidator::class);
 			if ($value && is_string(reset($value))) {
 				$fileValidator->addValidator($this->makeValidator(
-					FileExistsInStorageValidator::class,
+					Validator\FileExistsInStorageValidator::class,
 					['storage' => $this->context->uploadStorage]
 				));
 			} else {
 				if ($field->get('accept')) {
 					$fileValidator->addValidator($this->makeValidator(
-						Validator\MimeTypeValidator::class,
+						ExtbaseValidator\MimeTypeValidator::class,
 						['allowedMimeTypes' => explode(',', $field->get('accept'))],
 					));
 				}
@@ -161,7 +163,7 @@ class FieldValidator
 					$min = ($field->get('min') ?? '0') . 'K';
 					$max = $field->get('max') ? ($field->get('max') . 'K') : (PHP_INT_MAX . 'B');
 					$fileValidator->addValidator($this->makeValidator(
-						Validator\FileSizeValidator::class,
+						ExtbaseValidator\FileSizeValidator::class,
 						['minimum' => $min, 'maximum' => $max]
 					));
 				}
@@ -172,7 +174,7 @@ class FieldValidator
 		return $validator->validate($value);
 	}
 
-	protected function makeValidator(string $validator, array $options = []): Validator\ValidatorInterface
+	protected function makeValidator(string $validator, array $options = []): ExtbaseValidator\ValidatorInterface
 	{
 		$validator = Core\Utility\GeneralUtility::makeInstance($validator);
 		$validator->setOptions($options);

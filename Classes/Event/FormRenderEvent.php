@@ -9,7 +9,7 @@ use UBOS\Shape\Domain;
 final class FormRenderEvent
 {
 	public function __construct(
-		public readonly Domain\FormContext $context,
+		public readonly Domain\FormRuntime\FormContext $context,
 		protected array $variables = [],
 	) {}
 	public function getVariables(): array
