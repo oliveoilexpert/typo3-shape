@@ -12,6 +12,12 @@
 			<trans-unit id="validation.error.unique_in_submissions"><source>This value has already been used.</source></trans-unit>
 			<trans-unit id="validation.error.unique_in_table"><source>This value has already been used.</source></trans-unit>
 
+			<trans-unit id="label.prev_page"><source>back</source></trans-unit>
+			<trans-unit id="label.next_page"><source>submit</source></trans-unit>
+
+			<trans-unit id="label.add_fieldset"><source>add</source></trans-unit>
+			<trans-unit id="label.remove_fieldset"><source>remove</source></trans-unit>
+
 		</body>
 	</file>
 </xliff>

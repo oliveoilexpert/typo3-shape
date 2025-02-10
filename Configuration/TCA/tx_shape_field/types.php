@@ -514,7 +514,7 @@ return [
 					'overrideChildTca' => [
 						'columns' => [
 							'display_condition' => [
-								'displayCond' => 'FIELD:type:=:666666',
+								//'displayCond' => 'FIELD:type:=:666666',
 							]
 						]
 					]

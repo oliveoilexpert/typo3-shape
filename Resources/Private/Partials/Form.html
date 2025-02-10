@@ -8,18 +8,17 @@
 		data-yf-form="{form.name}"
 		pageUid="{plugin.pid}"
 		arguments="{pageIndex:forwardStepPageIndex}">
+
 	<div>
 		<f:form.hidden name="session" value='{sessionJson}'/>
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
 
-	<h2 class="{blockClass}__form__header">{form.title}</h2>
-
 	<f:if condition="{currentPage.type} == 'summary'">
 		<f:then>
 			<div class="{blockClass}__page">
 			<f:if condition="{currentPage.title}">
-				<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+				<header class="{blockClass}__page__header">{currentPage.title}</header>
 			</f:if>
 			<f:for each="{form.pages}" as="page">
 				<fieldset class="{blockClass}__fieldset -summary-step" disabled>
@@ -33,7 +32,7 @@
 		<f:else>
 			<div class="{blockClass}__page">
 				<f:if condition="{currentPage.title}">
-					<h3 class="{blockClass}__page__header">{currentPage.title}</h3>
+					<header class="{blockClass}__page__header">{currentPage.title}</header>
 				</f:if>
 				<fieldset class="{blockClass}__fieldset">
 					<f:alias map="{fields: currentPage.fields}">

@@ -15,8 +15,6 @@ use UBOS\Shape\Validation;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
-// todo: create FormContext that contains plugin, form, session etc for finishers and validators and events to use
-// todo: add more arguments to events
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
 // todo: translate flexform labels
@@ -140,18 +138,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			throw new \Exception('No form found');
 		}
 
-		// apply session values to form fields and check display conditions
-		foreach ($form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if ($field->has('name')) {
-					$field->setSessionValue($session->values[$field->getName()] ?? null);
-				}
-				if ($field->has('display_condition') && $field->get('display_condition')) {
-					$field->shouldDisplay = $this->getConditionResolver()->evaluate($field->get('display_condition'));
-				}
-			}
-		}
-
 		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
 		$this->context = new Domain\FormContext(
 			$this->request,
@@ -160,6 +146,31 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$session,
 			$uploadStorage
 		);
+
+		// apply session values to form fields and check display conditions
+		foreach ($this->context->form->get('pages') as $page) {
+			foreach ($page->get('fields') as $field) {
+				if ($field->has('name')) {
+					$field->setSessionValue($session->values[$field->getName()] ?? null);
+				}
+				if ($field->has('display_condition')) {
+					$event = new Event\FieldResolveConditionEvent(
+						$this->context,
+						$field,
+						$this->getConditionResolver(),
+					);
+					$this->eventDispatcher->dispatch($event);
+					if (! $event->isPropagationStopped()) {
+						if (! $field->get('display_condition')) {
+							continue;
+						}
+						$field->conditionResult = $this->getConditionResolver()->evaluate($field->get('display_condition'));
+					} else {
+						$field->conditionResult = $event->result;
+					}
+				}
+			}
+		}
 	}
 
 
@@ -204,7 +215,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$viewVariables = $event->getVariables();
 
 		$this->view->assignMultiple($viewVariables);
-		$this->view->setTemplate('form');
+		$this->view->setTemplate('Form');
 		return $this->htmlResponse();
 	}
 
@@ -260,6 +271,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				continue;
 			}
 			$value = $values[$name];
+			$event = new Event\FieldProcessEvent($this->context, $field, $value);
+			$this->eventDispatcher->dispatch($event);
+			if ($event->isPropagationStopped()) {
+				$this->getSession()->values[$name] = $event->processedValue;
+				continue;
+			}
 			if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
 				$this->processUploadedFiles($value, $name);
 			}

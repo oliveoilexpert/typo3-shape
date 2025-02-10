@@ -1,7 +1,7 @@
 <f:variable name="fieldWidthStyle"
 			value="--yf-field-width:{field.width}%;"/>
 
-<div class="{blockClass}__field -type-{field.type} -layout-{field.layout} -{currentPage.type}-step {field.css_class}{f:if(condition:'{field.js_display_condition}',then:' --hidden')}"
+<div class="{blockClass}__field {blockClass}__{field.type}-field -layout-{field.layout} -{currentPage.type}-step {field.css_class}{f:if(condition:'{field.js_display_condition}',then:' --hidden')}"
 	 data-yf-field="{field.name}"
 	 data-yf-condition="{field.js_display_condition}"
 	 style="{fieldWidthStyle}">

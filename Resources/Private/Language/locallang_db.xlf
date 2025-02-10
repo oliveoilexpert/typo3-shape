@@ -18,7 +18,7 @@
 			<trans-unit id="form.finishers"><source>Finishers</source></trans-unit>
 
 			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
-			<trans-unit id="form_page.title"><source>Title</source></trans-unit>
+			<trans-unit id="form_page.title"><source>Header</source></trans-unit>
 			<trans-unit id="form_page.type"><source>Type</source></trans-unit>
 			<trans-unit id="form_page.fields"><source>Fields</source></trans-unit>
 			<trans-unit id="form_page.form_parent"><source>Form Parent</source></trans-unit>

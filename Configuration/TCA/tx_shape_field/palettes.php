@@ -89,7 +89,9 @@ return [
 		--linebreak--, 
 		label, name, 
 		--linebreak--, 
-		fields',
+		fields,
+		--linebreak--,
+		description',
 	],
 	'advanced-default' => [
 		'showitem' => 'disabled, readonly',

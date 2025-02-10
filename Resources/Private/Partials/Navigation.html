@@ -1,14 +1,20 @@
 <div class="{blockClass}__navigation">
     <f:if condition="!{isFirstPage}">
         <button type="submit"
-                class="{blockClass}__navigation__button -prev {buttonClass}"
+                class="{buttonClass} {blockClass}__navigation__button -prev"
                 formnovalidate
                 formaction="{f:uri.action(action:'renderStep', arguments:{pageIndex:backStepPageIndex})}">
-            {currentPage.prev_label}
+            <f:if condition="{currentPage.prev_label}">
+                <f:then>{currentPage.prev_label}</f:then>
+                <f:else>{f:translate(key:'label.prev_page')}</f:else>
+            </f:if>
         </button>
     </f:if>
     <button type="submit"
-            class="{blockClass}__navigation__button -next {buttonClass}">
-        {currentPage.next_label}
+            class="{buttonClass} {blockClass}__navigation__button -next{f:if(condition:isLastPage,then:' -submit')}">
+        <f:if condition="{currentPage.next_label}">
+            <f:then>{currentPage.next_label}</f:then>
+            <f:else>{f:translate(key:'label.next_page')}</f:else>
+        </f:if>
     </button>
 </div>

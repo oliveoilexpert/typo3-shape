@@ -20,11 +20,14 @@
 		</f:if>
 	</div>
 
-	<button class="{blockClass}__repeatable__add {buttonClass}"
-			type="button"
-			data-yf-repeatable-add="{id}">
-		Add fieldset
-	</button>
+	<f:if condition="{currentPage.type} !== 'summary'">
+		<button class="{blockClass}__repeatable__add {buttonClass}"
+				type="button"
+				data-yf-repeatable-add="{id}">
+			{f:translate(key:'label.add_fieldset')}
+		</button>
+	</f:if>
+
 </f:render>
 
 <f:section name="RepeatableContainer">
@@ -34,11 +37,13 @@
 				<f:render partial="FieldList" arguments="{_all}"/>
 			</f:alias>
 		</div>
-		<button class="{blockClass}__repeatable__remove {buttonClass}"
-				type="button"
-				data-yf-repeatable-remove>
-			Remove fieldset
-		</button>
+		<f:if condition="{currentPage.type} !== 'summary'">
+			<button class="{blockClass}__repeatable__remove {buttonClass}"
+					type="button"
+					data-yf-repeatable-remove>
+				{f:translate(key:'label.remove_fieldset')}
+			</button>
+		</f:if>
 	</div>
 </f:section>
 

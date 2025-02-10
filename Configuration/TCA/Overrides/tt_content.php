@@ -37,7 +37,7 @@ $GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds']['*' . ',
 $GLOBALS['TCA']['tt_content']['types'][$pluginKey] = [
 	'showitem' => '	--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
 		--palette--;;general,
-		header,
+		--palette--;;header,
 		pi_flexform,',
 	'columnsOverrides' => []
 ];

@@ -23,7 +23,7 @@ class FieldRecord extends Record
 
 	protected mixed $sessionValue = null;
 	protected ?array $selectedOptions = null;
-	public bool $shouldDisplay = true;
+	public bool $conditionResult = true;
 	public ?Result $validationResult = null;
 
 	public function __construct(

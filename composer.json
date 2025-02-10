@@ -1,5 +1,5 @@
 {
-	"name": "oliveoilexpert/shape",
+	"name": "oliveoilexpert/typo3-shape",
 	"type": "typo3-cms-extension",
 	"description": "Flexible form extension - if ext:form and ext:powermail had a baby",
 	"license": "GPL-2.0-or-later",

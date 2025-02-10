@@ -39,7 +39,7 @@ class FieldValidator
 			return $validator->validate($value);
 		}
 
-		if ($field->has('required') && $field->get('required') && $field->shouldDisplay) {
+		if ($field->has('required') && $field->get('required') && $field->conditionResult) {
 			$validator->addValidator($this->makeValidator(
 				Validator\NotEmptyValidator::class
 			));
