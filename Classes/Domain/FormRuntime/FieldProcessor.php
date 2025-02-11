@@ -12,45 +12,46 @@ class FieldProcessor
 {
 	public function __construct(
 		protected Domain\FormRuntime\FormContext $context,
-		protected EventDispatcherInterface $eventDispatcher
+		protected EventDispatcherInterface $eventDispatcher,
+		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null
 	)
 	{
 	}
 
-	public function process(Domain\Record\FieldRecord $field, mixed $value): mixed
+	public function process(Domain\Record\FieldRecord $field, mixed $value): array
 	{
-		if (!$field->has('name') || $value == null) {
+		if (!$field->has('name')) {
 			return $value;
 		}
-		$name = $field->getName();
-
 		$event = new FieldProcessEvent($this->context, $field, $value);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
-			return $event->processedValue;
+			return [$event->processedValue, $event->state];
 		}
 		if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
-			return $this->processUploadedFiles($value, $name);
+			return $this->saveUploadedFiles($value);
 		}
 		if ($value instanceof Core\Http\UploadedFile) {
-			return $this->processUploadedFiles([$value], $name);
+			return $this->saveUploadedFiles([$value]);
 		}
 		if ($field->getType() === 'password') {
-			return $this->getPasswordHash()->getHashedPassword($value);
+			return [
+				$this->getPasswordHash()->getHashedPassword($value),
+				['orig' => $value]
+			];
 		}
-		return $value;
+		return [$value, null];
 	}
 
-	protected function processUploadedFiles(array $files, string $fieldName): array
+	protected function saveUploadedFiles(array $files): array
 	{
-		$folderPath = $this->getSessionUploadFolder();
+		$folderPath = $this->context->getSessionUploadFolder();
 		$uploadStorage = $this->context->uploadStorage;
-		$session = $this->context->session;
 		if (!$uploadStorage->hasFolder($folderPath)) {
 			$uploadStorage->createFolder($folderPath);
 		}
-		$session->filenames[$fieldName] = [];
-		$newVal = [];
+		$fileNames = [];
+		$filePaths = [];
 		foreach ($files as $file) {
 			// todo: file upload event
 			$newFile = $uploadStorage->addUploadedFile(
@@ -59,18 +60,12 @@ class FieldProcessor
 				$file->getClientFilename(),
 				Core\Resource\Enum\DuplicationBehavior::RENAME
 			);
-			$session->filenames[$fieldName][] = $newFile->getName();
-			$newVal[] = $folderPath . $newFile->getName();
+			$fileNames[] = $newFile->getName();
+			$filePaths[] = $folderPath . $newFile->getName();
 		}
-		return $newVal;
+		return [$filePaths, ['fileNames' => $fileNames]];
 	}
 
-	protected function getSessionUploadFolder(): string
-	{
-		return explode(':', $this->context->settings['uploadFolder'])[1] . $this->context->session->id . '/';
-	}
-
-	protected ?PasswordHashing\PasswordHashInterface $passwordHash = null;
 	protected function getPasswordHash(): PasswordHashing\PasswordHashInterface
 	{
 		if ($this->passwordHash === null) {

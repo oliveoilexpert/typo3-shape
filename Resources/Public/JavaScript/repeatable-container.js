@@ -19,7 +19,8 @@
 		})
 		clone.querySelectorAll('input, textarea, select').forEach(input => {
 			input.name = input.name.replaceAll(`[__INDEX]`, `[${i}]`)
-			const newId = input.id + '-' + i
+			const newId = input.id.replaceAll(`[__INDEX]`, `[${i}]`)
+			//const newId = input.id + '-' + i
 			clone.querySelector(`label[for="${input.id}"]`)?.setAttribute('for', newId)
 			input.id = newId
 		});

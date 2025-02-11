@@ -19,7 +19,7 @@ class FieldConditionResolver
 
 	public function evaluate(Domain\Record\FieldRecord $field): mixed
 	{
-		if (! $field->has('display_condition')) {
+		if (!$field->has('display_condition') || !$field->get('display_condition')) {
 			return true;
 		}
 		$event = new FieldResolveConditionEvent(

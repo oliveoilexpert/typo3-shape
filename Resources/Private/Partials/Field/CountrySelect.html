@@ -3,8 +3,8 @@
 	<f:form.countrySelect
 			name="{namespace}[{field.name}]"
 			value="{field.sessionValue}"
-			id="{idPrefix}-co{field.uid}"
-			additionalAttributes="{shape:formFieldAttributes(record:field)}"
+			id="{namespace}[{field.name}]"
+			additionalAttributes="{shape:formFieldAttributes(field:field)}"
 			class="{blockClass}__control {blockClass}__{field.type}-control"
 			prependOptionLabel=" "
 			prependOptionValue=""

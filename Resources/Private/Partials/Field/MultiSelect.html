@@ -2,9 +2,9 @@
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{namespace}[{field.name}]"
 				   multiple="1"
-				   additionalAttributes="{shape:formFieldAttributes(record:field)}"
+				   additionalAttributes="{shape:formFieldAttributes(field:field)}"
 				   class="{blockClass}__control {blockClass}__{field.type}-control"
-				   id="{idPrefix}-co{field.uid}">
+				   id="{namespace}[{field.name}]">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
 					selected="{field.selectedOptions.{option.value}}"

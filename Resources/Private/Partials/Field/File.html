@@ -3,13 +3,14 @@
 	<f:form.textfield
 			name="{namespace}[{field.name}][]"
 		    type="{field.type}"
-		    additionalAttributes="{shape:formFieldAttributes(record:field)}"
+		    additionalAttributes="{shape:formFieldAttributes(field:field)}"
 			class="{blockClass}__control {blockClass}__{field.type}-control"
-			id="{idPrefix}-co{field.uid}"/>
-	<f:if condition="{session.filenames.{field.name}}">
+			id="{namespace}[{field.name}]"/>
+	<f:if condition="{field.sessionValue}">
 		<div class="{blockClass}__filenames">
-			<f:for each="{session.filenames.{field.name}}" as="filename">
-				<div>{filename}</div>
+			<f:for each="{field.sessionValue}" as="uploadedFilePath">
+				<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
+				<div>{shape:basename(path:uploadedFilePath)}</div>
 			</f:for>
 		</div>
 	</f:if>

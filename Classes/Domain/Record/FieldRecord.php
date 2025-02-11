@@ -22,9 +22,16 @@ class FieldRecord extends Record
 	const DATETIME_PROPS = ['default_value', 'min', 'max'];
 
 	protected mixed $sessionValue = null;
-	protected ?array $selectedOptions = null;
 	public bool $conditionResult = true;
 	public ?Result $validationResult = null;
+	protected ?array $selectedOptions = null;
+	public ?array $state = null;
+	public ?array $runtime = [
+		'conditionResult' => true,
+		'validationResult' => null,
+		'value' => null,
+		'valueProxy' => null,
+	];
 
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,

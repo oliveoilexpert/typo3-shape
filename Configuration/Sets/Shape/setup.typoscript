@@ -27,3 +27,10 @@ tx_shape_form_fragment {
         no_cache = 1
     }
 }
+
+plugin.tx_shape {
+    settings {
+        pluginUid = 0
+        uploadFolder = 1:/user_upload/
+    }
+}

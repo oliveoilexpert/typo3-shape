@@ -9,10 +9,19 @@ readonly class FormContext
 	public function __construct(
 		public RequestInterface $request,
 		public array $settings,
-		public Core\Domain\RecordInterface $plugin,
-		public Core\Domain\RecordInterface $form,
+		public Core\Domain\Record $plugin,
+		public Core\Domain\Record $form,
 		public FormSession $session,
+		public array $postValues,
 		public Core\Resource\ResourceStorageInterface $uploadStorage,
 	)
 	{}
+	public function getValue(string $name): mixed
+	{
+		return $this->postValues[$name] ?? $this->session->values[$name] ?? null;
+	}
+	public function getSessionUploadFolder(): string
+	{
+		return explode(':', $this->settings['uploadFolder'])[1] . $this->session->id . '/';
+	}
 }

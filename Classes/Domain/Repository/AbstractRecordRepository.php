@@ -28,7 +28,7 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		$this->languageId = $languageId;
 	}
 
-	public function findByUid(int $uid, bool $asRecord = true): Core\Domain\RecordInterface|null
+	public function findByUid(int $uid, bool $asRecord = true): Core\Domain\Record|null
 	{
 		$queryBuilder = $this->connectionPool->getQueryBuilderForTable($this->getTableName());
 		$where = [

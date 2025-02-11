@@ -29,13 +29,12 @@ use UBOS\Shape\Event;
 // todo: rate limiter finisher?
 // todo: all settings for plugin: disable server validation?,
 // todo: repeatable container server side conditions?
-// note: upload and radio fields will not be in formValues if no value is set
+// note: upload and radio fields will not be in POST values if no value is set
 
 class FormController extends Extbase\Mvc\Controller\ActionController
 {
 	protected FormRuntime\FormContext $context;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
-	private string $formDataArgumentName = 'values';
 	protected string $fragmentPageTypeNum = '11510497112101';
 
 	public function __construct(
@@ -48,100 +47,46 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
 			return $this->renderLazyLoader();
 		}
-		$this->createContext();
+		$this->applyContext();
 		return $this->renderForm();
 	}
 
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
-		$this->createContext();
-		if (!$this->getSession()->values) {
-			return $this->redirect('render');
-		}
-		$isStepBack = ($this->getSession()->previousPageIndex ?? 1) > $pageIndex;
-		$previousPageRecord = $this->getForm()->get('pages')[$this->getSession()->previousPageIndex-1];
+		$this->applyContext();
+		$isStepBack = ($this->context->session->previousPageIndex ?? 1) > $pageIndex;
+		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
 		if (!$isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}
-		if ($this->getSession()->hasErrors) {
-			$pageIndex = $this->getSession()->previousPageIndex;
-			DebugUtility::debug($this->getSession());
+		if ($this->context->session->hasErrors) {
+			$pageIndex = $this->context->session->previousPageIndex;
+			DebugUtility::debug($this->context->session);
 		} else {
-			$this->processPage($previousPageRecord);
+			$this->processPostValues();
 		}
 		return $this->renderForm($pageIndex);
 	}
 
 	public function submitAction(): ResponseInterface
 	{
-		$this->createContext();
-		if (!$this->getSession()->values) {
-			return $this->redirect('render');
-		}
+		$this->applyContext();
 		// validate
-		$this->validateForm($this->getForm());
+		$this->validateForm();
 		// if errors, go back to previous page
-		if ($this->getSession()->hasErrors) {
-			return $this->renderForm($this->getSession()->previousPageIndex);
+		if ($this->context->session->hasErrors) {
+			return $this->renderForm($this->context->session->previousPageIndex);
 		}
-		// maybe process entire form here? previousPageIndex can be manipulated client side and is not secure
-		// uploadedFiles could be validated but never saved if user manipulates previousPageIndex
-		$previousPageRecord = $this->getForm()->get('pages')[$this->getSession()->previousPageIndex-1];
-		$this->processPage($previousPageRecord);
+		$this->processPostValues();
 		return $this->executeFinishers();
 	}
 
-	protected function createContext(): void
+	protected function applyContext(): void
 	{
-		if (!$this->request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
-			$sessionData = (array)json_decode($this->request->getArguments()['session'] ?? '[]', true);
-			try {
-				$session = new FormRuntime\FormSession(...$sessionData);
-				$session->hasErrors = false;
-			} catch (\Exception $e) {
-				$session = new FormRuntime\FormSession();
-			}
-			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
-			$session->values = array_merge(
-				$session->values,
-				$this->request->getArguments()[$this->formDataArgumentName] ?? []
-			);
-		} else {
-			$session = new FormRuntime\FormSession();
-		}
-
-		$contentData = $this->request->getAttribute('currentContentObject')?->data;
-		if (!($contentData['CType'] ?? false)) {
-			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-			$contentData = $queryBuilder
-				->select('*')
-				->from('tt_content')
-				->where(
-					$queryBuilder->expr()->eq('uid', (int)$this->request->getArgument('pluginUid') ?? $this->settings['pluginUid'] ?? 0)
-				)
-				->executeQuery()->fetchAllAssociative()[0] ?? null;
-		}
-		if (!$contentData) {
-			throw new \Exception('No content data found');
-		}
-		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
-			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
-
-		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
-		if (!$form) {
-			throw new \Exception('No form found');
-		}
-
-		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($this->settings['uploadFolder']);
-		$this->context = new FormRuntime\FormContext(
+		$this->context = FormRuntime\FormContextBuilder::buildFromRequest(
 			$this->request,
-			$this->settings,
-			$plugin,
-			$form,
-			$session,
-			$uploadStorage
+			$this->settings
 		);
-
 		$resolver = new FormRuntime\FieldConditionResolver(
 			$this->context,
 			$this->getConditionResolver(),
@@ -150,7 +95,8 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		foreach ($this->context->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if ($field->has('name')) {
-					$field->setSessionValue($session->values[$field->getName()] ?? null);
+					$field->setSessionValue($this->context->session->values[$field->getName()] ?? null);
+					//$field->state = $this->context->session->fieldStates[$field->getName()] ?? null;
 				}
 				$field->conditionResult = $resolver->evaluate($field);
 			}
@@ -174,16 +120,16 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function renderForm(int $pageIndex = 1): ?ResponseInterface
 	{
-		$lastPageIndex = count($this->getForm()->get('pages'));
-		$currentPageRecord = $this->getForm()->get('pages')[$pageIndex - 1];
+		$lastPageIndex = count($this->context->form->get('pages'));
+		$currentPageRecord = $this->context->form->get('pages')[$pageIndex - 1];
 
 		$viewVariables = [
-			'session' => $this->getSession(),
-			'sessionJson' => json_encode($this->getSession()),
-			'namespace' => $this->formDataArgumentName,
+			'session' => $this->context->session,
+			'sessionJson' => json_encode($this->context->session),
+			'namespace' => $this->context->form->get('name'),
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
-			'plugin' => $this->getPlugin(),
-			'form' => $this->getForm(),
+			'plugin' => $this->context->plugin,
+			'form' => $this->context->form,
 			'settings' => $this->settings,
 			'currentPage' => $currentPageRecord,
 			'pageIndex' => $pageIndex,
@@ -202,23 +148,23 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->htmlResponse();
 	}
 
-	protected function validateForm(Core\Domain\RecordInterface $form): void
+	protected function validateForm(): void
 	{
-		if (!$form->has('pages')) {
+		if (!$this->context->form->has('pages')) {
 			return;
 		}
 		$index = 1;
-		foreach ($form->get('pages') as $page) {
+		foreach ($this->context->form->get('pages') as $page) {
 			$this->validatePage($page);
-			if ($this->getSession()->hasErrors) {
-				$this->getSession()->previousPageIndex = $index;
+			if ($this->context->session->hasErrors) {
+				$this->context->session->previousPageIndex = $index;
 				break;
 			}
 			$index++;
 		}
 	}
 
-	protected function validatePage(Core\Domain\RecordInterface $page): void
+	protected function validatePage(Core\Domain\Record $page): void
 	{
 		if (!$page->has('fields')) {
 			return;
@@ -228,38 +174,42 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->eventDispatcher
 		);
 		foreach ($page->get('fields') as $field) {
-			if (!$field->has('name')) {
-				continue;
-			}
-			$name = $field->getName();
-			$field->validationResult = $validator->validate($field, $this->getSession()->values[$name] ?? null);
+			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
-				$this->getSession()->hasErrors = true;
+				$this->context->session->hasErrors = true;
 			}
 		}
 	}
 
-	protected function processPage(Core\Domain\RecordInterface $page): void
+	protected function processPostValues(): void
 	{
-		if (!$page->has('fields')) {
-			return;
-		}
 		$processor = new FormRuntime\FieldProcessor(
 			$this->context,
 			$this->eventDispatcher
 		);
-		foreach ($page->get('fields') as $field) {
-			$this->getSession()->values[$field->getName()] = $processor->process(
-				$field,
-				$this->getSession()->values[$field->getName()] ?? null
-			);
+		foreach ($this->context->form->get('pages') as $page) {
+			foreach ($page->get('fields') as $field) {
+				if (!$field->has('name')) {
+					continue;
+				}
+				$name = $field->getName();
+				if (!isset($this->context->postValues[$name])) {
+					continue;
+				}
+				[$processed, $state] = $processor->process(
+					$field,
+					$this->context->getValue($name)
+				);
+				$this->context->session->values[$name] = $processed;
+				$field->setSessionValue($processed);
+			}
 		}
 	}
 
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->getForm()->get('finishers') as $finisherRecord) {
+		foreach ($this->context->form->get('finishers') as $finisherRecord) {
 			$willExecute = true;
 			if ($finisherRecord->get('condition') ?? false) {
 				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));
@@ -273,7 +223,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			// todo: remove session values that do not belong to the form
 			try {
 				// execute finisher event
-				$response = $this->makeFinisherInstance($finisherRecord, $this->getSession()->values)?->execute() ?? $response;
+				$response = $this->makeFinisherInstance($finisherRecord)?->execute() ?? $response;
 			} catch (\Exception $e) {
 				throw $e;
 			}
@@ -287,7 +237,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->htmlResponse($message);
 	}
 
-	protected function makeFinisherInstance(Core\Domain\RecordInterface $finisherRecord, array $formValues): ?Domain\Finisher\AbstractFinisher
+	protected function makeFinisherInstance(Core\Domain\Record $finisherRecord): ?Domain\Finisher\AbstractFinisher
 	{
 		$className = $finisherRecord->get('type') ?? '';
 		if (!$className || !class_exists($className)) {
@@ -298,26 +248,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->request,
 			$this->view,
 			$this->settings,
-			$this->getPlugin(),
-			$this->getForm(),
+			$this->context->plugin,
+			$this->context->form,
 			$finisherRecord,
-			$formValues,
+			$this->context->session->values,
 		);
-	}
-
-	protected function getPlugin(): Core\Domain\RecordInterface
-	{
-		return $this->context->plugin;
-	}
-
-	protected function getForm(): Core\Domain\RecordInterface
-	{
-		return $this->context->form;
-	}
-
-	protected function getSession(): FormRuntime\FormSession
-	{
-		return $this->context->session;
 	}
 
 	protected function getConditionResolver(): Core\ExpressionLanguage\Resolver
@@ -327,7 +262,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 
 		$variables = [
-			'formValues' => $this->getSession()->values,
+			'formValues' => $this->context->session->values,
 			'frontendUser' => $this->getFrontendUser(),
 			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
 			'site' => $this->request->getAttribute('site'),
@@ -351,12 +286,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	}
 	protected function getSessionKey(): stringx
 	{
-		return 'tx_shape_c' . $this->getPlugin()?->getUid() . '_f' . $this->getForm()->getUid();
+		return 'tx_shape_c' . $this->context->plugin?->getUid() . '_f' . $this->context->form->getUid();
 	}
 
 	// use fe_session to store form session?
 	// how to handle garbage collection?
 	// Core\Session\UserSessionManager::create('FE')->collectGarbage(10);
-	// $this->getFrontendUser()->setKey('ses', $this->getSessionKey(), $this->getSession());
+	// $this->getFrontendUser()->setKey('ses', $this->getSessionKey(), $this->context->session);
 	// DebugUtility::debug($this->getFrontendUser()->getKey('ses', $this->getSessionKey()));
 }

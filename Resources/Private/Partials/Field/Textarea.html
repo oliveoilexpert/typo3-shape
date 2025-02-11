@@ -2,8 +2,8 @@
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textarea name="{namespace}[{field.name}]"
 					 value="{field.sessionValue}"
-					 additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					 additionalAttributes="{shape:formFieldAttributes(field:field)}"
 					 class="{blockClass}__control {blockClass}__{field.type}-control"
-					 id="{idPrefix}-co{field.uid}"/>
+					 id="{namespace}[{field.name}]"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

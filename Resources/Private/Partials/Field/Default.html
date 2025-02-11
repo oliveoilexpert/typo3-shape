@@ -3,11 +3,11 @@
 	<f:form.textfield name="{namespace}[{field.name}]"
 					  type="{field.type}"
 					  value="{field.sessionValue}"
-					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					  additionalAttributes="{shape:formFieldAttributes(field:field)}"
 					  class="{blockClass}__control {blockClass}__{field.type}-control"
-					  id="{idPrefix}-co{field.uid}"/>
+					  id="{namespace}[{field.name}]"/>
 	<f:if condition="{field.datalist}">
-		<datalist id="{idPrefix}-co{field.uid}-datalist">
+		<datalist id="{namespace}[{field.name}]-datalist">
 			<f:for each="{field.datalistArray}" as="item">
 				<option value="{item}"/>
 			</f:for>

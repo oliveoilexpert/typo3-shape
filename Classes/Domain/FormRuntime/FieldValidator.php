@@ -20,7 +20,9 @@ class FieldValidator
 
 	public function validate(Domain\Record\FieldRecord $field, mixed $value): \TYPO3\CMS\Extbase\Error\Result
 	{
-
+		if (!$field->has('name')) {
+			return new \TYPO3\CMS\Extbase\Error\Result();
+		}
 		$type = $field->getType();
 
 		// todo: PhoneNumberValidator, ColorValidator,
@@ -41,6 +43,7 @@ class FieldValidator
 			return $validator->validate($value);
 		}
 
+		// add validators based on field properties
 		if ($field->has('required') && $field->get('required') && $field->conditionResult) {
 			$validator->addValidator($this->makeValidator(
 				ExtbaseValidator\NotEmptyValidator::class

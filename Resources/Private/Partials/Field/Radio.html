@@ -4,10 +4,10 @@
 		<f:form.radio name="{namespace}[{field.name}]"
 					  checked="{field.sessionValue} == {option.value}"
 					  value="{option.value}"
-					  additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					  additionalAttributes="{shape:formFieldAttributes(field:field)}"
 					  class="{blockClass}__control {blockClass}__{field.type}-control"
-					  id="{idPrefix}-co{field.uid}-{i.index}"/>
-		<label class="{blockClass}__label -for-radio" for="{idPrefix}-co{field.uid}-{i.index}">{option.label}</label>
+					  id="{namespace}[{field.name}]-{i.index}"/>
+		<label class="{blockClass}__label -for-radio" for="{namespace}[{field.name}]-{i.index}">{option.label}</label>
 	</f:for>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

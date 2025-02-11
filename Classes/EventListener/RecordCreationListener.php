@@ -29,11 +29,10 @@ final class RecordCreationListener
 
 	protected function setRecord(RecordCreationEvent $event, string $className): void
 	{
-		$record = new $className(
+		$event->setRecord(new $className(
 			$event->getRawRecord(),
 			$event->getProperties(),
 			$event->getSystemProperties()
-		);
-		$event->setRecord($record);
+		));
 	}
 }

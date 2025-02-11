@@ -6,7 +6,6 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
 use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
 use UBOS\Shape\Domain\Record\RepeatableContainerRecord;
 use UBOS\Shape\Event;
@@ -14,6 +13,11 @@ use UBOS\Shape\Domain\FormRuntime;
 
 final class RepeatableContainerListener
 {
+	public function __construct(
+		protected EventDispatcher $eventDispatcher
+	) {
+	}
+
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreationListener')]
 	public function recordCreation(RecordCreationEvent $event): void
 	{
@@ -22,12 +26,11 @@ final class RepeatableContainerListener
 		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field'
 			&& $event->getRawRecord()->get('type') === 'repeatable-container') {
-			$record = new RepeatableContainerRecord(
+			$event->setRecord(new RepeatableContainerRecord(
 				$event->getRawRecord(),
 				$event->getProperties(),
 				$event->getSystemProperties()
-			);
-			$event->setRecord($record);
+			));
 		}
 	}
 
@@ -48,7 +51,7 @@ final class RepeatableContainerListener
 		$fieldResolver = new FormRuntime\FieldConditionResolver(
 			$event->context,
 			$event->resolver,
-			GeneralUtility::makeInstance(EventDispatcher::class)
+			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			foreach ($fields as $childField) {
@@ -75,13 +78,16 @@ final class RepeatableContainerListener
 		}
 		$validator = new FormRuntime\FieldValidator(
 			$event->context,
-			GeneralUtility::makeInstance(EventDispatcher::class)
+			$this->eventDispatcher
 		);
+		DebugUtility::debug($event->value);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$result->forProperty($index);
 			foreach ($fields as $childField) {
-				$childField->validationResult = $validator->validate($childField, $childField->getSessionValue() ?? null);
-				$result->forProperty($index)->forProperty($childField->getName())->merge($childField->validationResult);
+				$name = $childField->getName();
+				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
+				$childField->validationResult = $validator->validate($childField, $value);
+				$result->forProperty($index)->forProperty($name)->merge($childField->validationResult);
 			}
 		}
 		$event->result = $result;
@@ -101,15 +107,19 @@ final class RepeatableContainerListener
 		}
 		$processor = new FormRuntime\FieldProcessor(
 			$event->context,
-			GeneralUtility::makeInstance(EventDispatcher::class)
+			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$processedValue[$index] = [];
 			foreach ($fields as $childField) {
-				$processedValue[$index][$childField->getName()] = $processor->process(
-					$childField,
-					$childField->getSessionValue() ?? null
-				);
+				if (!$field->has('name')) {
+					continue;
+				}
+				$name = $childField->getName();
+				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
+				[$childProcessed, $childState] = $processor->process($childField, $value);
+				$childField->setSessionValue($childProcessed);
+				$processedValue[$index][$name] = $childProcessed;
 			}
 		}
 		$event->processedValue = $processedValue;

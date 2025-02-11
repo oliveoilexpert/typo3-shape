@@ -2,9 +2,20 @@
 
 namespace UBOS\Shape\Domain\Record;
 
+use TYPO3\CMS\Core\Domain\RawRecord;
+use TYPO3\CMS\Core\Domain\Record\SystemProperties;
+
 class RepeatableContainerRecord extends FieldRecord
 {
 	protected ?array $createdFieldsets = null;
+
+	protected function initialize(): void
+	{
+		parent::initialize();
+		if (!$this->get('display_condition')) {
+			$this->properties['display_condition'] = 'true';
+		}
+	}
 
 	public function setSessionValue(mixed $value): void
 	{
@@ -17,15 +28,16 @@ class RepeatableContainerRecord extends FieldRecord
 		if ($this->createdFieldsets !== null) {
 			return $this->createdFieldsets;
 		}
-		$index = 0;
 		if (!$this->getSessionValue()) {
 			return [];
 		}
+		$index = 0;
 		foreach ($this->getSessionValue() as $values) {
 			foreach($this->get('fields') as $childField) {
 				$newField = clone $childField;
-				if (isset($values[$newField->getName()])) {
-					$newField->setSessionValue($values[$newField->getName()]);
+				$name = $newField->getName();
+				if (isset($values[$name])) {
+					$newField->setSessionValue($values[$name]);
 				}
 				$this->createdFieldsets[$index][] = $newField;
 			}

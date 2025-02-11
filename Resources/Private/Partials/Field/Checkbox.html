@@ -2,9 +2,9 @@
 	<f:form.checkbox name="{namespace}[{field.name}]"
 					 checked="{field.sessionValue}"
 					 value="1"
-					 additionalAttributes="{shape:formFieldAttributes(record:field)}"
+					 additionalAttributes="{shape:formFieldAttributes(field:field)}"
 					 class="{blockClass}__control {blockClass}__{field.type}-control"
-					 id="{idPrefix}-co{field.uid}"/>
+					 id="{namespace}[{field.name}]"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>
