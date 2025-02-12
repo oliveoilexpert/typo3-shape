@@ -5,26 +5,29 @@ namespace UBOS\Shape\ViewHelpers;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-class FormFieldAttributesViewHelper extends AbstractViewHelper
+class FieldAttributesViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
 		// name, type, description, required, default, escape
 		$this->registerArgument('field', 'object', '', true);
+		$this->registerArgument('idSuffix', 'string', '', false, '');
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}
 
 	public function render(): array
 	{
 		$field = $this->arguments['field'];
+		$id = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]{$this->arguments['idSuffix']}";
 		$attributes = [
 			'data-yf-control' => $field->get('name'),
+			'id' => $id,
 		];
 		if ($field->has('validation_message') && $field->get('validation_message')) {
 			$attributes['data-yf-validation-message'] = $field->get('validation_message');
 		}
 		if ($field->has('datalist') && $field->get('datalist')) {
-			$attributes['list'] = $this->templateVariableContainer->get('namespace') . '[' . $field->getName() . ']-datalist';
+			$attributes['list'] = "{$id}-datalist";
 		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {
 			if (!$field->has($attribute)) continue;
