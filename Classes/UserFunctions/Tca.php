@@ -24,7 +24,7 @@ class Tca
 		if (is_array($type)) {
 			$type = $type[0] ?? '';
 		}
-		$params['title'] = $label . ' <small>[' . $type . ']</small>';
+		$params['title'] = "{$label}<small>[$type}]</small>";
 	}
 	public function getEmptySlugPrefix(array $parameters, TcaSlug $reference): string
 	{

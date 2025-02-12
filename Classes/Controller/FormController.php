@@ -13,7 +13,6 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
-use UBOS\Shape\Event\FieldValidationEvent;
 
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
@@ -97,7 +96,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			foreach ($page->get('fields') as $field) {
 				if ($field->has('name')) {
 					$field->setSessionValue($this->context->session->values[$field->getName()] ?? null);
-					//$field->state = $this->context->session->fieldStates[$field->getName()] ?? null;
 				}
 				$field->conditionResult = $resolver->evaluate($field);
 			}
@@ -275,7 +273,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	}
 	protected function getSessionKey(): stringx
 	{
-		return 'tx_shape_c' . $this->context->plugin?->getUid() . '_f' . $this->context->form->getUid();
+		return "tx_shape_c{$this->context->plugin?->getUid()}_f{$this->context->form->getUid()}";
 	}
 
 	// use fe_session to store form session?

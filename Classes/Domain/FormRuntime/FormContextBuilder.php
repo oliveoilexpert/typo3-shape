@@ -46,6 +46,9 @@ class FormContextBuilder
 				$postValues,
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
 			);
+
+			// only keep post values that can be mapped to fields
+			// substitute missing values with proxy values, if possible (e.g. for file fields)
 			foreach ($form->get('pages') as $page) {
 				foreach ($page->get('fields') as $field) {
 					if (!$field->has('name')) {

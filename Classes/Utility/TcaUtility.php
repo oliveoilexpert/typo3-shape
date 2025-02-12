@@ -30,7 +30,7 @@ class TcaUtility
 		string $file = 'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf'
 	): string
 	{
-		return $file . ':' . $key;
+		return "{$file}:{$key}";
 	}
 
 	public static function addToFields(

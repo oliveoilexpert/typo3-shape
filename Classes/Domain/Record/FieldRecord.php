@@ -25,13 +25,6 @@ class FieldRecord extends Record
 	public bool $conditionResult = true;
 	public ?Result $validationResult = null;
 	protected ?array $selectedOptions = null;
-	public ?array $state = null;
-	public ?array $runtime = [
-		'conditionResult' => true,
-		'validationResult' => null,
-		'value' => null,
-		'valueProxy' => null,
-	];
 
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,
@@ -54,10 +47,11 @@ class FieldRecord extends Record
 			}
 			$this->properties[$key] = $this->properties[$key]->format(self::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
 		}
-		// Set default value for fields with options
 		if (!$this->has('field_options')) {
 			return;
 		}
+		// Set default value for fields with options
+		// Types that start with 'multi-' are multi-select fields and have an array as default value
 		if (str_starts_with($this->getType(),'multi-')) {
 			$value = [];
 			foreach ($this->get('field_options') as $option) {
