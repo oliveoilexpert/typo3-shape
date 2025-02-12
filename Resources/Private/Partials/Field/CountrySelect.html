@@ -1,10 +1,10 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.countrySelect
-			name="{namespace}[{field.name}]"
+			name="{fieldAttributes.name}"
 			value="{field.sessionValue}"
-			id="{namespace}[{field.name}]"
-			additionalAttributes="{shape:formFieldAttributes(field:field)}"
+			additionalAttributes="{fieldAttributes}"
 			class="{blockClass}__control {blockClass}__{field.type}-control"
 			prependOptionLabel=" "
 			prependOptionValue=""

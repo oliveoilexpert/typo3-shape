@@ -11,22 +11,23 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 	{
 		// name, type, description, required, default, escape
 		$this->registerArgument('field', 'object', '', true);
-		$this->registerArgument('idSuffix', 'string', '', false, '');
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}
 
 	public function render(): array
 	{
 		$field = $this->arguments['field'];
-		$id = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]{$this->arguments['idSuffix']}";
+		$name = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]";
+		$id = "{$this->templateVariableContainer->get('idPrefix')}{$name}";
 		$attributes = [
 			'data-yf-control' => $field->get('name'),
 			'id' => $id,
+			'name' => $name
 		];
 		if ($field->has('validation_message') && $field->get('validation_message')) {
 			$attributes['data-yf-validation-message'] = $field->get('validation_message');
 		}
-		if ($field->has('datalist') && $field->get('datalist')) {
+		if ($field->has('datalist') && $field->get('datalist') && $field->get('type') !== 'country-select') {
 			$attributes['list'] = "{$id}-datalist";
 		}
 		foreach (['required', 'readonly', 'disabled', 'multiple'] as $attribute) {

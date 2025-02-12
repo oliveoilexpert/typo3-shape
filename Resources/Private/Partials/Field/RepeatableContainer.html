@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="id" value="{namespace}[{field.name}]"/>
+	<f:variable name="id" value="{idPrefix}{namespace}[{field.name}]"/>
 
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>

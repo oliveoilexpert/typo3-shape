@@ -1,13 +1,14 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
-		<f:form.radio name="{namespace}[{field.name}]"
+		<f:form.radio name="{fieldAttributes.name}"
 					  checked="{field.sessionValue} == {option.value}"
 					  value="{option.value}"
-					  additionalAttributes="{shape:formFieldAttributes(field:field)}"
+					  additionalAttributes="{fieldAttributes}"
 					  class="{blockClass}__control {blockClass}__{field.type}-control"
-					  id="{namespace}[{field.name}]-{i.index}"/>
-		<label class="{blockClass}__label -for-radio" for="{namespace}[{field.name}]-{i.index}">{option.label}</label>
+					  id="{fieldAttributes.id}-{i.index}"/>
+		<label class="{blockClass}__label -for-radio" for="{fieldAttributes.id}-{i.index}">{option.label}</label>
 	</f:for>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

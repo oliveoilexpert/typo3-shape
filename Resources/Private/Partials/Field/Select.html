@@ -1,9 +1,9 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
-	<f:form.select name="{namespace}[{field.name}]"
-				   additionalAttributes="{shape:formFieldAttributes(field:field)}"
-				   class="{blockClass}__control {blockClass}__{field.type}-control"
-				   id="{namespace}[{field.name}]">
+	<f:form.select name="{fieldAttributes.name}"
+				   additionalAttributes="{fieldAttributes}"
+				   class="{blockClass}__control {blockClass}__{field.type}-control">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
 				selected="{field.sessionValue} === {option.value}"

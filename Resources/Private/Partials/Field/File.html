@@ -1,15 +1,17 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textfield
-			name="{namespace}[{field.name}][]"
+			name="{fieldAttributes.name}[]"
 		    type="{field.type}"
-		    additionalAttributes="{shape:formFieldAttributes(field:field)}"
-			class="{blockClass}__control {blockClass}__{field.type}-control"
-			id="{namespace}[{field.name}]"/>
+		    additionalAttributes="{fieldAttributes}"
+			class="{blockClass}__control {blockClass}__{field.type}-control"/>
+	<f:debug>{field}</f:debug>
 	<f:if condition="{field.sessionValue}">
 		<div class="{blockClass}__file-uploads">
 			<f:for each="{field.sessionValue}" as="uploadedFilePath">
 				<div class="{blockClass}__file-upload">
+					<f:debug>{uploadedFilePath}</f:debug>
 					<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
 					{shape:basename(path:uploadedFilePath) -> f:format.crop(maxCharacters:20)}
 					<button class="{blockClass}__file-upload-remove"

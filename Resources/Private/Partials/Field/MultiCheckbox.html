@@ -1,15 +1,16 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
-		<f:form.checkbox name="{namespace}[{field.name}]"
+		<f:form.checkbox name="{fieldAttributes.name}"
 						 checked="{field.selectedOptions.{option.value}}"
 						 multiple="1"
 						 value="{option.value}"
 						 data-yf-multi-check-required="{field.required}"
-						 additionalAttributes="{shape:formFieldAttributes(field:field)}"
-						 class="{blockClass}__control {blockClass}__{field.type}-control"
-						 id="{namespace}[{field.name}]-{i.index}"/>
-		<label class="{blockClass}__label -for-checkbox" for="{namespace}[{field.name}]-{i.index}">{option.label}</label>
+						 additionalAttributes="{fieldAttributes}"
+						 id="{fieldAttributes.id}-{i.index}"
+						 class="{blockClass}__control {blockClass}__{field.type}-control"/>
+		<label class="{blockClass}__label -for-checkbox" for="{fieldAttributes.id}-{i.index}">{option.label}</label>
 	</f:for>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>
