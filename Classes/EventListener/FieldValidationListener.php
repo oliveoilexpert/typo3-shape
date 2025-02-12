@@ -127,7 +127,7 @@ final class FieldValidationListener
 			if ($value && is_string(reset($value))) {
 				$fileValidator->addValidator($this->makeValidator(
 					Validator\FileExistsInStorageValidator::class,
-					['storage' => $this->context->uploadStorage]
+					['storage' => $event->context->uploadStorage]
 				));
 			} else {
 				if ($field->get('accept')) {

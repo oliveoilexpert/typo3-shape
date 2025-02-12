@@ -15,7 +15,6 @@ final class FieldProcessEvent
 		public readonly mixed $value,
 		public mixed $processedValue = null,
 	) {}
-
 	public function isPropagationStopped(): bool
 	{
 		return $this->processedValue !== null;

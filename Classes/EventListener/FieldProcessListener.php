@@ -22,10 +22,10 @@ final class FieldProcessListener
 		$value = $event->value;
 		$field = $event->field;
 		if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
-			$event->processedValue = $this->saveUploadedFiles($value);
+			$event->processedValue = $this->saveUploadedFiles($value, $event);
 		}
 		if ($value instanceof Core\Http\UploadedFile) {
-			$event->processedValue = $this->saveUploadedFiles([$value]);
+			$event->processedValue = $this->saveUploadedFiles([$value], $event);
 		}
 		if ($field->getType() === 'password') {
 			$event->processedValue = $this->getPasswordHash()->getHashedPassword($value);

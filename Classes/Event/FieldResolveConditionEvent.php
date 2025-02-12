@@ -15,7 +15,6 @@ final class FieldResolveConditionEvent
 		public readonly Core\ExpressionLanguage\Resolver $resolver,
 		public ?bool $result = null,
 	) {}
-
 	public function isPropagationStopped(): bool
 	{
 		return $this->result !== null;

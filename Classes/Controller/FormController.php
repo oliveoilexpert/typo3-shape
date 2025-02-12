@@ -185,6 +185,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		);
 		foreach ($this->context->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
+				// only process fields that have been newly submitted, not session values
+				if (!$field->has('name') || !isset($this->context->postValues[$field->get('name')])) {
+					continue;
+				}
 				$name = $field->getName();
 				$processedValue = $processor->process($field, $this->context->getValue($name));
 				$this->context->session->values[$name] = $processedValue;

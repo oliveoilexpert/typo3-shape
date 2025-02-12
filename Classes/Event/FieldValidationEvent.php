@@ -20,12 +20,10 @@ final class FieldValidationEvent
 	)
 	{
 	}
-
 	public function isPropagationStopped(): bool
 	{
 		return $this->result !== null;
 	}
-
 	public function addValidator(Validator\ValidatorInterface $validator): void
 	{
 		$this->validator->addValidator($validator);
