@@ -55,9 +55,6 @@ final class RepeatableContainerListener
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			foreach ($fields as $childField) {
-				if (! $childField->has('display_condition')) {
-					continue;
-				}
 				$childField->set('display_condition', str_replace('__INDEX', $index, $childField->get('display_condition')));
 				$childField->conditionResult = $fieldResolver->evaluate($childField);
 			}
@@ -80,7 +77,6 @@ final class RepeatableContainerListener
 			$event->context,
 			$this->eventDispatcher
 		);
-		DebugUtility::debug($event->value);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$result->forProperty($index);
 			foreach ($fields as $childField) {
@@ -112,17 +108,13 @@ final class RepeatableContainerListener
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$processedValue[$index] = [];
 			foreach ($fields as $childField) {
-				if (!$field->has('name')) {
-					continue;
-				}
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				[$childProcessed, $childState] = $processor->process($childField, $value);
+				$childProcessed = $processor->process($childField, $value);
 				$childField->setSessionValue($childProcessed);
 				$processedValue[$index][$name] = $childProcessed;
 			}
 		}
 		$event->processedValue = $processedValue;
 	}
-
 }

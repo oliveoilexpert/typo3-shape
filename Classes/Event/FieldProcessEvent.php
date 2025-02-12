@@ -14,7 +14,6 @@ final class FieldProcessEvent
 		public readonly Domain\Record\FieldRecord $field,
 		public readonly mixed $value,
 		public mixed $processedValue = null,
-		public mixed $state = null,
 	) {}
 
 	public function isPropagationStopped(): bool

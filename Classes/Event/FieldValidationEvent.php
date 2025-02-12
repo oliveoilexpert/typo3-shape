@@ -17,8 +17,9 @@ final class FieldValidationEvent
 		public readonly Validator\ConjunctionValidator $validator,
 		public $value,
 		public ?Result $result = null,
-		public bool $buildDefaultValidators = true
-	) {}
+	)
+	{
+	}
 
 	public function isPropagationStopped(): bool
 	{

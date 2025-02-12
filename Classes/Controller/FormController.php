@@ -13,6 +13,7 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
+use UBOS\Shape\Event\FieldValidationEvent;
 
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
@@ -169,10 +170,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$validator = new FormRuntime\FieldValidator(
-			$this->context,
-			$this->eventDispatcher
-		);
+		$validator = new FormRuntime\FieldValidator($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
@@ -189,19 +187,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		);
 		foreach ($this->context->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
-				if (!$field->has('name')) {
-					continue;
-				}
 				$name = $field->getName();
-				if (!isset($this->context->postValues[$name])) {
-					continue;
-				}
-				[$processed, $state] = $processor->process(
-					$field,
-					$this->context->getValue($name)
-				);
-				$this->context->session->values[$name] = $processed;
-				$field->setSessionValue($processed);
+				$processedValue = $processor->process($field, $this->context->getValue($name));
+				$this->context->session->values[$name] = $processedValue;
+				$field->setSessionValue($processedValue);
 			}
 		}
 	}

@@ -19,17 +19,7 @@ class FormContextBuilder
 	{
 		$extensionService = GeneralUtility::makeInstance(ExtensionService::class);
 		$pluginNamespace = $extensionService->getPluginNamespace($request->getControllerExtensionName(), $request->getControllerName());
-		$contentData = $request->getAttribute('currentContentObject')?->data;
-		if (!($contentData['CType'] ?? false)) {
-			$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-			$contentData = $queryBuilder
-				->select('*')
-				->from('tt_content')
-				->where(
-					$queryBuilder->expr()->eq('uid', (int)$request->getArgument('pluginUid') ?? $settings['pluginUid'] ?? 0)
-				)
-				->executeQuery()->fetchAllAssociative()[0] ?? null;
-		}
+		$contentData = self::getContentData($request, $settings);
 		if (!$contentData) {
 			throw new \Exception('No content data found');
 		}
@@ -50,7 +40,7 @@ class FormContextBuilder
 			}
 			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 
-			// manually create values form parsed body and uploaded files because ExtbaseRequestParameters->
+			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
 			$postValues = $request->getParsedBody()[$pluginNamespace][$form->get('name')] ?? [];
 			Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
 				$postValues,
@@ -85,5 +75,24 @@ class FormContextBuilder
 			$cleanedPostValues,
 			$uploadStorage
 		);
+	}
+
+	protected static function getContentData(
+		RequestInterface $request,
+		array $settings
+	): ?array
+	{
+		$contentData = $request->getAttribute('currentContentObject')?->data;
+		if (isset($contentData['CType'])) {
+			return $contentData;
+		}
+		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+		return $queryBuilder
+			->select('*')
+			->from('tt_content')
+			->where(
+				$queryBuilder->expr()->eq('uid', (int)$request->getArgument('pluginUid') ?? $settings['pluginUid'] ?? 0)
+			)
+			->executeQuery()->fetchAllAssociative()[0] ?? null;
 	}
 }

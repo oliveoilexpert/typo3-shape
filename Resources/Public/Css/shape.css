@@ -4,6 +4,8 @@
 	--yf-gap: 1.5em;
 	--yf-error-dark-color: #721c24;
 	--yf-error-light-color: #f8d7da;
+	--yf-file-upload-dark-color: #004085;
+	--yf-file-upload-light-color: #cce5ff;
 	* {
 		box-sizing: border-box;
 	}
@@ -95,6 +97,33 @@
 .yform__multi-checkbox-control,
 .yform__file-control{
 	width: auto;
+}
+.yform__file-uploads {
+	margin-top: .5em;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5em;
+}
+.yform__file-upload {
+	position: relative;
+	font-size: smaller;
+	padding: .5em 2em .5em .75em;
+	line-height: 1;
+	border-radius: 5px;
+	@media(prefers-color-scheme: dark) {
+		color: var(--yf-file-upload-light-color);
+		background: var(--yf-file-upload-dark-color);
+	}
+	@media(prefers-color-scheme: light) {
+		color: var(--yf-file-upload-dark-color);
+		background: var(--yf-file-upload-light-color);
+	}
+}
+.yform__file-upload-remove {
+	position: absolute;
+	top: 0;
+	font-size: 150%;
+	padding-left: .5em;
 }
 
 .yform__repeatable-container-field {

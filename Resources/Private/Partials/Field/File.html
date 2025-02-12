@@ -7,10 +7,15 @@
 			class="{blockClass}__control {blockClass}__{field.type}-control"
 			id="{namespace}[{field.name}]"/>
 	<f:if condition="{field.sessionValue}">
-		<div class="{blockClass}__filenames">
+		<div class="{blockClass}__file-uploads">
 			<f:for each="{field.sessionValue}" as="uploadedFilePath">
-				<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
-				<div>{shape:basename(path:uploadedFilePath)}</div>
+				<div class="{blockClass}__file-upload">
+					<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
+					{shape:basename(path:uploadedFilePath) -> f:format.crop(maxCharacters:20)}
+					<button class="{blockClass}__file-upload-remove"
+							onclick="this.parentElement.remove()"
+							aria-label="{f:translate(key:'label.remove_upload')}">⨯</button>
+				</div>
 			</f:for>
 		</div>
 	</f:if>

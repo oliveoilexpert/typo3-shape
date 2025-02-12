@@ -28,13 +28,9 @@ class FieldConditionResolver
 			$this->resolver,
 		);
 		$this->eventDispatcher->dispatch($event);
-		if (! $event->isPropagationStopped()) {
-			if (! $field->get('display_condition')) {
-				return true;
-			}
-			return $this->resolver->evaluate($field->get('display_condition'));
-		} else {
+		if ($event->isPropagationStopped()) {
 			return $event->result;
 		}
+		return $this->resolver->evaluate($field->get('display_condition'));
 	}
 }
