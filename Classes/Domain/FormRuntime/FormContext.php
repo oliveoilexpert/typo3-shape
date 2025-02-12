@@ -15,7 +15,8 @@ readonly class FormContext
 		public array $postValues,
 		public Core\Resource\ResourceStorageInterface $uploadStorage,
 	)
-	{}
+	{
+	}
 	public function getValue(string $name): mixed
 	{
 		return $this->postValues[$name] ?? $this->session->values[$name] ?? null;

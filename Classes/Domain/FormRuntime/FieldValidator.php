@@ -22,14 +22,12 @@ class FieldValidator
 		if (!$field->has('name')) {
 			return new \TYPO3\CMS\Extbase\Error\Result();
 		}
-		// todo: PhoneNumberValidator, ColorValidator,
 		$event = new FieldValidationEvent(
 			$this->context,
 			$field,
 			Core\Utility\GeneralUtility::makeInstance(ExtbaseValidator\ConjunctionValidator::class),
 			$value
 		);
-
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
 			return $event->result;
