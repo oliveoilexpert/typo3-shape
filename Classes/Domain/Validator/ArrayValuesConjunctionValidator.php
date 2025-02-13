@@ -20,7 +20,7 @@ final class ArrayValuesConjunctionValidator extends AbstractCompositeValidator
 
     /**
      * Checks if all values in the given array are valid according to the validators of the conjunction.
-     * Every validator has to be valid for every value, to make the whole conjunction valid.
+     * Every validator has to be valid for every value to make the whole conjunction valid.
      *
      * @param mixed $value The value that should be validated
      */

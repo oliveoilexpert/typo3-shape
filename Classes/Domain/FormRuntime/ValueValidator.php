@@ -6,9 +6,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\FieldValidationEvent;
+use UBOS\Shape\Event\ValueValidationEvent;
 
-class FieldValidator
+class ValueValidator
 {
 	public function __construct(
 		protected Domain\FormRuntime\FormContext $context,
@@ -22,7 +22,7 @@ class FieldValidator
 		if (!$field->has('name')) {
 			return new \TYPO3\CMS\Extbase\Error\Result();
 		}
-		$event = new FieldValidationEvent(
+		$event = new ValueValidationEvent(
 			$this->context,
 			$field,
 			Core\Utility\GeneralUtility::makeInstance(ExtbaseValidator\ConjunctionValidator::class),

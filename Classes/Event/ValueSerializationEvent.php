@@ -7,16 +7,16 @@ namespace UBOS\Shape\Event;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 
-final class FieldResolveConditionEvent
+final class ValueSerializationEvent
 {
 	public function __construct(
 		public readonly Domain\FormRuntime\FormContext $context,
 		public readonly Domain\Record\FieldRecord $field,
-		public readonly Core\ExpressionLanguage\Resolver $resolver,
-		public ?bool $result = null,
+		public readonly mixed $value,
+		public mixed $serializedValue = null,
 	) {}
 	public function isPropagationStopped(): bool
 	{
-		return $this->result !== null;
+		return $this->serializedValue !== null;
 	}
 }

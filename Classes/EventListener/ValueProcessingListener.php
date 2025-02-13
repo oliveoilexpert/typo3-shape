@@ -2,35 +2,26 @@
 
 namespace UBOS\Shape\EventListener;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Crypto\PasswordHashing;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\FieldProcessingEvent;
+use UBOS\Shape\Event\ValueProcessingEvent;
 
-final class FieldProcessingListener
+final class ValueProcessingListener
 {
 	public function __construct(
 		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null
-	)
-	{
-	}
+	) {}
 
 	#[AsEventListener]
-	public function __invoke(FieldProcessingEvent $event): void
+	public function __invoke(ValueProcessingEvent $event): void
 	{
 		if ($event->isPropagationStopped()) {
 			return;
 		}
 		$value = $event->value;
 		$field = $event->field;
-
-		if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
-			$event->processedValue = $this->saveUploadedFiles($value, $event);
-		}
-		if ($value instanceof Core\Http\UploadedFile) {
-			$event->processedValue = $this->saveUploadedFiles([$value], $event);
-		}
 		if ($field->getType() === 'password') {
 			$event->processedValue = $this->getPasswordHash()->getHashedPassword($value);
 		}
@@ -43,26 +34,6 @@ final class FieldProcessingListener
 				}
 			}
 		}
-	}
-
-	protected function saveUploadedFiles(array $files, FieldProcessingEvent $event): array
-	{
-		$folderPath = $event->context->getSessionUploadFolder();
-		$uploadStorage = $event->context->uploadStorage;
-		if (!$uploadStorage->hasFolder($folderPath)) {
-			$uploadStorage->createFolder($folderPath);
-		}
-		$filePaths = [];
-		foreach ($files as $file) {
-			$newFile = $uploadStorage->addUploadedFile(
-				$file,
-				$uploadStorage->getFolder($folderPath),
-				$file->getClientFilename(),
-				Core\Resource\Enum\DuplicationBehavior::RENAME
-			);
-			$filePaths[] = $folderPath . $newFile->getName();
-		}
-		return $filePaths;
 	}
 
 	protected function getPasswordHash(): PasswordHashing\PasswordHashInterface

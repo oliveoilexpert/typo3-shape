@@ -5,7 +5,7 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\FieldResolveConditionEvent;
+use UBOS\Shape\Event\FieldConditionResolutionEvent;
 
 class FieldConditionResolver
 {
@@ -22,7 +22,7 @@ class FieldConditionResolver
 		if (!$field->has('display_condition') || !$field->get('display_condition')) {
 			return true;
 		}
-		$event = new FieldResolveConditionEvent(
+		$event = new FieldConditionResolutionEvent(
 			$this->context,
 			$field,
 			$this->resolver,

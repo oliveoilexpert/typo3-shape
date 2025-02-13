@@ -15,8 +15,7 @@ final class RepeatableContainerListener
 {
 	public function __construct(
 		protected EventDispatcher $eventDispatcher
-	) {
-	}
+	) {}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreationListener')]
 	public function recordCreation(RecordCreationEvent $event): void
@@ -32,7 +31,7 @@ final class RepeatableContainerListener
 	}
 
 	#[AsEventListener]
-	public function fieldResolveCondition(Event\FieldResolveConditionEvent $event): void
+	public function fieldConditionResolution(Event\FieldConditionResolutionEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -58,8 +57,8 @@ final class RepeatableContainerListener
 		}
 	}
 
-	#[AsEventListener(after: 'UBOS\Shape\EventListener\FieldValidationListener')]
-	public function fieldValidation(Event\FieldValidationEvent $event): void
+	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidationListener')]
+	public function valueValidation(Event\ValueValidationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -70,7 +69,7 @@ final class RepeatableContainerListener
 			$event->result = $result;
 			return;
 		}
-		$validator = new FormRuntime\FieldValidator(
+		$validator = new FormRuntime\ValueValidator(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -83,12 +82,43 @@ final class RepeatableContainerListener
 				$result->forProperty($index)->forProperty($name)->merge($childField->validationResult);
 			}
 		}
-		DebugUtility::debug($result);
 		$event->result = $result;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\FieldProcessingListener')]
-	public function fieldProcess(Event\FieldProcessingEvent $event): void
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializationListener')]
+	public function valueSerialization(Event\ValueSerializationEvent $event): void
+	{
+		$field = $event->field;
+		if (!($field instanceof RepeatableContainerRecord)) {
+			return;
+		}
+		$serializedValue = [];
+		if (!$event->value) {
+			$event->serializedValue = $serializedValue;
+			return;
+		}
+		$serializer = new FormRuntime\ValueSerializer(
+			$event->context,
+			$this->eventDispatcher
+		);
+		foreach ($field->getCreatedFieldsets() as $index => $fields) {
+			$serializedValue[$index] = [];
+			foreach ($fields as $childField) {
+				$name = $childField->getName();
+				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
+				$serializedChildValue = $serializer->serialize($childField, $value);
+				$childField->setSessionValue($serializedChildValue);
+				$serializedValue[$index][$name] = $serializedChildValue;
+				if (isset($event->value[$index][$name.'__CONFIRM'])) {
+					$serializedValue[$index][$name.'__CONFIRM'] = $serializedChildValue;
+				}
+			}
+		}
+		$event->serializedValue = $serializedValue;
+	}
+
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessingListener')]
+	public function valueProcessing(Event\ValueProcessingEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -99,7 +129,7 @@ final class RepeatableContainerListener
 			$event->processedValue = $processedValue;
 			return;
 		}
-		$processor = new FormRuntime\FieldProcessor(
+		$processor = new FormRuntime\ValueProcessor(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -108,9 +138,12 @@ final class RepeatableContainerListener
 			foreach ($fields as $childField) {
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				$childProcessed = $processor->process($childField, $value);
-				$childField->setSessionValue($childProcessed);
-				$processedValue[$index][$name] = $childProcessed;
+				$processedChildValue = $processor->process($childField, $value);
+				$childField->setSessionValue($processedChildValue);
+				$processedValue[$index][$name] = $processedChildValue;
+				if (isset($event->value[$index][$name.'__CONFIRM'])) {
+					$processedValue[$index][$name.'__CONFIRM'] = $processedChildValue;
+				}
 			}
 		}
 		$event->processedValue = $processedValue;

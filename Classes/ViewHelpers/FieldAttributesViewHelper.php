@@ -10,7 +10,7 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 	public function initializeArguments(): void
 	{
 		// name, type, description, required, default, escape
-		$this->registerArgument('field', 'object', '', false, null);
+		$this->registerArgument('field', 'object', '', false, false);
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}
 

@@ -258,7 +258,16 @@ $columns = [
 	'pattern' => [
 		'config' => [
 			'type' => 'input',
-			'size' => 40,
+			'size' => 100,
+			'valuePicker' => [
+				'items' => [
+					['Alphabetic', '/^[\pL]*$/u'],
+					['Alphanumeric', '/^[\pL\d]*$/u'],
+					['Zip code (5 digits)', '^[0-9]{5}$'],
+					['Phone number', '^\+?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$'],
+					['Password', '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$']
+				],
+			],
 		],
 	],
 	'accept' => [
@@ -416,6 +425,11 @@ $columns = [
 			]
 		]
 	],
+	'confirm_input' => [
+		'config' => [
+			'type' => 'check',
+		],
+	],
 	'display_condition' => [
 		'description' => Util::t('field.display_condition.description'),
 		'config' => [
@@ -465,6 +479,7 @@ $langSyncColumns = [
 	'autocomplete',
 	'autocomplete_modifier',
 	'datalist',
+	'confirm_input',
 	'display_condition',
 	'js_display_condition'
 ];

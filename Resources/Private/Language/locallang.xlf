@@ -8,7 +8,7 @@
 			<trans-unit id="validation.error.date_range.maximum"><source>Value must be %s or earlier.</source></trans-unit>
 			<trans-unit id="validation.error.file_exists_in_storage"><source>Uploaded file could not be found.</source></trans-unit>
 			<trans-unit id="validation.error.in_array"><source>Value must be one of the provided options.</source></trans-unit>
-			<trans-unit id="validation.error.subset_of_array"><source>Values must be one of the provided options.</source></trans-unit>
+			<trans-unit id="validation.error.subset_array"><source>Values must be one of the provided options.</source></trans-unit>
 			<trans-unit id="validation.error.count.countable"><source>Value must be countable.</source></trans-unit>
 			<trans-unit id="validation.error.count.minimum"><source>Value must have at least %s items.</source></trans-unit>
 			<trans-unit id="validation.error.count.maximum"><source>Value must not have more than %s items.</source></trans-unit>
@@ -22,13 +22,20 @@
 			<trans-unit id="validation.error.number_step_range.nearest"><source>Please enter a valid value. The two nearest valid values are %s and %s.</source></trans-unit>
 			<trans-unit id="validation.error.number_step_range.nearest_single"><source>Please enter a valid value. The nearest valid value is %s.</source></trans-unit>
 
+			<trans-unit id="validation.error.equal"><source>Submitted values do not match.</source></trans-unit>
+			<trans-unit id="validation.error.file_upload"><source>Submitted value is not a file.</source></trans-unit>
+
 			<trans-unit id="label.prev_page"><source>back</source></trans-unit>
 			<trans-unit id="label.next_page"><source>submit</source></trans-unit>
 
 			<trans-unit id="label.add_fieldset"><source>add</source></trans-unit>
 			<trans-unit id="label.remove_fieldset"><source>remove</source></trans-unit>
 
-			<trans-unit id="label.remove_upload"><source>Remove upload</source></trans-unit>
+			<trans-unit id="label.remove"><source>Remove</source></trans-unit>
+
+			<trans-unit id="label.confirm_input"><source>Confirm</source></trans-unit>
+			<trans-unit id="label.password_saved"><source>Password saved</source></trans-unit>
+
 		</body>
 	</file>
 </xliff>

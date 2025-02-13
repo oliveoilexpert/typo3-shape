@@ -3,7 +3,7 @@
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
 		<f:form.radio name="{fieldAttributes.name}"
-					  checked="{field.sessionValue} == {option.value}"
+					  checked="{field.value} == {option.value}"
 					  value="{option.value}"
 					  additionalAttributes="{fieldAttributes}"
 					  class="{blockClass}__control {blockClass}__{field.type}-control"

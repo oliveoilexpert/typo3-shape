@@ -1,7 +1,7 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
 	<f:form.checkbox name="{fieldAttributes.name}"
-					 checked="{field.sessionValue}"
+					 checked="{field.value}"
 					 value="1"
 					 additionalAttributes="{fieldAttributes}"
 					 class="{blockClass}__control {blockClass}__{field.type}-control"/>

@@ -8,12 +8,12 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Domain\Validator;
-use UBOS\Shape\Event\FieldValidationEvent;
+use UBOS\Shape\Event\ValueValidationEvent;
 
-final class FieldValidationListener
+final class ValueValidationListener
 {
 	#[AsEventListener]
-	public function __invoke(FieldValidationEvent $event): void
+	public function __invoke(ValueValidationEvent $event): void
 	{
 		if ($event->isPropagationStopped()) {
 			return;
@@ -79,11 +79,16 @@ final class FieldValidationListener
 				$optionValues[] = $option->get('value');
 			}
 			$event->addValidator($this->makeValidator(
-				Validator\SubsetOfArrayValidator::class,
+				Validator\SubsetArrayValidator::class,
 				['array' => $optionValues]
 			));
 		}
-
+		if ($field->has('confirm_input') && $field->get('confirm_input') && $value && isset($event->context->session->values[$field->get('name').'__CONFIRM'])) {
+			$event->addValidator($this->makeValidator(
+				Validator\EqualValidator::class,
+				['value' => $event->context->session->values[$field->get('name').'__CONFIRM'] ?? null]
+			));
+		}
 		if (in_array($type, ['date','datetime-local','time','week','month']) && $value) {
 			$format = Domain\Record\FieldRecord::DATETIME_FORMATS[$type];
 			$min = $field->get('min');
@@ -123,7 +128,7 @@ final class FieldValidationListener
 				]
 			));
 		}
-		if (is_array($value) && $field->has('min') && $field->has('max') && $type !== 'file') {
+		if ($type !== 'file' && is_array($value) && $field->has('min') && $field->has('max')) {
 			$event->addValidator($this->makeValidator(
 				Validator\CountValidator::class,
 				['minimum' => $field->get('min'), 'maximum' => $field->get('max')]
@@ -140,6 +145,9 @@ final class FieldValidationListener
 					['storage' => $event->context->uploadStorage]
 				));
 			} else {
+				$fileValidator->addValidator($this->makeValidator(
+					Validator\FileUploadValidator::class
+				));
 				if ($field->get('accept')) {
 					$fileValidator->addValidator($this->makeValidator(
 						ExtbaseValidator\MimeTypeValidator::class,

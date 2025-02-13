@@ -5,17 +5,21 @@
 			name="{fieldAttributes.name}[]"
 		    type="{field.type}"
 		    additionalAttributes="{fieldAttributes}"
+			onchange="this.closest('[data-yf-field]').querySelector('[data-yf-upload-list]').remove()"
 			class="{blockClass}__control {blockClass}__{field.type}-control"/>
-	<f:if condition="{field.sessionValue}">
-		<div class="{blockClass}__file-uploads">
-			<f:for each="{field.sessionValue}" as="uploadedFilePath">
+
+	<f:if condition="{field.value}">
+		<div class="{blockClass}__tag-list" data-yf-upload-list>
+			<f:for each="{field.value}" as="uploadedFilePath">
 				<f:if condition="{uploadedFilePath -> shape:isString()}">
-					<div class="{blockClass}__file-upload">
+					<div class="{blockClass}__tag">
 						<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
 						{uploadedFilePath -> shape:basename() -> f:format.crop(maxCharacters:20)}
-						<button class="{blockClass}__file-upload-remove"
+						<button class="{blockClass}__tag__icon"
 								onclick="this.parentElement.remove()"
-								aria-label="{f:translate(key:'label.remove_upload')}">⨯</button>
+								aria-label="{f:translate(key:'label.remove_upload')}">
+							<f:render partial="Icon/Close"/>
+						</button>
 					</div>
 				</f:if>
 			</f:for>

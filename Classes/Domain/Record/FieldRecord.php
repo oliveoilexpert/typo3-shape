@@ -79,9 +79,13 @@ class FieldRecord extends Record
 	{
 		return $this->properties['type'] ?? '';
 	}
-	public function getSessionValue(): mixed
+	public function getValue(): mixed
 	{
 		return $this->sessionValue ?? $this->get('default_value');
+	}
+	public function getSessionValue(): mixed
+	{
+		return $this->sessionValue;
 	}
 	public function setSessionValue(mixed $value): void
 	{
@@ -113,7 +117,7 @@ class FieldRecord extends Record
 			return $this->selectedOptions;
 		}
 		$selectedOptions = [];
-		$value = $this->getSessionValue();
+		$value = $this->getValue();
 		if (is_array($value)) {
 			foreach ($value as $val) {
 				$selectedOptions[$val] = $val;

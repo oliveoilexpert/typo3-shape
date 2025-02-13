@@ -2,22 +2,27 @@
 .yform__form {
 	--yf-field-width: 100%;
 	--yf-gap: 1.5em;
+	--yf-spacing: .5em;
 	--yf-error-dark-color: #721c24;
 	--yf-error-light-color: #f8d7da;
 	--yf-file-upload-dark-color: #004085;
 	--yf-file-upload-light-color: #cce5ff;
+
 	* {
 		box-sizing: border-box;
 	}
 }
+
 .yform__page {
 	padding-bottom: var(--yf-gap);
 }
+
 .yform__page__header {
 	width: 100%;
 	margin-bottom: var(--yf-gap);
 	font-size: 150%;
 }
+
 .yform__fieldset {
 	display: flex;
 	flex-wrap: wrap;
@@ -25,55 +30,73 @@
 	padding: 0;
 	border: none;
 }
+
 .yform__field {
+	box-sizing: border-box;
 	width: var(--yf-field-width);
 	padding: calc(var(--yf-gap) / 2);
-	box-sizing: border-box;
-	@media(max-width: 768px) {
+	@media (max-width: 768px) {
 		min-width: 50%;
 	}
+
 	&.-summary-step {
-		opacity: 0.8;
 		pointer-events: none;
+		opacity: 0.8;
 	}
+
 	&.--hidden {
 		display: none;
 	}
 }
 
 .yform__label {
-	margin-bottom: .5em;
 	display: block;
+	margin-bottom: var(--yf-spacing);
+
 	&.-for-checkbox, &.-for-radio {
 		display: inline-block;
 	}
 }
+
 .yform__control {
 	width: 100%;
+
+	&[disabled] {
+		opacity: 0.6;
+	}
 }
+
 .yform__description {
-	margin-top: .5em;
+	margin-top: var(--yf-spacing);
 	font-size: smaller;
 }
+
 .yform__error {
 	display: none;
 	width: fit-content;
 	max-width: 100%;
-	margin-top: .5em;
-	font-size: smaller;
+	margin-top: var(--yf-spacing);
 	padding: .5em .75em;
+	font-size: smaller;
+	line-height: 1.1;
 	border-radius: 5px;
+
 	&.--visible {
 		display: block;
 	}
-	@media(prefers-color-scheme: dark) {
+
+	@media (prefers-color-scheme: dark) {
 		color: var(--yf-error-light-color);
 		background: var(--yf-error-dark-color);
 	}
-	@media(prefers-color-scheme: light) {
+	@media (prefers-color-scheme: light) {
 		color: var(--yf-error-dark-color);
 		background: var(--yf-error-light-color);
 	}
+}
+
+.yform__confirm__label {
+	margin-top: var(--yf-spacing);
 }
 
 .yform__navigation {
@@ -81,67 +104,87 @@
 	margin-top: var(--yf-gap);
 	gap: var(--yf-gap);
 }
+
 .yform__navigation__button.-next {
 	margin-left: auto;
 }
+
 .yform__button {
 	padding: 0.5em 1em;
 	border: 2px solid currentColor;
 	border-radius: 10px;
 }
+
 .yform__header-field {
 	margin-top: var(--yf-gap);
 }
+
 .yform__checkbox-control,
 .yform__radio-control,
 .yform__multi-checkbox-control,
-.yform__file-control{
+.yform__file-control {
 	width: auto;
 }
-.yform__file-uploads {
-	margin-top: .5em;
+
+.yform__tag-list {
 	display: flex;
 	flex-wrap: wrap;
+	margin-top: var(--yf-spacing);
 	gap: .5em;
 }
-.yform__file-upload {
+
+.yform__tag {
 	position: relative;
+	padding: .5em .75em;
 	font-size: smaller;
-	padding: .5em 2em .5em .75em;
-	line-height: 1;
+	line-height: 1.1;
 	border-radius: 5px;
-	@media(prefers-color-scheme: dark) {
+
+	&:has(.yform__tag__icon) {
+		padding-right: 2em;
+	}
+
+	@media (prefers-color-scheme: dark) {
 		color: var(--yf-file-upload-light-color);
 		background: var(--yf-file-upload-dark-color);
 	}
-	@media(prefers-color-scheme: light) {
+	@media (prefers-color-scheme: light) {
 		color: var(--yf-file-upload-dark-color);
 		background: var(--yf-file-upload-light-color);
 	}
 }
-.yform__file-upload-remove {
+
+.yform__tag__icon {
 	position: absolute;
-	top: 0;
-	font-size: 150%;
 	padding-left: .5em;
+
+	svg {
+		width: 1em;
+		height: 1em;
+		fill: currentColor;
+	}
 }
 
 .yform__repeatable-container-field {
 	width: 100%;
 }
+
 .yform__repeatable__list {
 	display: flex;
-	flex-direction: column;
 	align-items: flex-start;
+	flex-direction: column;
 	width: 100%;
 }
+
 @keyframes show-repeatable-item {
 	from {
 		opacity: 0;
-	} to {
-			opacity: 1;
-		}
+	}
+	to {
+		opacity: 1;
+	}
 }
+
 .yform__repeatable__item {
 	width: 100%;
 	padding: calc(var(--yf-gap) / 1);
@@ -150,14 +193,17 @@
 	animation: show-repeatable-item 0.4s;
 	margin-block: calc(var(--yf-gap) / 2);
 }
+
 .yform__repeatable__fieldset {
 	display: flex;
 	flex-wrap: wrap;
 	margin: calc(var(--yf-gap) / -2);
 }
+
 .yform__repeatable__add {
 	margin-top: calc(var(--yf-gap) / 2);
 }
+
 .yform__repeatable__remove {
 	display: block;
 	margin-top: var(--yf-gap);

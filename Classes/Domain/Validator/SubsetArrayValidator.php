@@ -7,7 +7,7 @@ namespace UBOS\Shape\Domain\Validator;
 use TYPO3\CMS\Extbase\Validation\Exception\InvalidValidationOptionsException;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
-final class SubsetOfArrayValidator extends AbstractValidator
+final class SubsetArrayValidator extends AbstractValidator
 {
 	protected $supportedOptions = [
 		'array' => [[], 'The array to use for validation', 'array', true],
@@ -22,7 +22,7 @@ final class SubsetOfArrayValidator extends AbstractValidator
 		if (array_diff($value, $this->options['array'])) {
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.subset_of_array',
+					'validation.error.subset_array',
 					'shape',
 				),
 				1739105405

@@ -6,7 +6,7 @@
 				   class="{blockClass}__control {blockClass}__{field.type}-control">
 		<f:for each="{field.field_options}" as="option">
 			<f:form.select.option
-				selected="{field.sessionValue} === {option.value}"
+				selected="{field.value} === {option.value}"
 				value="{option.value}">{option.label}</f:form.select.option>
 		</f:for>
 	</f:form.select>

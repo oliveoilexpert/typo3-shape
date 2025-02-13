@@ -9,7 +9,7 @@ use TYPO3\CMS\Extbase\Validation\Validator;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 
-final class FieldValidationEvent
+final class ValueValidationEvent
 {
 	public function __construct(
 		public readonly Domain\FormRuntime\FormContext $context,
@@ -17,9 +17,7 @@ final class FieldValidationEvent
 		public readonly Validator\ConjunctionValidator $validator,
 		public $value,
 		public ?Result $result = null,
-	)
-	{
-	}
+	) {}
 	public function isPropagationStopped(): bool
 	{
 		return $this->result !== null;

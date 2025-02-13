@@ -38,14 +38,17 @@ class FormContextBuilder
 			} catch (\Exception $e) {
 				$session = new FormSession();
 			}
-			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 
+			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
 			$postValues = $request->getParsedBody()[$pluginNamespace][$form->get('name')] ?? [];
 			Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
 				$postValues,
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
 			);
+
+			$pageIndex = $request->getArguments()['pageIndex'] ?? 1;
+			$isStepBack = ($session->previousPageIndex ?? 1) > $pageIndex;
 
 			// only keep post values that can be mapped to fields
 			// substitute missing values with proxy values, if possible (e.g. for file fields)
@@ -54,19 +57,20 @@ class FormContextBuilder
 					if (!$field->has('name')) {
 						continue;
 					}
-					if (isset($postValues[$field->getName()])) {
-						$cleanedPostValues[$field->getName()] = $postValues[$field->getName()];
-					} else if (isset($postValues[$field->getName(). '__PROXY'])) {
-						$cleanedPostValues[$field->getName()] = $postValues[$field->getName(). '__PROXY'];
+					$name = $field->getName();
+					if (isset($postValues[$name.'__CONFIRM'])) {
+						$cleanedPostValues[$name.'__CONFIRM'] = $postValues[$name.'__CONFIRM'];
+					}
+					if (isset($postValues[$name])) {
+						$cleanedPostValues[$name] = $postValues[$name];
+					} else if (isset($postValues[$name.'__PROXY'])) {
+						$cleanedPostValues[$name] = $postValues[$name.'__PROXY'];
 					}
 				}
 			}
-			$session->values = array_merge(
-				$session->values,
-				$cleanedPostValues
-			);
 		} else {
 			$session = new FormSession();
+			$isStepBack = false;
 		}
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		return new FormContext(
@@ -76,7 +80,8 @@ class FormContextBuilder
 			$form,
 			$session,
 			$cleanedPostValues,
-			$uploadStorage
+			$uploadStorage,
+			$isStepBack
 		);
 	}
 

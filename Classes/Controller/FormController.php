@@ -15,8 +15,6 @@ use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
 
-// todo: min and max for multi- fields and repeatable containers?
-// todo: valuePicker for regex patterns
 // todo: send mail attach uploads and more settings
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
@@ -59,16 +57,15 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->applyContext();
-		$isStepBack = ($this->context->session->previousPageIndex ?? 1) > $pageIndex;
 		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
-		if (!$isStepBack) {
+		DebugUtility::debug($this->context);
+		DebugUtility::debug($previousPageRecord);
+		if (!$this->context->isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}
+		$this->serializePage($previousPageRecord);
 		if ($this->context->session->hasErrors) {
-			$pageIndex = $this->context->session->previousPageIndex;
-			DebugUtility::debug($this->context->session);
-		} else {
-			$this->processPostValues();
+			return $this->renderForm($this->context->session->previousPageIndex);
 		}
 		return $this->renderForm($pageIndex);
 	}
@@ -76,13 +73,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function submitAction(): ResponseInterface
 	{
 		$this->applyContext();
-		// validate
 		$this->validateForm();
-		// if errors, go back to previous page
+		$this->serializeForm();
 		if ($this->context->session->hasErrors) {
 			return $this->renderForm($this->context->session->previousPageIndex);
 		}
-		$this->processPostValues();
+		$this->processForm();
 		return $this->executeFinishers();
 	}
 
@@ -91,6 +87,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->context = FormRuntime\FormContextBuilder::buildFromRequest(
 			$this->request,
 			$this->settings
+		);
+		$this->context->session->values = array_merge(
+			$this->context->session->values,
+			$this->context->postValues
 		);
 		$resolver = new FormRuntime\FieldConditionResolver(
 			$this->context,
@@ -126,7 +126,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$lastPageIndex = count($this->context->form->get('pages'));
 		$currentPageRecord = $this->context->form->get('pages')[$pageIndex - 1];
-
+		$this->context->session->previousPageIndex = $pageIndex;
 		$viewVariables = [
 			'session' => $this->context->session,
 			'sessionJson' => json_encode($this->context->session),
@@ -173,7 +173,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$validator = new FormRuntime\FieldValidator($this->context, $this->eventDispatcher);
+		$validator = new FormRuntime\ValueValidator($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
@@ -182,22 +182,54 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 	}
 
-	protected function processPostValues(): void
+	protected function serializeForm(): void
 	{
-		$processor = new FormRuntime\FieldProcessor(
+		if (!$this->context->form->has('pages')) {
+			return;
+		}
+		foreach ($this->context->form->get('pages') as $page) {
+			$this->serializePage($page);
+		}
+	}
+
+	protected function serializePage(Core\Domain\Record $page): void
+	{
+		if (!$page->has('fields')) {
+			return;
+		}
+		$serializer = new FormRuntime\ValueSerializer($this->context, $this->eventDispatcher);
+		foreach ($page->get('fields') as $field) {
+			if (!$field->has('name')) {
+				continue;
+			}
+			$name = $field->getName();
+			$serializedValue = $serializer->serialize($field, $this->context->getValue($name));
+			$field->setSessionValue($serializedValue);
+			$this->context->session->values[$name] = $serializedValue;
+			if (isset($this->context->session->values[$name.'__CONFIRM'])) {
+				$this->context->session->values[$name.'__CONFIRM'] = $serializedValue;
+			}
+		}
+	}
+
+	protected function processForm(): void
+	{
+		$processor = new FormRuntime\ValueProcessor(
 			$this->context,
 			$this->eventDispatcher
 		);
 		foreach ($this->context->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
-				// only process fields that have been newly submitted, not session values
-				if (!$field->has('name') || !isset($this->context->postValues[$field->get('name')])) {
+				if (!$field->has('name')) {
 					continue;
 				}
 				$name = $field->getName();
 				$processedValue = $processor->process($field, $this->context->getValue($name));
-				$this->context->session->values[$name] = $processedValue;
 				$field->setSessionValue($processedValue);
+				$this->context->session->values[$name] = $processedValue;
+				if (isset($this->context->session->values[$name.'__CONFIRM'])) {
+					$this->context->session->values[$name.'__CONFIRM'] = $processedValue;
+				}
 			}
 		}
 	}

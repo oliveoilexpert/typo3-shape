@@ -92,6 +92,7 @@
 			<trans-unit id="field.datalist"><source>Datalist</source></trans-unit>
 			<trans-unit id="field.autocomplete"><source>Autocomplete</source></trans-unit>
 			<trans-unit id="field.autocomplete_modifier"><source>Autocomplete Modifier</source></trans-unit>
+			<trans-unit id="field.confirm_input"><source>Confirmation input</source></trans-unit>
 			<trans-unit id="field.display_condition"><source>Server-side Display Condition</source></trans-unit>
 			<trans-unit id="field.display_condition.description">
 				<source>Condition expression in Symfony Expression Language. Useful for multi-page forms and field variants.</source>

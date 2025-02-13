@@ -2,7 +2,7 @@
 	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textarea name="{fieldAttributes.name}"
-					 value="{field.sessionValue}"
+					 value="{field.value}"
 					 additionalAttributes="{fieldAttributes}"
 					 class="{blockClass}__control {blockClass}__{field.type}-control"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>

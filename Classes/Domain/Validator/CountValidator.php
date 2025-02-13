@@ -19,7 +19,6 @@ final class CountValidator extends AbstractValidator
      */
     public function isValid(mixed $value): void
     {
-		DebugUtility::debug($value);
         if (!is_array($value) && !($value instanceof \Countable)) {
             $this->addError(
                 $this->translateErrorMessage(

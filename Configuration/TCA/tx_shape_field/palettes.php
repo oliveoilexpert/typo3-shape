@@ -39,7 +39,7 @@ return [
 		--linebreak--,
 		label, name, 
 		--linebreak--, 
-		type, required, 
+		type, required, confirm_input,
 		--linebreak--, 
 		description, placeholder',
 	],

@@ -14,6 +14,7 @@ readonly class FormContext
 		public FormSession $session,
 		public array $postValues,
 		public Core\Resource\ResourceStorageInterface $uploadStorage,
+		public bool $isStepBack = false,
 	)
 	{
 	}
