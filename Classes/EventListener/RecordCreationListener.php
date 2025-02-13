@@ -19,10 +19,6 @@ final class RecordCreationListener
 			return;
 		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field') {
-			if ($event->getProperty('type') === 'repeatable-container') {
-				$this->setRecord($event, Record\RepeatableContainerRecord::class);
-				return;
-			}
 			$this->setRecord($event, Record\FieldRecord::class);
 		}
 	}

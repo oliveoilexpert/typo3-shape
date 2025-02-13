@@ -5,7 +5,7 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\FieldProcessEvent;
+use UBOS\Shape\Event\FieldProcessingEvent;
 
 class FieldProcessor
 {
@@ -21,7 +21,7 @@ class FieldProcessor
 		if (!$field->has('name')) {
 			return $value;
 		}
-		$event = new FieldProcessEvent($this->context, $field, $value);
+		$event = new FieldProcessingEvent($this->context, $field, $value);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
 			return $event->processedValue;

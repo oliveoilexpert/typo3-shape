@@ -14,6 +14,10 @@ use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
+
+// todo: min and max for multi- fields and repeatable containers?
+// todo: valuePicker for regex patterns
+// todo: send mail attach uploads and more settings
 // todo: powermail features: spam protection system
 // todo: confirmation fields, like for passwords
 // todo: translate flexform labels
@@ -29,6 +33,7 @@ use UBOS\Shape\Event;
 // todo: rate limiter finisher?
 // todo: all settings for plugin: disable server validation?,
 // todo: repeatable container server side conditions?
+// todo: "validation_message" inline elements in fields where you select the error type (e.g. "number_step_range.maximum") and set a custom message; considerations: would only work for server side validation, so maybe not worth it, especially since most validations also happen on the client, so you would never see the custom message in most cases
 // note: upload and radio fields will not be in POST values if no value is set
 
 class FormController extends Extbase\Mvc\Controller\ActionController

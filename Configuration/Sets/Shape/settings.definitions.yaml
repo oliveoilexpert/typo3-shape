@@ -1,0 +1,65 @@
+categories:
+  YForm:
+    label: YForm
+  YForm.navigation:
+    label: Navigation
+    parent: Puck
+  YForm.template:
+    label: Template
+    parent: Puck
+
+settings:
+  template.rootLayout:
+    label: Root layout
+    description: 'Base layout type for site'
+    category: Puck.template
+    type: string
+    default: default
+    enum:
+      default: 'Default'
+  template.logo:
+    label: Logo
+    category: Puck.template
+    type: string
+    default: default
+    enum:
+      default: 'Default'
+  template.favicon:
+    label: Favicon
+    category: Puck.template
+    type: string
+    default: default
+    enum:
+      default: 'Default'
+  navigation.main:
+    label: Main navigation
+    description: Parent uids of main navigation
+    category: Puck.navigation
+    type: string
+    default: ''
+  navigation.footer:
+    label: Footer navigation
+    description: Parent uids of footer navigation
+    category: Puck.navigation
+    type: string
+    default: ''
+  navigation.social:
+    label: Social navigation
+    description: Parent uids of social navigation
+    category: Puck.navigation
+    type: string
+    default: ''
+  navigation.meta:
+    label: Meta navigation
+    description: Parent uids of meta navigation
+    category: Puck.navigation
+    type: string
+    default: ''
+  navigation.searchPage:
+    label: Search page
+    description: Uid of search plugin page
+    category: Puck.navigation
+    type: string
+    default: ''
+
+

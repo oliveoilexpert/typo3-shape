@@ -105,6 +105,10 @@
 			<trans-unit id="field.min_filesize"><source>Minimum file size in kB</source></trans-unit>
 			<trans-unit id="field.max_filesize"><source>Maximum file size in kB</source></trans-unit>
 			<trans-unit id="field.content_element"><source>Content element</source></trans-unit>
+			<trans-unit id="field.min_selected"><source>Minimum number of selected items</source></trans-unit>
+			<trans-unit id="field.max_selected"><source>Maximum number of selected items</source></trans-unit>
+			<trans-unit id="field.min_fieldsets"><source>Minimum number of created fieldsets</source></trans-unit>
+			<trans-unit id="field.max_fieldsets"><source>Maximum number of created fieldsets</source></trans-unit>
 
 			<trans-unit id="field_option.ctrl.title"><source>Form Field Option</source></trans-unit>
 			<trans-unit id="field_option.label"><source>Label</source></trans-unit>

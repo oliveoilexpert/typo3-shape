@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textfield
 			name="{fieldAttributes.name}[]"
@@ -9,13 +9,15 @@
 	<f:if condition="{field.sessionValue}">
 		<div class="{blockClass}__file-uploads">
 			<f:for each="{field.sessionValue}" as="uploadedFilePath">
-				<div class="{blockClass}__file-upload">
-					<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
-					{shape:basename(path:uploadedFilePath) -> f:format.crop(maxCharacters:20)}
-					<button class="{blockClass}__file-upload-remove"
-							onclick="this.parentElement.remove()"
-							aria-label="{f:translate(key:'label.remove_upload')}">⨯</button>
-				</div>
+				<f:if condition="{uploadedFilePath -> shape:isString()}">
+					<div class="{blockClass}__file-upload">
+						<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
+						{uploadedFilePath -> shape:basename() -> f:format.crop(maxCharacters:20)}
+						<button class="{blockClass}__file-upload-remove"
+								onclick="this.parentElement.remove()"
+								aria-label="{f:translate(key:'label.remove_upload')}">⨯</button>
+					</div>
+				</f:if>
 			</f:for>
 		</div>
 	</f:if>

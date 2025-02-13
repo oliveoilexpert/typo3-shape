@@ -7,7 +7,7 @@ namespace UBOS\Shape\Event;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 
-final class FieldProcessEvent
+final class FieldProcessingEvent
 {
 	public function __construct(
 		public readonly Domain\FormRuntime\FormContext $context,

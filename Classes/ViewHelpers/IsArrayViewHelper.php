@@ -5,18 +5,18 @@ namespace UBOS\Shape\ViewHelpers;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-class BasenameViewHelper extends AbstractViewHelper
+class IsArrayViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
 		// name, type, description, required, default, escape
-		$this->registerArgument('path', 'string', '', false, '');
+		$this->registerArgument('variable', 'mixed', '', false, null);
 	}
 
-	public function render(): string
+	public function render(): bool
 	{
-		$path = $this->arguments['path'] ?: $this->renderChildren() ?: '';
-		return basename($path);
+		$var = $this->arguments['variable'] ?: $this->renderChildren() ?: null;
+		return is_array($var);
 	}
 
 }

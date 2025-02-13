@@ -4,6 +4,7 @@ namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Domain\Validator;
@@ -14,6 +15,9 @@ final class FieldValidationListener
 	#[AsEventListener]
 	public function __invoke(FieldValidationEvent $event): void
 	{
+		if ($event->isPropagationStopped()) {
+			return;
+		}
 		$field = $event->field;
 		$value = $event->value;
 		$type = $field->getType();
@@ -45,18 +49,18 @@ final class FieldValidationListener
 				ExtbaseValidator\UrlValidator::class
 			));
 		}
-
-		if ($type === 'number' && $value !== null) {
-			$value = (int)$value;
-			if ($field->get('min') !== null || $field->get('max') !== null) {
-				$event->addValidator($this->makeValidator(
-					ExtbaseValidator\NumberRangeValidator::class,
-					[
-						'minimum' => $field->get('min') ?? 0,
-						'maximum' => $field->get('max') ?? PHP_INT_MAX
-					]
-				));
-			}
+		if (($type === 'number' || $type === 'range') && $value !== null) {
+			$step = $field->get('step') ?? 1;
+			$offset = $field->get('min') ?? $field->get('default_value') ?? 0;
+			$event->addValidator($this->makeValidator(
+				Validator\NumberStepRangeValidator::class,
+				[
+					'offset' => $offset,
+					'step' => $step,
+					'minimum' => $field->get('min') ?? null,
+					'maximum' => $field->get('max') ?? null
+				]
+			));
 		}
 
 		if ($field->has('field_options') && $value && !is_array($value)) {
@@ -69,7 +73,6 @@ final class FieldValidationListener
 				['array' => $optionValues]
 			));
 		}
-
 		if ($field->has('field_options') && is_array($value)) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
@@ -120,11 +123,18 @@ final class FieldValidationListener
 				]
 			));
 		}
-
-		if ($type === 'file' && is_array($value)) {
-			// todo: throw exception if value isnt array?
+		if (is_array($value) && $field->has('min') && $field->has('max') && $type !== 'file') {
+			$event->addValidator($this->makeValidator(
+				Validator\CountValidator::class,
+				['minimum' => $field->get('min'), 'maximum' => $field->get('max')]
+			));
+		}
+		if ($type === 'file' && $value) {
+			if (!is_array($value)) {
+				$value = [$value];
+			}
 			$fileValidator = Core\Utility\GeneralUtility::makeInstance(Validator\ArrayValuesConjunctionValidator::class);
-			if ($value && is_string(reset($value))) {
+			if (is_string(reset($value))) {
 				$fileValidator->addValidator($this->makeValidator(
 					Validator\FileExistsInStorageValidator::class,
 					['storage' => $event->context->uploadStorage]

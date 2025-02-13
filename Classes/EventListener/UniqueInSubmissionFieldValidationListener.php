@@ -18,9 +18,8 @@ final class UniqueInSubmissionFieldValidationListener
 		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Domain\Validator\UniqueInSubmissionsValidator::class);
 		$validator->setOptions([
 			'fieldName' => $field->getName(),
-			'pluginUid' => $event->getPlugin()->getUid(),
-			'formUid' => $event->getPlugin()->get('pi_flexform')
-					->get('settings')['form'][0]->getUid() ?? 0,
+			'pluginUid' => $event->context->plugin->getUid(),
+			'formUid' => $event->context->form->getUid(),
 		]);
 		$event->addValidator($validator);
 	}

@@ -124,6 +124,12 @@ return [
 		--linebreak--,
 		datalist'
 	],
+	'advanced-multi-input' => [
+		'showitem' => '
+		disabled, readonly,
+		--linebreak--,
+		min, max'
+	],
 	'advanced-country-select' => [
 		'showitem' => '
 		disabled, readonly,
@@ -136,6 +142,10 @@ return [
 		--linebreak--,
 		accept, 
 		--linebreak--, 
+		min, max',
+	],
+	'advanced-repeatable-container' => [
+		'showitem' => '
 		min, max',
 	],
 	'appearance' => [

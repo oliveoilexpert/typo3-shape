@@ -10,13 +10,16 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 	public function initializeArguments(): void
 	{
 		// name, type, description, required, default, escape
-		$this->registerArgument('field', 'object', '', true);
+		$this->registerArgument('field', 'object', '', false, null);
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}
 
 	public function render(): array
 	{
-		$field = $this->arguments['field'];
+		$field = $this->arguments['field'] ?: $this->renderChildren() ?: null;
+		if (!$field) {
+			return [];
+		}
 		$name = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]";
 		$id = "{$this->templateVariableContainer->get('idPrefix')}{$name}";
 		$attributes = [
@@ -37,12 +40,15 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 				$attributes[$attribute] = '';
 			}
 		}
-		foreach (['step', 'pattern', 'maxlength', 'placeholder', 'min', 'max'] as $attribute) {
+		foreach (['pattern', 'maxlength', 'placeholder', 'min', 'max'] as $attribute) {
 			if (!$field->has($attribute)) continue;
 			$val = $field->get($attribute);
 			if ($val || $val === 0) {
 				$attributes[$attribute] = (string)$val;
 			}
+		}
+		if ($field->has('step') && $field->get('step')) {
+			$attributes['step'] = (float)$field->get('step') ?: 'any';
 		}
 		if ($field->has('autocomplete') && $field->get('autocomplete')) {
 			$attributes['autocomplete'] = $field->get('autocomplete_modifier') . $field->get('autocomplete');

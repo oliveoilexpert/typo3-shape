@@ -136,9 +136,9 @@ return [
 				'config' => [
 					'type' => 'number',
 					'format' => 'decimal',
-					'mode' => 'useOrOverridePlaceholder',
-					'nullable' => true,
-					'default' => null
+					'mode' => '',
+					'nullable' => false,
+					'default' => 0
 				],
 			],
 			'max' => [
@@ -173,9 +173,9 @@ return [
 				'config' => [
 					'type' => 'number',
 					'format' => 'decimal',
-					'mode' => 'useOrOverridePlaceholder',
-					'nullable' => true,
-					'default' => null
+					'mode' => '',
+					'nullable' => false,
+					'default' => 0
 				],
 			],
 			'max' => [
@@ -247,7 +247,23 @@ return [
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
 		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
-			--palette--;;advanced-default,' . $showItemBase,
+			--palette--;;advanced-multi-input,' . $showItemBase,
+		'columnsOverrides' => [
+			'min' => [
+				'label' => Util::t('field.min_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			],
+			'max' => [
+				'label' => Util::t('field.max_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			]
+		]
 	],
 	'multi-checkbox' => [
 		'showitem' => '
@@ -256,7 +272,23 @@ return [
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
 		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
-			--palette--;;advanced-default,' . $showItemBase,
+			--palette--;;advanced-multi-input,' . $showItemBase,
+		'columnsOverrides' => [
+			'min' => [
+				'label' => Util::t('field.min_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			],
+			'max' => [
+				'label' => Util::t('field.max_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			]
+		]
 	],
 	'country-select' => [
 		'showitem' => '
@@ -507,8 +539,24 @@ return [
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 			--palette--;;general-repeatable-container, 
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
-			--palette--;;appearance,' . $showItemBase,
+			--palette--;;appearance,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
+			--palette--;;advanced-repeatable-container,' . $showItemBase,
 		'columnsOverrides' => [
+			'min' => [
+				'label' => Util::t('field.min_fieldsets'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			],
+			'max' => [
+				'label' => Util::t('field.max_fieldsets'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			]
 		]
 	]
 ];

@@ -6,9 +6,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\FieldProcessEvent;
+use UBOS\Shape\Event\FieldProcessingEvent;
 
-final class FieldProcessListener
+final class FieldProcessingListener
 {
 	public function __construct(
 		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null
@@ -17,10 +17,14 @@ final class FieldProcessListener
 	}
 
 	#[AsEventListener]
-	public function __invoke(FieldProcessEvent $event): void
+	public function __invoke(FieldProcessingEvent $event): void
 	{
+		if ($event->isPropagationStopped()) {
+			return;
+		}
 		$value = $event->value;
 		$field = $event->field;
+
 		if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
 			$event->processedValue = $this->saveUploadedFiles($value, $event);
 		}
@@ -30,9 +34,18 @@ final class FieldProcessListener
 		if ($field->getType() === 'password') {
 			$event->processedValue = $this->getPasswordHash()->getHashedPassword($value);
 		}
+		if ($field->getType() === 'number' || $field->getType() === 'range') {
+			if (is_numeric($value)) {
+				if (filter_var($value, FILTER_VALIDATE_INT) !== false) {
+					$event->processedValue = (int) $value;
+				} else if (filter_var($value, FILTER_VALIDATE_FLOAT) !== false) {
+					$event->processedValue = (float) $value;
+				}
+			}
+		}
 	}
 
-	protected function saveUploadedFiles(array $files, FieldProcessEvent $event): array
+	protected function saveUploadedFiles(array $files, FieldProcessingEvent $event): array
 	{
 		$folderPath = $event->context->getSessionUploadFolder();
 		$uploadStorage = $event->context->uploadStorage;

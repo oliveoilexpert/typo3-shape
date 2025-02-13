@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{shape:fieldAttributes(field:field)}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textfield name="{fieldAttributes.name}"
 					  type="{field.type}"

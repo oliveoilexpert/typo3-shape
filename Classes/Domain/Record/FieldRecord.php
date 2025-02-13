@@ -92,6 +92,14 @@ class FieldRecord extends Record
 	{
 		$this->properties[$key] = $value;
 	}
+	public function get($key): mixed
+	{
+		try {
+			return parent::get($key);
+		} catch (\Exception $e) {
+			return null;
+		}
+	}
 	public function prefill(?string $value): void
 	{
 		$this->properties['default_value'] = $value;

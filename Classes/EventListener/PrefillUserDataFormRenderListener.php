@@ -24,8 +24,7 @@ final class PrefillUserDataFormRenderListener
 		if (!$userData) {
 			return;
 		}
-		$form = $event->getVariables()['form'];
-		foreach ($form->get('pages') as $page) {
+		foreach ($event->context->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if (!$field->has('user_prefill_column')) {
 					continue;
@@ -36,6 +35,5 @@ final class PrefillUserDataFormRenderListener
 				}
 			}
 		}
-		$event->setVariable('form', $form);
 	}
 }
