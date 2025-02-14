@@ -24,7 +24,7 @@ class FieldRecord extends Record
 	protected mixed $sessionValue = null;
 	public bool $conditionResult = true;
 	public ?Result $validationResult = null;
-	protected ?array $selectedOptions = null;
+	protected ?array $optionState = null;
 
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,
@@ -90,7 +90,7 @@ class FieldRecord extends Record
 	public function setSessionValue(mixed $value): void
 	{
 		$this->sessionValue = $value;
-		$this->selectedOptions = null;
+		$this->optionState = null;
 	}
 	public function set($key, $value): void
 	{
@@ -108,24 +108,24 @@ class FieldRecord extends Record
 	{
 		$this->properties['default_value'] = $value;
 	}
-	public function getSelectedOptions(): ?array
+	public function getOptionState(): ?array
 	{
 		if (!$this->has('field_options')) {
 			return null;
 		}
-		if ($this->selectedOptions !== null) {
-			return $this->selectedOptions;
+		if ($this->optionState !== null) {
+			return $this->optionState;
 		}
-		$selectedOptions = [];
+		$optionState = [];
 		$value = $this->getValue();
-		if (is_array($value)) {
-			foreach ($value as $val) {
-				$selectedOptions[$val] = $val;
+		foreach ($this->get('field_options') as $option) {
+			if (is_array($value)) {
+				$optionState[$option->get('value')] = in_array($option->get('value'), $value);
+			} else {
+				$optionState[$option->get('value')] = $option->get('value') == $value;
 			}
-		} else {
-			$selectedOptions[$value] = $value;
 		}
-		return $selectedOptions;
+		return $optionState;
 	}
 
 	public function getDatalistArray(): array

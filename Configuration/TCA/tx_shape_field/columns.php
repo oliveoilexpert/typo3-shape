@@ -77,19 +77,20 @@ $columns = [
 				[Util::t('field.type.item.captcha'), 'captcha', 'form-text', 'special'],
 				[Util::t('field.type.item.hidden'), 'hidden', 'form-hidden', 'special'],
 
-				[Util::t('field.type.item.repeatable-container'), 'repeatable-container', 'content-container', 'container'],
+				[Util::t('field.type.item.combined-select-text'), 'combined-select-text', 'form-multi-select', 'groups'],
+				[Util::t('field.type.item.repeatable-container'), 'repeatable-container', 'content-container', 'groups'],
 
 				[Util::t('field.type.item.content-header'), 'content-header', 'content-header', 'no-input'],
 				[Util::t('field.type.item.content-rte'), 'content-rte', 'form-static-text', 'no-input'],
 				[Util::t('field.type.item.content-element'), 'content-element', 'form-content-element', 'no-input'],
 			]),
 			'itemGroups' => [
-				'text-inputs' => Util::t('field.type.itemGroup.text-inputs'),
-				'select-inputs' => Util::t('field.type.itemGroup.select-inputs'),
-				'datetime-inputs' => Util::t('field.type.itemGroup.datetime-inputs'),
-				'special' => Util::t('field.type.itemGroup.special'),
-				'container' => Util::t('field.type.itemGroup.container'),
-				'no-input' => Util::t('field.type.itemGroup.no-input'),
+				'text-inputs' => Util::t('field.type.item_group.text-inputs'),
+				'select-inputs' => Util::t('field.type.item_group.select-inputs'),
+				'datetime' => Util::t('field.type.item_group.datetime'),
+				'special' => Util::t('field.type.item_group.special'),
+				'groups' => Util::t('field.type.item_group.groups'),
+				'no-input' => Util::t('field.type.item_group.no-input'),
 			],
 //			'fieldWizard' => [
 //				'selectIcons' => [

@@ -33,6 +33,13 @@
 			<trans-unit id="field.placeholder"><source>Placeholder</source></trans-unit>
 
 			<trans-unit id="field.type"><source>Type</source></trans-unit>
+			<trans-unit id="field.type.item_group.text-inputs"><source>Text Input</source></trans-unit>
+			<trans-unit id="field.type.item_group.select-inputs"><source>Option Selection</source></trans-unit>
+			<trans-unit id="field.type.item_group.datetime"><source>Datetime Picker</source></trans-unit>
+			<trans-unit id="field.type.item_group.special"><source>Special</source></trans-unit>
+			<trans-unit id="field.type.item_group.groups"><source>Field Groups</source></trans-unit>
+			<trans-unit id="field.type.item_group.no-input"><source>Content only</source></trans-unit>
+
 			<trans-unit id="field.type.item.text"><source>Text</source></trans-unit>
 			<trans-unit id="field.type.item.textarea"><source>Textarea</source></trans-unit>
 			<trans-unit id="field.type.item.email"><source>Email</source></trans-unit>
@@ -62,7 +69,8 @@
 			<trans-unit id="field.type.item.captcha"><source>Captcha</source></trans-unit>
 			<trans-unit id="field.type.item.hidden"><source>Hidden</source></trans-unit>
 
-			<trans-unit id="field.type.item.repeatable-container"><source>Repeatable Field Container</source></trans-unit>
+			<trans-unit id="field.type.item.repeatable-container"><source>Repeatable Field Group</source></trans-unit>
+			<trans-unit id="field.type.item.combined-select-text"><source>Select with Text Field Override</source></trans-unit>
 
 			<trans-unit id="field.type.item.content-header"><source>Header</source></trans-unit>
 			<trans-unit id="field.type.item.content-rte"><source>RTE Content</source></trans-unit>

@@ -95,6 +95,10 @@
 	}
 }
 
+.yform__spacing {
+	margin-top: var(--yf-spacing);
+}
+
 .yform__confirm__label {
 	margin-top: var(--yf-spacing);
 }

@@ -58,8 +58,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->applyContext();
 		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
-		DebugUtility::debug($this->context);
-		DebugUtility::debug($previousPageRecord);
+		//DebugUtility::debug($this->context);
 		if (!$this->context->isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}

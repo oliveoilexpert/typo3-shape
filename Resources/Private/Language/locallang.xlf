@@ -35,6 +35,7 @@
 
 			<trans-unit id="label.confirm_input"><source>Confirm</source></trans-unit>
 			<trans-unit id="label.password_saved"><source>Password saved</source></trans-unit>
+			<trans-unit id="label.enter_custom_value"><source>Enter custom value:</source></trans-unit>
 
 		</body>
 	</file>

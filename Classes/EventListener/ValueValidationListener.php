@@ -62,8 +62,7 @@ final class ValueValidationListener
 				]
 			));
 		}
-
-		if ($field->has('field_options') && $value && !is_array($value)) {
+		if ($field->has('field_options') && $value && in_array($type, ['select','checkbox','radio'])) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');
@@ -73,7 +72,8 @@ final class ValueValidationListener
 				['array' => $optionValues]
 			));
 		}
-		if ($field->has('field_options') && is_array($value)) {
+		// would be problem if one were to add a combination type field, e.g. select + text input
+		if ($field->has('field_options') && $value && in_array($type, ['multi-select','multi-checkbox'])) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
 				$optionValues[] = $option->get('value');

@@ -148,6 +148,12 @@ return [
 		'showitem' => '
 		min, max',
 	],
+	'advanced-combined-select-text' => [
+		'showitem' => '
+		disabled, readonly,
+		--linebreak--,
+		pattern, maxlength',
+	],
 	'appearance' => [
 		'showitem' => '
 		layout, css_class, 

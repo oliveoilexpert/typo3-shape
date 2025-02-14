@@ -1,0 +1,43 @@
+<f:render partial="Field" contentAs="content" arguments="{_all}">
+	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
+	<f:variable name="hasCustomValue" value="{f:if(condition:'!({field.optionState} && {field.optionState.{field.value}}) && {field.value}',then:true,else:false)}"/>
+
+	<f:render partial="Control/Label" arguments="{_all}"/>
+	<f:form.select name="{fieldAttributes.name}"
+				   id="{fieldAttributes.id}"
+				   data-yf-control="{field.name}"
+				   data-yf-alt-control="1"
+				   disabled="{hasCustomValue}"
+				   readonly="{fieldAttributes.readonly}"
+				   required="{fieldAttributes.required}"
+				   class="{blockClass}__control {blockClass}__{field.type}-control">
+		<f:for each="{field.field_options}" as="option">
+			<f:form.select.option
+					selected="{field.optionState.{option.value}}"
+					value="{option.value}">{option.label}</f:form.select.option>
+		</f:for>
+	</f:form.select>
+
+	<div class="{blockClass}__spacing"></div>
+
+	<f:form.checkbox id="{fieldAttributes.id}--toggle"
+					 value="1"
+					 checked="{hasCustomValue}"
+					 onchange="this.parentElement.querySelectorAll('[data-yf-control]').forEach(el => el.toggleAttribute('disabled'))"/>
+	<label class="{blockClass}__label -for-checkbox"
+		   for="{fieldAttributes.id}--toggle">
+		{f:translate(key:'label.enter_custom_value')}
+	</label>
+	<f:form.textfield name="{fieldAttributes.name}"
+					  data-yf-control="{field.name}--custom"
+					  id="{fieldAttributes.id}--custom"
+					  value="{f:if(condition:'{hasCustomValue}',then:field.value,else:'')}"
+					  required="{fieldAttributes.required}"
+					  readonly="{fieldAttributes.readonly}"
+					  disabled="{f:if(condition:hasCustomValue,then:false,else:true)}"
+					  pattern="{field.pattern}"
+					  maxlength="{field.maxlength}"
+					  class="{blockClass}__control {blockClass}__{field.type}-control"/>
+
+	<f:render partial="Control/Description" arguments="{_all}"/>
+</f:render>

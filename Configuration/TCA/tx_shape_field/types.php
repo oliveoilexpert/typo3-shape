@@ -534,6 +534,31 @@ return [
 			],
 		]
 	],
+	'combined-select-text' => [
+		'showitem' => '
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
+			--palette--;;general-option-input, 
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
+			--palette--;;appearance,
+		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
+			--palette--;;advanced-combined-select-text,' . $showItemBase,
+		'columnsOverrides' => [
+			'min' => [
+				'label' => Util::t('field.min_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			],
+			'max' => [
+				'label' => Util::t('field.max_selected'),
+				'config' => [
+					'type' => 'number',
+					'format' => 'integer',
+				]
+			]
+		]
+	],
 	'repeatable-container' => [
 		'showitem' => '
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 

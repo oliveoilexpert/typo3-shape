@@ -3,7 +3,7 @@
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
 		<f:form.checkbox name="{fieldAttributes.name}"
-						 checked="{field.selectedOptions.{option.value}}"
+						 checked="{field.optionState.{option.value}}"
 						 multiple="1"
 						 value="{option.value}"
 						 data-yf-multi-check-required="{field.required}"
