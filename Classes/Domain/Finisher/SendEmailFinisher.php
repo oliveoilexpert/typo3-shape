@@ -39,12 +39,12 @@ class SendEmailFinisher extends AbstractFinisher
 			->from($this->resolveSenderAddress())
 			->to(...$recipients)
 			->subject($this->settings['mailSubject'] ?: ($GLOBALS['TYPO3_CONF_VARS']['SYS']['sitename']) . ' message')
-			->setRequest($this->request)
+			->setRequest($this->context->request)
 			->format($this->mailFormat)
 			->setTemplate($this->settings['mailTemplate'] ?: $this->templateName)
 			->assignMultiple([
-				'formValues' => $this->formValues,
-				'form' => $this->form,
+				'formValues' => $this->context->session->values,
+				'form' => $this->context->form,
 				'settings' => $this->settings,
 				'interpolatedMailBody' => $this->interpolateStringWithFormValues($this->settings['mailBody']),
 			]);
@@ -59,10 +59,10 @@ class SendEmailFinisher extends AbstractFinisher
 		}
 		if ($this->settings['mailAttachUploads']) {
 			$resourceFactory = GeneralUtility::makeInstance(Core\Resource\ResourceFactory::class);
-			foreach ($this->form->get('pages') as $page) {
+			foreach ($this->context->form->get('pages') as $page) {
 				foreach ($page->get('fields') as $field) {
-					if ($field->get('type') === 'file' && isset($this->formValues[$field->get('name')])) {
-						foreach ($this->formValues[$field->get('name')] as $fileIdentifier) {
+					if ($field->get('type') === 'file' && isset($this->context->session->values[$field->get('name')])) {
+						foreach ($this->context->session->values[$field->get('name')] as $fileIdentifier) {
 							$file = $resourceFactory->getFileObjectFromCombinedIdentifier($fileIdentifier);
 							if ($file) {
 								$email->attach($file->getContents(), $file->getName(), $file->getMimeType());
@@ -96,7 +96,7 @@ class SendEmailFinisher extends AbstractFinisher
 
 	protected function interpolateStringWithFormValues(string $string): string
 	{
-		foreach ($this->formValues as $key => $value) {
+		foreach ($this->context->session->values as $key => $value) {
 			if (is_array($value)) {
 				$value = implode(', ', $value);
 			}

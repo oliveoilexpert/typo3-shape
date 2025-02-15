@@ -17,7 +17,7 @@ class RedirectFinisher extends AbstractFinisher
 		if (!$this->settings['uri']) {
 			return null;
 		}
-		$controller = $this->request->getAttribute('frontend.controller');
+		$controller = $this->context->request->getAttribute('frontend.controller');
 		$cObj = Core\Utility\GeneralUtility::makeInstance(
 			ContentObjectRenderer::class,
 			$controller

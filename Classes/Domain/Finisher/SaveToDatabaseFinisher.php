@@ -22,12 +22,12 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
 			->getQueryBuilderForTable($this->settings['table']);
 		$values = [
-			'pid' => (int)($this->settings['storagePage'] ?: $this->plugin->getPid() ?? $this->form->getPid()),
+			'pid' => (int)($this->settings['storagePage'] ?: $this->context->plugin->getPid() ?? $this->context->form->getPid()),
 		];
 
 		foreach ($this->settings['mapping'] as $column => $field) {
 			if (!$field) continue;
-			$values[$column] = $this->formValues[$field] ?? '';
+			$values[$column] = $this->context->session->values[$field] ?? '';
 		}
 		$queryBuilder->insert($this->settings['table'])
 			->values($values)

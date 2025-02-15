@@ -4,24 +4,18 @@ namespace UBOS\Shape\Domain\Finisher;
 
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Extbase;
 
 abstract class AbstractFinisher
 {
 	protected array $settings = [];
 	public function __construct(
-		protected Extbase\Mvc\RequestInterface $request,
+		protected \UBOS\Shape\Domain\Form\FormContext $context,
+		protected Core\Domain\Record $finisher,
 		protected Core\View\ViewInterface $view,
-		protected array $pluginSettings,
-		protected Core\Domain\Record $plugin,
-		protected Core\Domain\Record $form,
-		protected Core\Domain\Record $finisherRecord,
-		protected array $formValues,
 	)
 	{
 		$this->settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
-			->convertFlexFormContentToArray($this->finisherRecord->getRawRecord()->get('settings'));
+			->convertFlexFormContentToArray($this->finisher->getRawRecord()->get('settings'));
 	}
 
 	abstract public function execute(): ?ResponseInterface;

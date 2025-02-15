@@ -13,7 +13,6 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
-use UBOS\Shape\Event\SpamProtectionEvent;
 
 
 // todo: exceptions
@@ -106,7 +105,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function isSpam(): bool
 	{
-		$event = new SpamProtectionEvent($this->context);
+		$event = new Event\SpamProtectionEvent($this->context);
 		$this->eventDispatcher->dispatch($event);
 		return $event->isSpam;
 	}
@@ -242,10 +241,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	protected function executeFinishers(): ?ResponseInterface
 	{
 		$response = null;
-		foreach ($this->context->form->get('finishers') as $finisherRecord) {
+		foreach ($this->context->form->get('finishers') as $finisher) {
 			$willExecute = true;
-			if ($finisherRecord->get('condition') ?? false) {
-				$conditionResult = $this->getConditionResolver()->evaluate($finisherRecord->get('condition'));
+			if ($finisher->get('condition') ?? false) {
+				$conditionResult = $this->getConditionResolver()->evaluate($finisher->get('condition'));
 				if (!$conditionResult) {
 					$willExecute = false;
 				}
@@ -256,7 +255,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			// todo: remove session values that do not belong to the form
 			try {
 				// execute finisher event
-				$response = $this->makeFinisherInstance($finisherRecord)?->execute() ?? $response;
+				$response = $this->makeFinisherInstance($finisher)?->execute() ?? $response;
 			} catch (\Exception $e) {
 				throw $e;
 			}
@@ -270,21 +269,17 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->htmlResponse($message);
 	}
 
-	protected function makeFinisherInstance(Core\Domain\Record $finisherRecord): ?Domain\Finisher\AbstractFinisher
+	protected function makeFinisherInstance(Core\Domain\Record $finisher): ?Domain\Finisher\AbstractFinisher
 	{
-		$className = $finisherRecord->get('type') ?? '';
+		$className = $finisher->get('type') ?? '';
 		if (!$className || !class_exists($className)) {
 			return null;
 		}
 		return GeneralUtility::makeInstance(
 			$className,
-			$this->request,
+			$this->context,
+			$finisher,
 			$this->view,
-			$this->settings,
-			$this->context->plugin,
-			$this->context->form,
-			$finisherRecord,
-			$this->context->session->values,
 		);
 	}
 
