@@ -2,18 +2,18 @@
     <sheets>
         <general>
             <ROOT>
-                <sheetTitle>General</sheetTitle>
+                <sheetTitle></sheetTitle>
                 <type>array</type>
                 <el>
                     <table>
-                        <label>Table name</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.table</label>
                         <config>
                             <type>input</type>
                             <required>1</required>
                         </config>
                     </table>
                     <storagePage>
-                        <label>Storage page</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.storagePage</label>
                         <config>
                             <type>group</type>
                             <internal_type>db</internal_type>
@@ -23,8 +23,8 @@
                         </config>
                     </storagePage>
                     <mapping>
-                        <label>Table-Form-Mapping</label>
-                        <description>JSON mapping table columns to form fields ("columName": "fieldName")</description>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.mapping</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.mapping.description</description>
                         <config>
                             <type>json</type>
                         </config>

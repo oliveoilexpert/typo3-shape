@@ -2,25 +2,37 @@
     <sheets>
         <mail>
             <ROOT>
-                <sheetTitle>Mail</sheetTitle>
+                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.mail</sheetTitle>
                 <type>array</type>
                 <el>
                     <mailSubject>
-                        <label>Subject</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailSubject</label>
                         <config>
                             <type>input</type>
                         </config>
                     </mailSubject>
+                    <mailTitle>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailTitle</label>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </mailTitle>
                     <mailBody>
-                        <label>Body</label>
-                        <description>Mail bodytext. Form values can be used with "{field-name}".</description>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailBody</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailBody.description</description>
                         <config>
                             <type>text</type>
                             <enableRichtext>1</enableRichtext>
                         </config>
                     </mailBody>
+                    <mailAttachUploads>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailAttachUploads</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+                    </mailAttachUploads>
                     <mailTemplate>
-                        <label>Template name</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailTemplate</label>
                         <config>
                             <type>input</type>
                         </config>
@@ -30,24 +42,38 @@
         </mail>
         <recipient>
             <ROOT>
-                <sheetTitle>Recipient</sheetTitle>
+                <sheetTitle>Recipients</sheetTitle>
                 <type>array</type>
-                <description>What do</description>
                 <el>
-                    <recipientAddress>
-                        <label>Recipient email address</label>
-                        <description>Comma separated list of email addresses to send to. If neither addresses nor an address field are provided, email will be sent to address of first email field found in form, if possible.</description>
+                    <recipientAddresses>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.recipientAddresses</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.recipientAddresses.description</description>
                         <config>
                             <type>input</type>
+                            <size>100</size>
                         </config>
-                    </recipientAddress>
-                    <recipientAddressField>
-                        <label>Recipient email address field</label>
-                        <description>Name of form field that contains email addresses to send to.</description>
+                    </recipientAddresses>
+                    <ccRecipientAddresses>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.ccRecipientAddresses</label>
                         <config>
                             <type>input</type>
+                            <size>100</size>
                         </config>
-                    </recipientAddressField>
+                    </ccRecipientAddresses>
+                    <bccRecipientAddresses>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.bccRecipientAddresses</label>
+                        <config>
+                            <type>input</type>
+                            <size>100</size>
+                        </config>
+                    </bccRecipientAddresses>
+                    <replyToAddresses>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.replyToAddresses</label>
+                        <config>
+                            <type>input</type>
+                            <size>100</size>
+                        </config>
+                    </replyToAddresses>
                 </el>
             </ROOT>
         </recipient>
@@ -57,18 +83,18 @@
                 <type>array</type>
                 <el>
                     <senderAddress>
-                        <label>Sender email address</label>
-                        <description>Falls back to [MAIL][defaultMailFromAddress].</description>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.senderAddress</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.senderAddress.description</description>
                         <config>
                             <type>email</type>
                         </config>
                     </senderAddress>
                     <senderName>
-                        <label>Sender name</label>
-                        <description>Falls back to [MAIL][defaultMailFromName].</description>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.senderName</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.senderName.description</description>
                         <config>
                             <type>input</type>
-                        </config>
+                        </config>§
                     </senderName>
                 </el>
             </ROOT>

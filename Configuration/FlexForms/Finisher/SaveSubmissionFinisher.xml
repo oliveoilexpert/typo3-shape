@@ -2,11 +2,11 @@
     <sheets>
         <general>
             <ROOT>
-                <sheetTitle>General</sheetTitle>
+                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.general</sheetTitle>
                 <type>array</type>
                 <el>
                     <storagePage>
-                        <label>Storage page</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveSubmission.storagePage</label>
                         <config>
                             <type>group</type>
                             <allowed>pages</allowed>
@@ -15,20 +15,20 @@
                         </config>
                     </storagePage>
                     <excludedFields>
-                        <label>Exclude fields from saved data</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveSubmission.excludedFields</label>
                         <config>
                             <type>input</type>
                         </config>
                     </excludedFields>
                     <saveUserData>
-                        <label>Save User Agent and IP-Address</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveSubmission.saveUserData</label>
                         <config>
                             <type>check</type>
                         </config>
                     </saveUserData>
                     <connectToLanguageParentForm>
-                        <label>Connect to original language form</label>
-                        <description>Submissions are connected to the form and plugin they were submitted from. When enabled, this will connect them to the original language version of form and plugin, if possible.</description>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveSubmission.connectToLanguageParentForm</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveSubmission.connectToLanguageParentForm.description</description>
                         <config>
                             <type>check</type>
                         </config>

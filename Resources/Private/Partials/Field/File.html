@@ -5,7 +5,7 @@
 			name="{fieldAttributes.name}[]"
 		    type="{field.type}"
 		    additionalAttributes="{fieldAttributes}"
-			onchange="this.closest('[data-yf-field]').querySelector('[data-yf-upload-list]').remove()"
+			onchange="this.parentElement.querySelector('[data-yf-upload-list]').remove()"
 			class="{blockClass}__control {blockClass}__{field.type}-control"/>
 
 	<f:if condition="{field.value}">

@@ -2,11 +2,11 @@
     <sheets>
         <general>
             <ROOT>
-                <sheetTitle>General</sheetTitle>
+                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.general</sheetTitle>
                 <type>array</type>
                 <el>
                     <contentElements>
-                        <label>Content elements</label>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.showContentElements.contentElements</label>
                         <config>
                             <type>group</type>
                             <internal_type>db</internal_type>

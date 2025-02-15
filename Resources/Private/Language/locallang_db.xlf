@@ -3,10 +3,13 @@
 	<file source-language="en" datatype="plaintext" original="EXT:shape/Resources/Private/Language/locallang_db.xlf">
 		<header/>
 		<body>
+			<trans-unit id="tab.general"><source>General</source></trans-unit>
 			<trans-unit id="tab.advanced"><source>Advanced</source></trans-unit>
 			<trans-unit id="tab.extended"><source>Extended</source></trans-unit>
 			<trans-unit id="tab.condition"><source>Condition</source></trans-unit>
 			<trans-unit id="tab.finishers"><source>Finishers</source></trans-unit>
+			<trans-unit id="tab.lazyLoad"><source>Lazy Load</source></trans-unit>
+			<trans-unit id="tab.mail"><source>Mail</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form record with individual Finishers</source></trans-unit>
@@ -149,6 +152,44 @@
 			<trans-unit id="form_submission.user_ip"><source>User IP-Address</source></trans-unit>
 			<trans-unit id="form_submission.user_agent"><source>User Agent</source></trans-unit>
 			<trans-unit id="form_submission.form_values"><source>Form Values</source></trans-unit>
+
+			<trans-unit id="flexform.form.form"><source>Form</source></trans-unit>
+			<trans-unit id="flexform.form.uploadFolder"><source>Upload Folder</source></trans-unit>
+			<trans-unit id="flexform.form.lazyLoad"><source>Lazy load uncached form</source></trans-unit>
+			<trans-unit id="flexform.form.lazyLoad.description"><source>Prefills or display conditions based on dynamic data (like current frontend user) require an uncached form. When enabled, this plugin will render a placeholder that replaces itself with an uncached form fetched from the server. This is only necessary if dynamic data is used for elements on the first page of the form, as only the first page is cached.</source></trans-unit>
+			<trans-unit id="flexform.form.lazyLoadFragmentPage"><source>Lazy load uncached form</source></trans-unit>
+			<trans-unit id="flexform.form.lazyLoadFragmentPage.description"><source>This must be set for lazy load to work. Page should not contain a Shape form plugin.</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.redirect.uri"><source>Redirect URL</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.saveSubmission.storagePage"><source>Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveSubmission.excludedFields"><source>Exclude fields from saved data</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveSubmission.saveUserData"><source>Save User Agent and IP-Address</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveSubmission.connectToLanguageParentForm"><source>Connect to original language form</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveSubmission.connectToLanguageParentForm.description"><source>Submissions are connected to the form and plugin they were submitted from. When enabled, this will connect them to the original language version of form and plugin, if possible.</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.saveToDatabase.table"><source>Table Name</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.storagePage"><source>Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.mapping"><source>Table-Form-Mapping</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.mapping.description"><source>JSON mapping table columns to form fields ("column_name": "field-name").</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.showContentElements.contentElements"><source>Content Elements</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.sendEmail.mailSubject"><source>Subject</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.mailTitle"><source>Title</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.mailBody"><source>Body</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.mailBody.description"><source>Mail bodytext. Form values can be used with "{field-name}".</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.mailAttachUploads"><source>Attach Uploads</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.mailTemplate"><source>Template</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.recipientAddresses"><source>Recipient Email Addresses</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.recipientAddresses.description"><source>Comma separated list of email addresses to send to. Form values can be used with "{field-name}".</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.ccRecipientAddresses"><source>CC Recipient Email Addresses</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.bccRecipientAddresses"><source>BCC Recipient Email Addresses</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.replyToAddresses"><source>Reply-to Email Addresses</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.senderAddress"><source>Sender Email Address</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.senderAddress.description"><source>Falls back to [MAIL][defaultMailFromAddress].</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.senderName"><source>Sender Name</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.senderName.description"><source>Falls back to [MAIL][defaultMailFromName].</source></trans-unit>
 
 		</body>
 	</file>

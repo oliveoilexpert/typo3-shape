@@ -5,14 +5,20 @@
 		data-yf-form="{namespace}"
 		autocomplete="on"
 		enctype="multipart/form-data"
-		action="{action}"
-		pageUid="{plugin.pid}"
-		arguments="{pageIndex:forwardStepPageIndex}">
-
+		action="render"
+		data-action="{f:uri.action(action:action, pageUid:plugin.pid, arguments:{pageIndex:forwardStepPageIndex})}">
 	<div>
 		<f:form.hidden name="session" value='{sessionJson}'/>
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
+
+	<f:if condition="{spamProtectionTriggered}">
+		<div class="{blockClass}__page">
+			<div class="{blockClass}__error --visible">
+				{f:translate(key:'label.spam_protection_triggered')}
+			</div>
+		</div>
+	</f:if>
 
 	<f:if condition="{currentPage.type} == 'summary'">
 		<f:then>

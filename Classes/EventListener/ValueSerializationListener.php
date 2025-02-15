@@ -51,7 +51,7 @@ final class ValueSerializationListener
 				$file->getClientFilename(),
 				Core\Resource\Enum\DuplicationBehavior::RENAME
 			);
-			$filePaths[] = $folderPath . $newFile->getName();
+			$filePaths[] = $uploadStorage->getUid() . ':' . $folderPath . $newFile->getName();
 		}
 		return $filePaths;
 	}

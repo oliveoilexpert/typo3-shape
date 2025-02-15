@@ -21,7 +21,6 @@ final class HTMLPatternValidator extends AbstractValidator
 			return;
 		}
 		$regex = $this->htmlPatternToPhpRegex($pattern);
-		DebugUtility::debug($regex);
 		$result = preg_match($regex, $value);
 		if ($result === 0) {
 			$this->addError(
@@ -33,7 +32,7 @@ final class HTMLPatternValidator extends AbstractValidator
 			);
 		}
 		if ($result === false) {
-			throw new InvalidValidationOptionsException('PatternValidator regular expression "' . $regex . '" contained an error.', 1739395516);
+			throw new InvalidValidationOptionsException('HTMLPatternValidator regular expression "' . $regex . '" contained an error.', 1739395516);
 		}
 	}
 

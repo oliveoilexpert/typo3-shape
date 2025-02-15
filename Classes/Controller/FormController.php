@@ -13,12 +13,9 @@ use TYPO3\CMS\Frontend;
 use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
+use UBOS\Shape\Event\SpamProtectionEvent;
 
 
-// todo: send mail attach uploads and more settings
-// todo: powermail features: spam protection system
-// todo: confirmation fields, like for passwords
-// todo: translate flexform labels
 // todo: improve valuePicker for conditions
 // todo: dispatch events: on upload process
 // todo: exceptions
@@ -57,12 +54,13 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->applyContext();
-		//DebugUtility::debug($this->context->postValues);
+		if ($this->isSpam()) {
+			return $this->redirect('render', arguments: ['spam' => 1]);
+		}
 		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
 		if (!$this->context->isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}
-		//DebugUtility::debug($this->context->form->get('pages')[0]->get('fields'));
 		$this->serializePage($previousPageRecord);
 		if ($this->context->session->hasErrors) {
 			return $this->renderForm($this->context->session->previousPageIndex);
@@ -73,6 +71,10 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function submitAction(): ResponseInterface
 	{
 		$this->applyContext();
+		$this->evaluateSpamProtection();
+		if ($this->isSpam()) {
+			return $this->redirect('render', arguments: ['spam' => 1]);
+		}
 		$this->validateForm();
 		$this->serializeForm();
 		if ($this->context->session->hasErrors) {
@@ -105,6 +107,13 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 				$field->conditionResult = $resolver->evaluate($field);
 			}
 		}
+	}
+
+	protected function isSpam(): bool
+	{
+		$event = new SpamProtectionEvent($this->context);
+		$this->eventDispatcher->dispatch($event);
+		return $event->isSpam;
 	}
 
 	protected function renderLazyLoader(): ResponseInterface
@@ -141,6 +150,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'forwardStepPageIndex' => $lastPageIndex === $pageIndex ? null : $pageIndex + 1,
 			'isFirstPage' => $pageIndex === 1,
 			'isLastPage' => $pageIndex === $lastPageIndex,
+			'spamProtectionTriggered' => $this->request->getArguments()['spam'] ?? false,
 		];
 
 		$event = new Event\FormRenderEvent($this->context, $viewVariables);

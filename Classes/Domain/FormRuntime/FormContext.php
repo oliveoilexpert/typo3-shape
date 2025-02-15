@@ -15,6 +15,7 @@ readonly class FormContext
 		public array $postValues,
 		public Core\Resource\ResourceStorageInterface $uploadStorage,
 		public bool $isStepBack = false,
+		public bool $isSpam = false,
 	)
 	{
 	}

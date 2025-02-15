@@ -142,8 +142,7 @@ final class ValueValidationListener
 			$fileValidator = Core\Utility\GeneralUtility::makeInstance(Validator\ArrayValuesConjunctionValidator::class);
 			if (is_string(reset($value))) {
 				$fileValidator->addValidator($this->makeValidator(
-					Validator\FileExistsInStorageValidator::class,
-					['storage' => $event->context->uploadStorage]
+					Validator\CombinedFileIdentifierValidator::class,
 				));
 			} else {
 				$fileValidator->addValidator($this->makeValidator(
