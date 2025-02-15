@@ -4,14 +4,15 @@
 		<header/>
 		<body>
 			<trans-unit id="validation.error.date_range.type"><source>Value must be a valid DateTime.</source></trans-unit>
-			<trans-unit id="validation.error.date_range.minimum"><source>Value must be %s or later.</source></trans-unit>
-			<trans-unit id="validation.error.date_range.maximum"><source>Value must be %s or earlier.</source></trans-unit>
+			<trans-unit id="validation.error.date_range.minimum"><source>Date/Time must be %s or later.</source></trans-unit>
+			<trans-unit id="validation.error.date_range.maximum"><source>Date/Time must be %s or earlier.</source></trans-unit>
 			<trans-unit id="validation.error.file_exists_in_storage"><source>Uploaded file could not be found.</source></trans-unit>
-			<trans-unit id="validation.error.in_array"><source>Value must be one of the provided options.</source></trans-unit>
-			<trans-unit id="validation.error.subset_array"><source>Values must be one of the provided options.</source></trans-unit>
+			<trans-unit id="validation.error.in_array"><source>Please select one of the provided options.</source></trans-unit>
+			<trans-unit id="validation.error.subset_array"><source>Please select from the provided options.</source></trans-unit>
 			<trans-unit id="validation.error.count.countable"><source>Value must be countable.</source></trans-unit>
-			<trans-unit id="validation.error.count.minimum"><source>Value must have at least %s items.</source></trans-unit>
-			<trans-unit id="validation.error.count.maximum"><source>Value must not have more than %s items.</source></trans-unit>
+			<trans-unit id="validation.error.count.minimum"><source>Please select at least %s options.</source></trans-unit>
+			<trans-unit id="validation.error.count.maximum"><source>Please select no more than %s options.</source></trans-unit>
+			<trans-unit id="validation.error.html_pattern"><source>Please match the format requested.</source></trans-unit>
 
 			<trans-unit id="validation.error.unique_in_submissions"><source>This value has already been used.</source></trans-unit>
 			<trans-unit id="validation.error.unique_in_table"><source>This value has already been used.</source></trans-unit>

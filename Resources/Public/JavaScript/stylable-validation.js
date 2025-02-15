@@ -8,7 +8,7 @@
 				e.preventDefault()
 				form.querySelector('[data-yf-control]:invalid').focus()
 				error.classList.add('--visible')
-				error.innerHTML = `<div>${control.dataset.yfValidityMessage || control.validationMessage}</div>`
+				error.innerHTML = `<div>${control.dataset.yfValidationMessage || control.validationMessage}</div>`
 			})
 			control.addEventListener('change', () => {
 				if (control.validity.valid) {

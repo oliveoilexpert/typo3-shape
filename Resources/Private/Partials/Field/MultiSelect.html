@@ -5,11 +5,7 @@
 				   multiple="1"
 				   additionalAttributes="{fieldAttributes}"
 				   class="{blockClass}__control {blockClass}__{field.type}-control">
-		<f:for each="{field.field_options}" as="option">
-			<f:form.select.option
-					selected="{field.optionState.{option.value}}"
-					value="{option.value}">{option.label}</f:form.select.option>
-		</f:for>
+		<f:render partial="Control/GroupedOptions" arguments="{_all}"/>
 	</f:form.select>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

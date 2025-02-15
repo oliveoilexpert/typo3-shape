@@ -122,6 +122,7 @@
 			<trans-unit id="field_option.ctrl.title"><source>Form Field Option</source></trans-unit>
 			<trans-unit id="field_option.label"><source>Label</source></trans-unit>
 			<trans-unit id="field_option.value"><source>Value</source></trans-unit>
+			<trans-unit id="field_option.group_label"><source>Starts Group</source></trans-unit>
 			<trans-unit id="field_option.selected"><source>Selected</source></trans-unit>
 			<trans-unit id="field_option.field_parent"><source>Field Parent</source></trans-unit>
 

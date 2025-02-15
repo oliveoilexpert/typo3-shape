@@ -57,11 +57,12 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->applyContext();
+		//DebugUtility::debug($this->context->postValues);
 		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
-		//DebugUtility::debug($this->context);
 		if (!$this->context->isStepBack) {
 			$this->validatePage($previousPageRecord);
 		}
+		//DebugUtility::debug($this->context->form->get('pages')[0]->get('fields'));
 		$this->serializePage($previousPageRecord);
 		if ($this->context->session->hasErrors) {
 			return $this->renderForm($this->context->session->previousPageIndex);

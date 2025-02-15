@@ -2,11 +2,15 @@
 	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
 	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
+		<f:if condition="{option.group_label}">
+			<header class="{blockClass}__options-header">
+				{option.group_label}
+			</header>
+		</f:if>
 		<f:form.checkbox name="{fieldAttributes.name}"
 						 checked="{field.optionState.{option.value}}"
 						 multiple="1"
 						 value="{option.value}"
-						 data-yf-multi-check-required="{field.required}"
 						 additionalAttributes="{fieldAttributes}"
 						 id="{fieldAttributes.id}-{i.index}"
 						 class="{blockClass}__control {blockClass}__{field.type}-control"/>

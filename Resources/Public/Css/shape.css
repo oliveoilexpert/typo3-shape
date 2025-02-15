@@ -95,6 +95,11 @@
 	}
 }
 
+.yform__options-header {
+	margin-block: var(--yf-spacing);
+	opacity: 0.5;
+}
+
 .yform__spacing {
 	margin-top: var(--yf-spacing);
 }

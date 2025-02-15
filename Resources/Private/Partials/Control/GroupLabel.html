@@ -1,4 +1,4 @@
-<div class="{blockClass}__label -for-{field.type}">
+<header class="{blockClass}__label -for-{field.type}">
 	<f:if condition="{field.rte_label}">
 		<f:then>
 			<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>
@@ -7,4 +7,4 @@
 		<f:else>{field.label -> f:format.trim()}</f:else>
 	</f:if>
 	<f:render partial="Control/Required" arguments="{_all}"/>
-</div>
+</header>

@@ -45,6 +45,13 @@ $columns = [
 			],
 		],
 	],
+	'group_label' => [
+		'config' => [
+			'type' => 'input',
+			'size' => 30,
+			'eval' => 'trim',
+		],
+	],
 	'selected' => [
 		'config' => [
 			'type' => 'check',
@@ -72,7 +79,7 @@ foreach ($columns as $key => $column) {
 }
 $palettes = [
 	'base' => [
-		'showitem' => 'label, value, selected',
+		'showitem' => 'label, value, group_label, selected',
 	],
 ];
 $showItem = '

@@ -28,9 +28,10 @@ final class ValueValidationListener
 			));
 		}
 		if ($field->has('pattern') && $field->get('pattern') && $value) {
+			$pattern = $field->get('pattern');
 			$event->addValidator($this->makeValidator(
-				ExtbaseValidator\RegularExpressionValidator::class,
-				['regularExpression' => $field->get('pattern')]
+				Validator\HTMLPatternValidator::class,
+				['pattern' => $pattern]
 			));
 		}
 		if ($type === 'email' && $value) {

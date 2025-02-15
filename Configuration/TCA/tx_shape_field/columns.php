@@ -262,11 +262,11 @@ $columns = [
 			'size' => 100,
 			'valuePicker' => [
 				'items' => [
-					['Alphabetic', '/^[\pL]*$/u'],
-					['Alphanumeric', '/^[\pL\d]*$/u'],
-					['Zip code (5 digits)', '^[0-9]{5}$'],
-					['Phone number', '^\+?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$'],
-					['Password', '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$']
+					['5 digits', '[0-9]{5}'],
+					['Alphabetic (Latin)', '[A-Za-zÀ-ÖØ-öø-ÿĀ-ſ]+'],
+					['Alphanumeric (Latin)', '[A-Za-zÀ-ÖØ-öø-ÿĀ-ſ0-9]+'],
+					['Phone (International)', '[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}'],
+					['Password (Strong)', '(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}']
 				],
 			],
 		],
@@ -311,6 +311,11 @@ $columns = [
 			'mode' => 'useOrOverridePlaceholder',
 			'nullable' => true,
 			'default' => null
+		],
+	],
+	'confirm_input' => [
+		'config' => [
+			'type' => 'check',
 		],
 	],
 	'datalist' => [
@@ -426,11 +431,6 @@ $columns = [
 			]
 		]
 	],
-	'confirm_input' => [
-		'config' => [
-			'type' => 'check',
-		],
-	],
 	'display_condition' => [
 		'description' => Util::t('field.display_condition.description'),
 		'config' => [
@@ -457,6 +457,17 @@ $columns = [
 			],
 		],
 	],
+];
+
+$validationAttributes = [
+	'required',
+	'pattern',
+	'maxlength',
+	'min',
+	'max',
+	'step',
+	'accept',
+	'confirm_input',
 ];
 
 $langSyncColumns = [

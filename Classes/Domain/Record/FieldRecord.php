@@ -128,6 +128,22 @@ class FieldRecord extends Record
 		return $optionState;
 	}
 
+	public function getGroupedOptions(): array
+	{
+		$groupedOptions = [];
+		$groupLabel = '';
+		foreach ($this->get('field_options') as $option) {
+			if ($option->get('group_label')) {
+				$groupLabel = $option->get('group_label');
+			}
+			if (!isset($groupedOptions[$groupLabel])) {
+				$groupedOptions[$groupLabel] = [];
+			}
+			$groupedOptions[$groupLabel][] = $option;
+		}
+		return $groupedOptions;
+	}
+
 	public function getDatalistArray(): array
 	{
 		return array_map('trim', explode(PHP_EOL, $this->properties['datalist'] ?? ''));
