@@ -451,8 +451,8 @@ $columns = [
 			'size' => 100,
 			'valuePicker' => [
 				'items' => [
-					['Field value is true / not empty', 'value("field-id")'],
-					['Field value is equal to', 'value("field-id") == "some-value"'],
+					['Field value true/not empty', 'value("field-id")'],
+					['Field value equal to', 'value("field-id") == "some-value"'],
 				],
 			],
 		],
