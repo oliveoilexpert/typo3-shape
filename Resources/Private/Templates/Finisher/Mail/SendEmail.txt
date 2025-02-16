@@ -1,1 +1,0 @@
-{interpolatedMailBody -> f:format.html()}

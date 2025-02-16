@@ -5,7 +5,9 @@
 		data-yf-form="{namespace}"
 		autocomplete="on"
 		enctype="multipart/form-data"
-		action="render"
+		action="{action}"
+		arguments="{pageIndex:forwardStepPageIndex}"
+		pageUid="{plugin.pid}"
 		data-action="{f:uri.action(action:action, pageUid:plugin.pid, arguments:{pageIndex:forwardStepPageIndex})}">
 	<div>
 		<f:form.hidden name="session" value='{sessionJson}'/>

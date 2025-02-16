@@ -9,7 +9,7 @@ abstract class AbstractFinisher
 {
 	protected array $settings = [];
 	public function __construct(
-		protected \UBOS\Shape\Domain\Form\FormContext $context,
+		protected \UBOS\Shape\Domain\FormRuntime\FormContext $context,
 		protected Core\Domain\Record $finisher,
 		protected Core\View\ViewInterface $view,
 	)

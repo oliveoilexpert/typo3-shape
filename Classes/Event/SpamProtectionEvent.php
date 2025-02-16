@@ -12,5 +12,10 @@ final class SpamProtectionEvent
 	public function __construct(
 		public readonly Domain\FormRuntime\FormContext $context,
 		public bool $isSpam = false,
+		protected array $spamMessages = [],
 	) {}
+	public function addSpamMessage(string $message): void
+	{
+		$this->spamMessages[] = $message;
+	}
 }

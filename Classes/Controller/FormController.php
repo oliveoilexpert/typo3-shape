@@ -65,7 +65,6 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function submitAction(): ResponseInterface
 	{
 		$this->applyContext();
-		$this->evaluateSpamProtection();
 		if ($this->isSpam()) {
 			return $this->redirect('render', arguments: ['spam' => 1]);
 		}
@@ -76,6 +75,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->processForm();
 		return $this->executeFinishers();
+	}
+
+	public function finishedAction(): ResponseInterface
+	{
+		return $this->htmlResponse();
 	}
 
 	protected function applyContext(): void
@@ -242,25 +246,14 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$response = null;
 		foreach ($this->context->form->get('finishers') as $finisher) {
-			$willExecute = true;
 			if ($finisher->get('condition') ?? false) {
-				$conditionResult = $this->getConditionResolver()->evaluate($finisher->get('condition'));
-				if (!$conditionResult) {
-					$willExecute = false;
+				if (!$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
+					continue;
 				}
 			}
-			if (!$willExecute) {
-				continue;
-			}
-			// todo: remove session values that do not belong to the form
-			try {
-				// execute finisher event
-				$response = $this->makeFinisherInstance($finisher)?->execute() ?? $response;
-			} catch (\Exception $e) {
-				throw $e;
-			}
+			$response = $this->makeFinisherInstance($finisher)?->execute() ?? $response;
 		}
-		return $response ?? $this->htmlResponse('finished');
+		return $response ?? $this->redirect('finished');
 	}
 
 	// todo: error responses

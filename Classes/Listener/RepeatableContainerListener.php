@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Listener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
@@ -17,7 +17,7 @@ final class RepeatableContainerListener
 		protected EventDispatcher $eventDispatcher
 	) {}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreationListener')]
+	#[AsEventListener(before: 'UBOS\Shape\Listener\RecordCreationListener')]
 	public function recordCreation(RecordCreationEvent $event): void
 	{
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field'
@@ -57,7 +57,7 @@ final class RepeatableContainerListener
 		}
 	}
 
-	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidationListener')]
+	#[AsEventListener(after: 'UBOS\Shape\Listener\ValueValidationListener')]
 	public function valueValidation(Event\ValueValidationEvent $event): void
 	{
 		$field = $event->field;
@@ -85,7 +85,7 @@ final class RepeatableContainerListener
 		$event->result = $result;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializationListener')]
+	#[AsEventListener(before: 'UBOS\Shape\Listener\ValueSerializationListener')]
 	public function valueSerialization(Event\ValueSerializationEvent $event): void
 	{
 		$field = $event->field;
@@ -117,7 +117,7 @@ final class RepeatableContainerListener
 		$event->serializedValue = $serializedValue;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessingListener')]
+	#[AsEventListener(before: 'UBOS\Shape\Listener\ValueProcessingListener')]
 	public function valueProcessing(Event\ValueProcessingEvent $event): void
 	{
 		$field = $event->field;

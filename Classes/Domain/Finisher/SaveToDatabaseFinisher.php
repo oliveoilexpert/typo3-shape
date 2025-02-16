@@ -27,7 +27,15 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 
 		foreach ($this->settings['mapping'] as $column => $field) {
 			if (!$field) continue;
-			$values[$column] = $this->context->session->values[$field] ?? '';
+			$value = $this->context->session->values[$field] ?? $field;
+			if (is_array($value)) {
+				try {
+					$value = implode(',', $value);
+				} catch (\Throwable $e) {
+					$value = json_encode($value);
+				}
+			}
+			$values[$column] = $value;
 		}
 		$queryBuilder->insert($this->settings['table'])
 			->values($values)

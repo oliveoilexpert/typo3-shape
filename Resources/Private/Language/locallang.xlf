@@ -39,7 +39,7 @@
 			<trans-unit id="label.enter_custom_value"><source>Enter custom value:</source></trans-unit>
 			<trans-unit id="label.spam_protection_triggered"><source>Spam protection triggered. Please try again.</source></trans-unit>
 
-
+			<trans-unit id="label.submit_message"><source>Thank you, your submission was successful.</source></trans-unit>
 		</body>
 	</file>
 </xliff>

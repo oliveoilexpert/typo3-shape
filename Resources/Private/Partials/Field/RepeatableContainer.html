@@ -1,7 +1,7 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:variable name="id" value="{idPrefix}{namespace}[{field.name}]"/>
 
-	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
+	<f:render partial="Control/HeaderLabel" arguments="{_all}"/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 
 	<div id="{id}" class="{blockClass}__repeatable__list -{currentPage.type}-step">

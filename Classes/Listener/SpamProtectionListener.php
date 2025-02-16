@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Listener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
@@ -15,6 +15,11 @@ final class SpamProtectionListener
 	{
 		// honeypot
 		if ($event->context->request->getParsedBody()['tx_shape_form']['__email'] ?? '') {
+			$event->isSpam = true;
+			$event->addSpamMessage('');
+		}
+		// focus field must be set
+		if (($event->context->request->getParsedBody()['tx_shape_form']['__focus'] ?? '') !== 'focus') {
 			$event->isSpam = true;
 		}
 	}

@@ -1,12 +1,12 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Listener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-final class UniqueInSubmissionFieldValidationListener
+final class UniqueInSubmissionValueValidationListener
 {
 	#[AsEventListener]
 	public function __invoke(ValueValidationEvent $event): void

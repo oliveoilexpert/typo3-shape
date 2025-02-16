@@ -5,41 +5,44 @@
                 <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.mail</sheetTitle>
                 <type>array</type>
                 <el>
-                    <mailSubject>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailSubject</label>
+                    <template>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.template</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                        </config>
+                    </template>
+                    <subject>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.subject</label>
                         <config>
                             <type>input</type>
                         </config>
-                    </mailSubject>
-                    <mailTitle>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailTitle</label>
+                    </subject>
+                    <attachUploads>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.attachUploads</label>
                         <config>
-                            <type>input</type>
+                            <type>check</type>
                         </config>
-                    </mailTitle>
-                    <mailBody>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailBody</label>
-                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailBody.description</description>
+                    </attachUploads>
+                </el>
+            </ROOT>
+        </mail>
+        <content>
+            <ROOT>
+                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.content</sheetTitle>
+                <type>array</type>
+                <el>
+                    <body>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body.description</description>
                         <config>
                             <type>text</type>
                             <enableRichtext>1</enableRichtext>
                         </config>
-                    </mailBody>
-                    <mailAttachUploads>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailAttachUploads</label>
-                        <config>
-                            <type>check</type>
-                        </config>
-                    </mailAttachUploads>
-                    <mailTemplate>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.mailTemplate</label>
-                        <config>
-                            <type>input</type>
-                        </config>
-                    </mailTemplate>
+                    </body>
                 </el>
             </ROOT>
-        </mail>
+        </content>
         <recipient>
             <ROOT>
                 <sheetTitle>Recipients</sheetTitle>

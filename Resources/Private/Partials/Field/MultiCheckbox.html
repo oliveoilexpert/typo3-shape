@@ -1,6 +1,6 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
-	<f:render partial="Control/GroupLabel" arguments="{_all}"/>
+	<f:render partial="Control/HeaderLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
 		<f:if condition="{option.group_label}">
 			<header class="{blockClass}__options-header">

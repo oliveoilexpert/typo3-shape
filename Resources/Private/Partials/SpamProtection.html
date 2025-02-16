@@ -1,8 +1,12 @@
 
 <f:form.textfield autocomplete="off" name="__email" tabindex="-1" style="position:absolute;margin-left:-999em"/>
-<script id="tx-shape-action-script">
+<template id="tx-shape-focus-input">
+    <f:form.textfield autocomplete="off" name="__focus" value="focus" tabindex="-1" style="position:absolute;margin-left:-999em"/>
+</template>
+<script>
      window.requestAnimationFrame(() => {
-         const form = document.getElementById('tx-shape-action-script').closest('form')
-         form.addEventListener('focusin', () => form.action = form.dataset.action, {once: true})
+        const tmpl = document.getElementById('tx-shape-focus-input')
+        const form = tmpl.closest('form')
+        form.addEventListener('focusin', () => tmpl.parentElement.appendChild(tmpl.content.cloneNode(true)), {once: true})
      })
 </script>

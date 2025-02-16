@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Listener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;

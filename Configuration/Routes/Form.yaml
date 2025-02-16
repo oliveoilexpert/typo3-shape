@@ -5,19 +5,19 @@ routeEnhancers:
     extension: Shape
     plugin: Form
     routes:
-      - routePath: '/{submitLabel}'
-        _controller: 'Form::submit'
+      - routePath: '/{finishedLabel}'
+        _controller: 'Form::finished'
       - routePath: '/{pageLabel}_{pageIndex}'
         _controller: 'Form::renderStep'
       - routePath: '/'
         _controller: 'Form::render'
     aspects:
-      submitLabel:
+      finishedLabel:
         type: LocaleModifier
-        default: 'submit'
+        default: 'finished'
         localeMap:
           - locale: 'de_DE.*'
-            value: 'submit'
+            value: 'abgeschlossen'
       pageLabel:
         type: LocaleModifier
         default: 'step'

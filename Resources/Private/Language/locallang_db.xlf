@@ -10,6 +10,7 @@
 			<trans-unit id="tab.finishers"><source>Finishers</source></trans-unit>
 			<trans-unit id="tab.lazyLoad"><source>Lazy Load</source></trans-unit>
 			<trans-unit id="tab.mail"><source>Mail</source></trans-unit>
+			<trans-unit id="tab.content"><source>Content</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form record with individual Finishers</source></trans-unit>
@@ -175,14 +176,14 @@
 
 			<trans-unit id="flexform.finisher.showContentElements.contentElements"><source>Content Elements</source></trans-unit>
 
-			<trans-unit id="flexform.finisher.sendEmail.mailSubject"><source>Subject</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.mailTitle"><source>Title</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.mailBody"><source>Body</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.mailBody.description"><source>Mail bodytext. Form values can be used with "{field-name}".</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.mailAttachUploads"><source>Attach Uploads</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.mailTemplate"><source>Template</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.subject"><source>Subject</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.title"><source>Title</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.body"><source>Body</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.body.description"><source>Mail bodytext. Form values can be used with "{{ field-name }}".</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.attachUploads"><source>Attach Uploads</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.template"><source>Template</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.recipientAddresses"><source>Recipient Email Addresses</source></trans-unit>
-			<trans-unit id="flexform.finisher.sendEmail.recipientAddresses.description"><source>Comma separated list of email addresses to send to. Form values can be used with "{field-name}".</source></trans-unit>
+			<trans-unit id="flexform.finisher.sendEmail.recipientAddresses.description"><source>Comma separated list of email addresses to send to. Form values can be used with "{{ field-name }}".</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.ccRecipientAddresses"><source>CC Recipient Email Addresses</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.bccRecipientAddresses"><source>BCC Recipient Email Addresses</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.replyToAddresses"><source>Reply-to Email Addresses</source></trans-unit>

@@ -4,7 +4,7 @@ namespace UBOS\Shape\Service;
 
 use TYPO3\CMS\Core;
 
-class DatabaseService
+class TcaRelationService
 {
 	public function __construct(
 		protected Core\Database\ConnectionPool $connectionPool

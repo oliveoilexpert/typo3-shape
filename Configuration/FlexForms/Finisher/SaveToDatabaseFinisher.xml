@@ -20,6 +20,11 @@
                             <allowed>pages</allowed>
                             <size>1</size>
                             <maxitems>1</maxitems>
+                            <fieldWizard>
+                                <tableList>
+                                    <disabled>true</disabled>
+                                </tableList>
+                            </fieldWizard>
                         </config>
                     </storagePage>
                     <mapping>
