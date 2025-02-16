@@ -13,14 +13,18 @@ final class SpamProtectionListener
 	#[AsEventListener]
 	public function __invoke(SpamProtectionEvent $event): void
 	{
+		$arguments = $event->context->request->getParsedBody()['tx_shape_form'] ?? [];
 		// honeypot
-		if ($event->context->request->getParsedBody()['tx_shape_form']['__email'] ?? '') {
-			$event->isSpam = true;
-			$event->addSpamMessage('');
+		if ($event->context->settings['spamProtection']['honeypot'] && $arguments['__email'] ?? '') {
+			$event->spamReasons['honeypot'] = [
+				'message' => 'Honeypot field was filled.',
+			];
 		}
 		// focus field must be set
-		if (($event->context->request->getParsedBody()['tx_shape_form']['__focus'] ?? '') !== 'focus') {
-			$event->isSpam = true;
+		if ($event->context->settings['spamProtection']['focusPass'] && ($arguments['__focus_pass'] ?? '') !== 'human') {
+			$event->spamReasons['focusPass'] = [
+				'message' => 'Focus Pass field that fills via JavaScript on focusin event was not filled correctly.',
+			];
 		}
 	}
 }

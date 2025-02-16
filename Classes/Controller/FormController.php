@@ -111,7 +111,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$event = new Event\SpamProtectionEvent($this->context);
 		$this->eventDispatcher->dispatch($event);
-		return $event->isSpam;
+		return (bool)$event->spamReasons;
 	}
 
 	protected function renderLazyLoader(): ResponseInterface

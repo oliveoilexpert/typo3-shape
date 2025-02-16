@@ -29,7 +29,7 @@ final readonly class FlexformConfigurationListener
 					'group' => $config['group'] ?? null,
 					'icon' => $config['icon'] ?? null,
 				];
-				if ($config['fields']) {
+				if ($config['fields'] ?? false) {
 					foreach ($config['fields'] as $field => $fieldConfig) {
 						$dataStructure['sheets']['content']['ROOT']['el'][$field] = $fieldConfig;
 					}

@@ -32,6 +32,9 @@ plugin.tx_shape {
     settings {
         pluginUid = 0
         uploadFolder = 1:/user_upload/
-        doggy = testy
+        spamProtection {
+            honeypot = 1
+            focusPass = 1
+        }
     }
 }
