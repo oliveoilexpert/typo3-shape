@@ -6,6 +6,9 @@ use TYPO3\CMS\Core;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+/**
+ * Utility class for TCA manipulation
+ */
 class TcaUtility
 {
 	public static function selectItemHelper(array $item): array
@@ -25,6 +28,12 @@ class TcaUtility
 		}, $items);
 	}
 
+	/**
+	 * Returns LLL:EXT:...:... string
+	 * @param string $key
+	 * @param string $file
+	 * @return string
+	 */
 	public static function t(
 		string $key,
 		string $file = 'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf'
@@ -33,10 +42,16 @@ class TcaUtility
 		return "{$file}:{$key}";
 	}
 
+	/**
+	 * Adds new fields to the showitem of tx_shape_field types
+	 * @param string $newFields
+	 * @param string $typeList The types to add the fields to, by default all types
+	 * @param string $position By default, the new fields are added after the "extended" tab
+	 */
 	public static function addToFields(
 		string $newFields,
 		string $typeList = '',
-			   $position = 'after:--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.extended,'
+		string $position = 'after:--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.extended,'
 	): void
 	{
 		ExtensionManagementUtility::addToAllTCAtypes(
@@ -47,6 +62,15 @@ class TcaUtility
 		);
 	}
 
+	/**
+	 * Adds a new type to tx_shape_field
+	 * @param string $label
+	 * @param string $value
+	 * @param string $icon
+	 * @param string $group
+	 * @param array $typeDefinition The TCA definition for the new type
+	 * @param string $baseType The base type to extend
+	 */
 	public static function addFieldType(
 		string $label,
 		string $value,
@@ -75,6 +99,12 @@ class TcaUtility
 		}
 	}
 
+	/**
+	 * Adds a new type to tx_shape_finisher
+	 * @param string $label
+	 * @param string $value
+	 * @param string $flexForm The flexform for the new type, e.g. 'FILE:EXT:my_ext/Configuration/FlexForms/Finisher/MyFinisher.xml'
+	 */
 	public static function addFinisherType(
 		string $label,
 		string $value,

@@ -4,17 +4,17 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 
-readonly class FormContext
+readonly class Context
 {
 	public function __construct(
-		public RequestInterface $request,
-		public array $settings,
-		public Core\Domain\Record $plugin,
-		public Core\Domain\Record $form,
-		public FormSession $session,
-		public array $postValues,
+		public RequestInterface                       $request,
+		public array                                  $settings,
+		public Core\Domain\Record                     $plugin,
+		public Core\Domain\Record                     $form,
+		public SessionData                            $session,
+		public array                                  $postValues,
 		public Core\Resource\ResourceStorageInterface $uploadStorage,
-		public bool $isStepBack = false
+		public bool                                   $isStepBack = false
 	)
 	{
 	}

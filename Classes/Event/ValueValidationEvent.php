@@ -12,11 +12,11 @@ use UBOS\Shape\Domain;
 final class ValueValidationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormContext $context,
-		public readonly Domain\Record\FieldRecord $field,
+		public readonly Domain\FormRuntime\Context     $context,
+		public readonly Domain\Record\FieldRecord      $field,
 		public readonly Validator\ConjunctionValidator $validator,
-		public $value,
-		public ?Result $result = null,
+		public                                         $value,
+		public ?Result                                 $result = null,
 	) {}
 	public function isPropagationStopped(): bool
 	{

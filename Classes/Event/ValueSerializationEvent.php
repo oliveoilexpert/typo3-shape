@@ -10,10 +10,10 @@ use UBOS\Shape\Domain;
 final class ValueSerializationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormContext $context,
-		public readonly Domain\Record\FieldRecord $field,
-		public readonly mixed $value,
-		public mixed $serializedValue = null,
+		public readonly Domain\FormRuntime\Context $context,
+		public readonly Domain\Record\FieldRecord  $field,
+		public readonly mixed                      $value,
+		public mixed                               $serializedValue = null,
 	) {}
 	public function isPropagationStopped(): bool
 	{

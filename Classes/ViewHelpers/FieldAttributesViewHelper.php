@@ -2,14 +2,12 @@
 
 namespace UBOS\Shape\ViewHelpers;
 
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class FieldAttributesViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
-		// name, type, description, required, default, escape
 		$this->registerArgument('field', 'object', '', false, false);
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}

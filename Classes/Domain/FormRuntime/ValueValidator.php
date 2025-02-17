@@ -11,8 +11,8 @@ use UBOS\Shape\Event\ValueValidationEvent;
 class ValueValidator
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormContext $context,
-		protected EventDispatcherInterface $eventDispatcher
+		protected Domain\FormRuntime\Context $context,
+		protected EventDispatcherInterface   $eventDispatcher
 	)
 	{
 	}

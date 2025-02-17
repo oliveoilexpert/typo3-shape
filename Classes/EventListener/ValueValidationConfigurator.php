@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 use UBOS\Shape\Domain\Validator;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-final class ValueValidatorBuilder
+final class ValueValidationConfigurator
 {
 	#[AsEventListener]
 	public function __invoke(ValueValidationEvent $event): void

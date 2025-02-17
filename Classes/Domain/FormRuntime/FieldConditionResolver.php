@@ -10,9 +10,9 @@ use UBOS\Shape\Event\FieldConditionResolutionEvent;
 class FieldConditionResolver
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormContext $context,
+		protected Domain\FormRuntime\Context       $context,
 		protected Core\ExpressionLanguage\Resolver $resolver,
-		protected EventDispatcherInterface $eventDispatcher
+		protected EventDispatcherInterface         $eventDispatcher
 	)
 	{
 	}

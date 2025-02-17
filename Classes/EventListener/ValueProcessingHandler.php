@@ -10,9 +10,7 @@ use UBOS\Shape\Event\ValueProcessingEvent;
 
 final class ValueProcessingHandler
 {
-	public function __construct(
-		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null
-	) {}
+	protected ?PasswordHashing\PasswordHashInterface $passwordHash = null;
 
 	#[AsEventListener]
 	public function __invoke(ValueProcessingEvent $event): void

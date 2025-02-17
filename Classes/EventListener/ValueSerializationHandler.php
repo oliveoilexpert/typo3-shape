@@ -20,7 +20,6 @@ final class ValueSerializationHandler
 			$value = [$value];
 		}
 		if (is_array($value) && reset($value) instanceof Core\Http\UploadedFile) {
-
 			// if the field was not validated or has errors, do not save the uploaded files
 			if ($event->field->validationResult == null || $event->field->validationResult->hasErrors()) {
 				$event->serializedValue = '';

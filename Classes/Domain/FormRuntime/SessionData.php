@@ -1,7 +1,7 @@
 <?php
 
 namespace UBOS\Shape\Domain\FormRuntime;
-class FormSession
+class SessionData
 {
 	public function __construct(
 		public string $id = '',

@@ -27,7 +27,7 @@ use UBOS\Shape\Event;
 
 class FormController extends Extbase\Mvc\Controller\ActionController
 {
-	protected FormRuntime\FormContext $context;
+	protected FormRuntime\Context $context;
 	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
 	protected string $fragmentPageTypeNum = '11510497112101';
 
@@ -84,13 +84,9 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function applyContext(): void
 	{
-		$this->context = FormRuntime\FormContextBuilder::buildFromRequest(
+		$this->context = FormRuntime\ContextBuilder::buildFromRequest(
 			$this->request,
 			$this->settings
-		);
-		$this->context->session->values = array_merge(
-			$this->context->session->values,
-			$this->context->postValues
 		);
 		$resolver = new FormRuntime\FieldConditionResolver(
 			$this->context,
@@ -305,7 +301,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		return $this->request->getAttribute('frontend.user');
 	}
-	protected function getSessionKey(): stringx
+	protected function getSessionKey(): string
 	{
 		return "tx_shape_c{$this->context->plugin?->getUid()}_f{$this->context->form->getUid()}";
 	}

@@ -6,7 +6,7 @@ use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-final class UniqueInSubmissionValidatorProvider
+final class UniqueInSubmissionValidationConfigurator
 {
 	#[AsEventListener]
 	public function __invoke(ValueValidationEvent $event): void

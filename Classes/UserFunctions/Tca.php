@@ -7,6 +7,10 @@ use TYPO3\CMS\Core\Utility\DebugUtility;
 
 class Tca
 {
+
+	/**
+	 * Provide label for inline field records
+	 */
 	public function getFormattedFieldLabel(array &$params): void
 	{
 		if (!isset($params['row'])) {
@@ -26,6 +30,10 @@ class Tca
 		}
 		$params['title'] = "{$label}<small>[{$type}]</small>";
 	}
+
+	/**
+	 * Provide empty slug prefix
+	 */
 	public function getEmptySlugPrefix(array $parameters, TcaSlug $reference): string
 	{
 		return "";

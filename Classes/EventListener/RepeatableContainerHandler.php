@@ -57,7 +57,7 @@ final class RepeatableContainerHandler
 		}
 	}
 
-	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidatorBuilder')]
+	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidationConfigurator')]
 	public function validateValue(Event\ValueValidationEvent $event): void
 	{
 		$field = $event->field;

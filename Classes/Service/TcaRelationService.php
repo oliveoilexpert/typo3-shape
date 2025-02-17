@@ -4,6 +4,14 @@ namespace UBOS\Shape\Service;
 
 use TYPO3\CMS\Core;
 
+/**
+ * Handles mirroring of comma-separated relation fields between tables
+ *
+ * When switching between field types (group/select <-> inline), the relation data
+ * needs to be mirrored between tables since these field types expect relations
+ * to be stored in opposite tables (Inline fields store parent uid in child records, while group/select fields store child uids in parent records).
+ *
+ */
 class TcaRelationService
 {
 	public function __construct(
@@ -12,6 +20,9 @@ class TcaRelationService
 	{
 	}
 
+	/**
+	 * Mirrors comma-separated relations between two tables
+	 */
 	public function mirrorCSVRelation(
 		string $originTable,
 		string $originColumn,
@@ -22,20 +33,21 @@ class TcaRelationService
 		$originQuery = $this->connectionPool->getQueryBuilderForTable($originTable);
 		$targetQuery = $this->connectionPool->getQueryBuilderForTable($targetTable);
 
-		// if destructive, empty "fields" column in tx_shape_form_page
+		// empty target column
 		if ($emptyTargetColumn) {
 			$targetQuery
 				->update($targetTable)
 				->set($targetColumn, '')
 				->executeQuery();
 		}
-		// find all pages
+		// find all target records
 		$targetRows = $targetQuery
 			->select('uid', $targetColumn)
 			->from($targetTable)
 			->executeQuery()
 			->fetchAllAssociative();
-		// for each page, find all fields that have page uid in page_parents and add that field uid to the page fields
+		// for each record in target table, find all records in origin table that have target uid in origin column
+		// and update target column with comma-separated list of origin uids
 		foreach ($targetRows as $row) {
 			$targetUid = $row['uid'];
 			$oppositeRows = $originQuery
@@ -63,6 +75,9 @@ class TcaRelationService
 		}
 	}
 
+	/**
+	 * Mirrors relations between form pages and fields based on TCA tx_shape_form_page.fields type
+	 */
 	public function mirrorCurrentPageFieldRelations(): void
 	{
 		$fieldsType = $GLOBALS['TCA']['tx_shape_form_page']['columns']['fields']['config']['type'];
@@ -83,6 +98,9 @@ class TcaRelationService
 		}
 	}
 
+	/**
+	 * Mirrors relations between forms and finishers based on TCA tx_shape_form.finishers type
+	 */
 	public function mirrorCurrentFormFinisherRelations(): void
 	{
 		$finishersType = $GLOBALS['TCA']['tx_shape_form']['columns']['finishers']['config']['type'];

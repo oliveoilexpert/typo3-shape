@@ -9,9 +9,9 @@ abstract class AbstractFinisher
 {
 	protected array $settings = [];
 	public function __construct(
-		protected \UBOS\Shape\Domain\FormRuntime\FormContext $context,
-		protected Core\Domain\Record $finisher,
-		protected Core\View\ViewInterface $view,
+		protected \UBOS\Shape\Domain\FormRuntime\Context $context,
+		protected Core\Domain\Record                     $finisher,
+		protected Core\View\ViewInterface                $view,
 	)
 	{
 		$this->settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)

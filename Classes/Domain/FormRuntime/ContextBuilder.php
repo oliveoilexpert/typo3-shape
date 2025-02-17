@@ -7,7 +7,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use TYPO3\CMS\Extbase\Service\ExtensionService;
 
-class FormContextBuilder
+class ContextBuilder
 {
 	public static function buildFromRequest(
 		RequestInterface $request,
@@ -15,7 +15,7 @@ class FormContextBuilder
 			'pluginUid' => null,
 			'uploadFolder' => '1:/user_upload/',
 		]
-	): FormContext
+	): Context
 	{
 		$extensionService = GeneralUtility::makeInstance(ExtensionService::class);
 		$pluginNamespace = $extensionService->getPluginNamespace($request->getControllerExtensionName(), $request->getControllerName());
@@ -29,14 +29,15 @@ class FormContextBuilder
 		if (!$form) {
 			throw new \Exception('No form found');
 		}
+		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$cleanedPostValues = [];
 		if (!$request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
 			$sessionData = (array)json_decode($request->getArguments()['session'] ?? '[]', true);
 			try {
-				$session = new FormSession(...$sessionData);
+				$session = new SessionData(...$sessionData);
 				$session->hasErrors = false;
 			} catch (\Exception $e) {
-				$session = new FormSession();
+				$session = new SessionData();
 			}
 
 			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
@@ -68,12 +69,15 @@ class FormContextBuilder
 					}
 				}
 			}
+			$session->values = array_merge(
+				$session->values,
+				$cleanedPostValues
+			);
 		} else {
-			$session = new FormSession();
+			$session = new SessionData();
 			$isStepBack = false;
 		}
-		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
-		return new FormContext(
+		return new Context(
 			$request,
 			$settings,
 			$plugin,

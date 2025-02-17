@@ -6,11 +6,10 @@ namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\AfterFlexFormDataStructureParsedEvent;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 
-#[AsEventListener]
 final readonly class FlexformConfigurationModifier
 {
+	#[AsEventListener]
 	public function __invoke(AfterFlexFormDataStructureParsedEvent $event): void
 	{
 		$identifier = $event->getIdentifier();
