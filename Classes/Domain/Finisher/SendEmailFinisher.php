@@ -10,7 +10,7 @@ use UBOS\Shape\Utility\TemplateVariableParser;
 
 class SendEmailFinisher extends AbstractFinisher
 {
-	public function execute(): ?ResponseInterface
+	public function execute(): void
 	{
 		$this->settings = array_merge([
 			'subject' => '',
@@ -27,7 +27,7 @@ class SendEmailFinisher extends AbstractFinisher
 
 		$recipients = $this->getAddresses($this->settings['recipientAddresses']);
 		if (!$recipients || !$this->settings['subject']) {
-			return null;
+			return;
 		}
 
 		$email = new Core\Mail\FluidEmail();
@@ -41,8 +41,8 @@ class SendEmailFinisher extends AbstractFinisher
 		$format = $templateConfig['format'] ?? Core\Mail\FluidEmail::FORMAT_BOTH;
 
 		$variables = [
-			'formValues' => $this->context->session->values,
-			'form' => $this->context->form,
+			'formValues' => $this->getFormValues(),
+			'form' => $this->getForm(),
 			'settings' => $this->settings,
 			'parsed' => [
 				'body' => $this->parseWithValues($this->settings['body'])
@@ -58,7 +58,7 @@ class SendEmailFinisher extends AbstractFinisher
 			->from($senderAddress)
 			->to(...$recipients)
 			->subject($subject)
-			->setRequest($this->context->request)
+			->setRequest($this->getRequest())
 			->format($format)
 			->setTemplate($template)
 			->assignMultiple($variables);
@@ -73,10 +73,10 @@ class SendEmailFinisher extends AbstractFinisher
 		}
 		if ($this->settings['attachUploads']) {
 			$resourceFactory = GeneralUtility::makeInstance(Core\Resource\ResourceFactory::class);
-			foreach ($this->context->form->get('pages') as $page) {
+			foreach ($this->getForm()->get('pages') as $page) {
 				foreach ($page->get('fields') as $field) {
-					if ($field->get('type') === 'file' && isset($this->context->session->values[$field->get('name')])) {
-						foreach ($this->context->session->values[$field->get('name')] as $fileIdentifier) {
+					if ($field->get('type') === 'file' && isset($this->getFormValues()[$field->get('name')])) {
+						foreach ($this->getFormValues()[$field->get('name')] as $fileIdentifier) {
 							$file = $resourceFactory->getFileObjectFromCombinedIdentifier($fileIdentifier);
 							if ($file) {
 								$email->attach($file->getContents(), $file->getName(), $file->getMimeType());
@@ -87,12 +87,11 @@ class SendEmailFinisher extends AbstractFinisher
 			}
 		}
 		GeneralUtility::makeInstance(Core\Mail\MailerInterface::class)->send($email);
-		return null;
 	}
 
 	protected function getAddresses(string $addressList): array
 	{
-		$addressList = TemplateVariableParser::parse($addressList, $this->context->session->values);
+		$addressList = TemplateVariableParser::parse($addressList, $this->getFormValues());
 		$addresses = [];
 		foreach (GeneralUtility::trimExplode(',', $addressList, true) as $address) {
 			if (str_starts_with($address, '{{')) {
@@ -105,6 +104,6 @@ class SendEmailFinisher extends AbstractFinisher
 
 	protected function parseWithValues(string $string): string
 	{
-		return TemplateVariableParser::parse($string, $this->context->session->values);
+		return TemplateVariableParser::parse($string, $this->getFormValues());
 	}
 }

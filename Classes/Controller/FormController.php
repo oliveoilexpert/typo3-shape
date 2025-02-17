@@ -59,6 +59,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if ($this->context->session->hasErrors) {
 			return $this->renderForm($this->context->session->previousPageIndex);
 		}
+		DebugUtility::debug($this->context->session->values);
 		return $this->renderForm($pageIndex);
 	}
 
@@ -79,6 +80,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	public function finishedAction(): ResponseInterface
 	{
+		$arguments = $this->request->getArguments();
+		if ($arguments['template']) {
+			$this->view->getRenderingContext()->setControllerAction($arguments['template']);
+		}
+		$this->view->assignMultiple($arguments);
 		return $this->htmlResponse();
 	}
 
@@ -240,36 +246,22 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function executeFinishers(): ?ResponseInterface
 	{
-		$response = null;
+		$runner = new FormRuntime\FinisherRunner($this->context);
 		foreach ($this->context->form->get('finishers') as $finisher) {
 			if ($finisher->get('condition') ?? false) {
 				if (!$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
 					continue;
 				}
 			}
-			$response = $this->makeFinisherInstance($finisher)?->execute() ?? $response;
+			$runner->run($finisher);
 		}
-		return $response ?? $this->redirect('finished');
+		return $runner->response ?? $this->redirect('finished', arguments: $runner->finishedActionArguments);
 	}
 
 	// todo: error responses
 	protected function errorResponse(string $message): ResponseInterface
 	{
 		return $this->htmlResponse($message);
-	}
-
-	protected function makeFinisherInstance(Core\Domain\Record $finisher): ?Domain\Finisher\AbstractFinisher
-	{
-		$className = $finisher->get('type') ?? '';
-		if (!$className || !class_exists($className)) {
-			return null;
-		}
-		return GeneralUtility::makeInstance(
-			$className,
-			$this->context,
-			$finisher,
-			$this->view,
-		);
 	}
 
 	protected function getConditionResolver(): Core\ExpressionLanguage\Resolver

@@ -12,7 +12,7 @@ class ContextBuilder
 	public static function buildFromRequest(
 		RequestInterface $request,
 		array $settings = [
-			'pluginUid' => null,
+			'pluginUid' => 0,
 			'uploadFolder' => '1:/user_upload/',
 		]
 	): Context
@@ -94,16 +94,16 @@ class ContextBuilder
 		array $settings
 	): ?array
 	{
-		$contentData = $request->getAttribute('currentContentObject')?->data;
-		if (isset($contentData['CType'])) {
-			return $contentData;
+		$uid = $request->getArguments()['pluginUid'] ?? $settings['pluginUid'] ?: 0;
+		if (!$uid) {
+			return $request->getAttribute('currentContentObject')?->data;
 		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
 		return $queryBuilder
 			->select('*')
 			->from('tt_content')
 			->where(
-				$queryBuilder->expr()->eq('uid', (int)$request->getArgument('pluginUid') ?? $settings['pluginUid'] ?? 0)
+				$queryBuilder->expr()->eq('uid', $uid)
 			)
 			->executeQuery()->fetchAllAssociative()[0] ?? null;
 	}

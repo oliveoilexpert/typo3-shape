@@ -9,7 +9,7 @@ use TYPO3\CMS\Extbase;
 
 class SaveToDatabaseFinisher extends AbstractFinisher
 {
-	public function execute(): ?ResponseInterface
+	public function execute(): void
 	{
 		$this->settings = array_merge([
 			'table' => '',
@@ -17,17 +17,17 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			'mapping' => [],
 		], $this->settings);
 		if (!$this->settings['table']) {
-			return null;
+			return;
 		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
 			->getQueryBuilderForTable($this->settings['table']);
 		$values = [
-			'pid' => (int)($this->settings['storagePage'] ?: $this->context->plugin->getPid() ?? $this->context->form->getPid()),
+			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
 		];
 
 		foreach ($this->settings['mapping'] as $column => $field) {
 			if (!$field) continue;
-			$value = $this->context->session->values[$field] ?? $field;
+			$value = $this->getFormValues()[$field] ?? $field;
 			if (is_array($value)) {
 				try {
 					$value = implode(',', $value);
@@ -40,6 +40,5 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 		$queryBuilder->insert($this->settings['table'])
 			->values($values)
 			->executeStatement();
-		return null;
 	}
 }

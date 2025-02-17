@@ -8,24 +8,24 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class RedirectFinisher extends AbstractFinisher
 {
-	public function execute(): ?ResponseInterface
+	public function execute(): void
 	{
 		$this->settings = array_merge([
 			'uri' => '',
 			'statusCode' => 303,
 		], $this->settings);
 		if (!$this->settings['uri']) {
-			return null;
+			return;
 		}
-		$controller = $this->context->request->getAttribute('frontend.controller');
+		$controller = $this->getRequest()->getAttribute('frontend.controller');
 		$cObj = Core\Utility\GeneralUtility::makeInstance(
 			ContentObjectRenderer::class,
 			$controller
 		);
 		$url = $cObj->typoLink_URL(['parameter' => $this->settings['uri'], 'forceAbsoluteUrl' => true]);
 		if (!$url) {
-			return null;
+			return;
 		}
-		return new Core\Http\RedirectResponse($url, $this->settings['statusCode']);
+		$this->runner->response = new Core\Http\RedirectResponse($url, $this->settings['statusCode']);
 	}
 }

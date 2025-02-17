@@ -5,13 +5,15 @@ namespace UBOS\Shape\Utility;
 
 /**
  * Parser for interpolating variables in templates.
- * Supports simple variable replacement and array to list conversion.
+ * Supports simple variable replacement, array to list conversion,
+ * and object property access.
  *
  * Syntax:
  * - Simple variable: {{ variable }}
  * - Array to list: {{ array[] }}
  * - Array property to list: {{ array[].property }}
  * - Nested array to list: {{ array.nested[] }}
+ * - Object property: {{ object.property }} (tries getter method first, then property)
  */
 class TemplateVariableParser
 {
@@ -48,7 +50,7 @@ class TemplateVariableParser
 			return '{{' . $path . '}}';
 		}
 
-		return $escapeHtml ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : $value;
+		return $escapeHtml ? htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') : (string)$value;
 	}
 
 	/**
@@ -72,10 +74,7 @@ class TemplateVariableParser
 			$propertyPath = ltrim($parts[1], '.');
 			$values = [];
 			foreach ($array as $item) {
-				if (!is_array($item)) {
-					continue;
-				}
-				$value = self::getValue($item, explode('.', $propertyPath));
+				$value = self::getValue([$item], explode('.', $propertyPath));
 				if ($value !== null && !is_array($value)) {
 					$values[] = $value;
 				}
@@ -92,16 +91,44 @@ class TemplateVariableParser
 	}
 
 	/**
-	 * Gets a value from a nested array structure using a path array.
+	 * Gets a value from a nested array/object structure using a path array.
+	 * For objects, tries getter method first, then property access.
+	 *
+	 * @param array $data The data structure to traverse
+	 * @param array $path The path segments to follow
+	 * @return mixed The value found at the path, or null if not found
 	 */
-	private static function getValue(array $data, array $path): string|array|null
+	private static function getValue(array $data, array $path): mixed
 	{
 		$value = $data;
+
 		foreach ($path as $key) {
-			if (!isset($value[$key])) {
-				return null;
+			$current = is_array($value) ? ($value[0] ?? $value) : $value;
+
+			// Try array access first
+			if (is_array($current) && isset($current[$key])) {
+				$value = $current[$key];
+				continue;
 			}
-			$value = $value[$key];
+
+			// Try object access (getter first, then property)
+			if (is_object($current)) {
+				// Try getter method
+				$getterMethod = 'get' . ucfirst($key);
+				if (method_exists($current, $getterMethod)) {
+					$value = $current->$getterMethod();
+					continue;
+				}
+
+				// Fall back to property access
+				if (property_exists($current, $key)) {
+					$value = $current->$key;
+					continue;
+				}
+			}
+
+			// If we get here, we couldn't find the value
+			return null;
 		}
 
 		return $value;

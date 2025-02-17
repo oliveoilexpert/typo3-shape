@@ -25,7 +25,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['shape'] = [
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
 	'Shape',
 	'Form',
-	[FormController::class => 'render, renderStep, renderErrorStep, submit'],
-	[FormController::class => 'renderStep, renderErrorStep, submit'],
+	[FormController::class => 'render, renderStep, renderErrorStep, submit, finished'],
+	[FormController::class => 'renderStep, renderErrorStep, submit, finished'],
 	'CType'
 );
