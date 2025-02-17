@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Crypto\PasswordHashing;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\ValueProcessingEvent;
 
-final class ValueProcessor
+final class ValueProcessingHandler
 {
 	public function __construct(
 		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null

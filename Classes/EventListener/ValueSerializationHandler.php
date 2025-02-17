@@ -7,7 +7,7 @@ use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\ValueSerializationEvent;
 
-final class ValueSerializer
+final class ValueSerializationHandler
 {
 	#[AsEventListener]
 	public function __invoke(ValueSerializationEvent $event): void

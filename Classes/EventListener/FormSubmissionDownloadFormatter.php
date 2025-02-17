@@ -6,7 +6,7 @@ use TYPO3\CMS\Backend\RecordList\Event\BeforeRecordDownloadIsExecutedEvent;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 
-final class FormSubmissionExportFormatter
+final class FormSubmissionDownloadFormatter
 {
 	#[AsEventListener]
 	public function __invoke(BeforeRecordDownloadIsExecutedEvent $event): void

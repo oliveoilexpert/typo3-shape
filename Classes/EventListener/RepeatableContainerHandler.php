@@ -57,7 +57,7 @@ final class RepeatableContainerHandler
 		}
 	}
 
-	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidatorProvider')]
+	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidatorBuilder')]
 	public function validateValue(Event\ValueValidationEvent $event): void
 	{
 		$field = $event->field;
@@ -69,7 +69,7 @@ final class RepeatableContainerHandler
 			$event->result = $result;
 			return;
 		}
-		$validator = new FormRuntime\ValueValidation(
+		$validator = new FormRuntime\ValueValidator(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -85,7 +85,7 @@ final class RepeatableContainerHandler
 		$event->result = $result;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializer')]
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializationHandler')]
 	public function serializeValue(Event\ValueSerializationEvent $event): void
 	{
 		$field = $event->field;
@@ -97,7 +97,7 @@ final class RepeatableContainerHandler
 			$event->serializedValue = $serializedValue;
 			return;
 		}
-		$serializer = new FormRuntime\ValueSerialization(
+		$serializer = new FormRuntime\ValueSerializer(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -117,7 +117,7 @@ final class RepeatableContainerHandler
 		$event->serializedValue = $serializedValue;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessor')]
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessingHandler')]
 	public function processValue(Event\ValueProcessingEvent $event): void
 	{
 		$field = $event->field;
@@ -129,7 +129,7 @@ final class RepeatableContainerHandler
 			$event->processedValue = $processedValue;
 			return;
 		}
-		$processor = new FormRuntime\ValueProcessing(
+		$processor = new FormRuntime\ValueProcessor(
 			$event->context,
 			$this->eventDispatcher
 		);

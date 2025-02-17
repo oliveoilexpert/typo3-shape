@@ -4,12 +4,12 @@ namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
-use UBOS\Shape\Event\FormRenderEvent;
+use UBOS\Shape\Event\BeforeFormRenderEvent;
 
 final class UserDataFieldPrefiller
 {
 	#[AsEventListener]
-	public function __invoke(FormRenderEvent $event): void
+	public function __invoke(BeforeFormRenderEvent $event): void
 	{
 		$feAuth = $event->context->request->getAttribute('frontend.user');
 		if (!$feAuth->getUserId()) {

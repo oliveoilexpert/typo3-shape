@@ -151,7 +151,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			'spamProtectionTriggered' => $this->request->getArguments()['spam'] ?? false,
 		];
 
-		$event = new Event\FormRenderEvent($this->context, $viewVariables);
+		$event = new Event\BeforeFormRenderEvent($this->context, $viewVariables);
 		$this->eventDispatcher->dispatch($event);
 		$viewVariables = $event->getVariables();
 
@@ -181,7 +181,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$validator = new FormRuntime\ValueValidation($this->context, $this->eventDispatcher);
+		$validator = new FormRuntime\ValueValidator($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
@@ -205,7 +205,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$serializer = new FormRuntime\ValueSerialization($this->context, $this->eventDispatcher);
+		$serializer = new FormRuntime\ValueSerializer($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			if (!$field->has('name')) {
 				continue;
@@ -222,7 +222,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function processForm(): void
 	{
-		$processor = new FormRuntime\ValueProcessing(
+		$processor = new FormRuntime\ValueProcessor(
 			$this->context,
 			$this->eventDispatcher
 		);

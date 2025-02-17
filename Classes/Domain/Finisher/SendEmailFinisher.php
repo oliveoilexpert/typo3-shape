@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use UBOS\Shape\Utility\Parser\TemplateVariableParser;
+use UBOS\Shape\Utility\TemplateVariableParser;
 
 class SendEmailFinisher extends AbstractFinisher
 {

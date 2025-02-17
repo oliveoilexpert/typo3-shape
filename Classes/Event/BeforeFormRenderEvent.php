@@ -6,7 +6,7 @@ namespace UBOS\Shape\Event;
 
 use UBOS\Shape\Domain;
 
-final class FormRenderEvent
+final class BeforeFormRenderEvent
 {
 	public function __construct(
 		public readonly Domain\FormRuntime\FormContext $context,
