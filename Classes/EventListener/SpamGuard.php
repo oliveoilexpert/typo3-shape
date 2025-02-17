@@ -1,17 +1,17 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\SpamProtectionEvent;
+use UBOS\Shape\Event\SpamAnalysisEvent;
 
-final class SpamProtectionListener
+final class SpamGuard
 {
 	#[AsEventListener]
-	public function __invoke(SpamProtectionEvent $event): void
+	public function __invoke(SpamAnalysisEvent $event): void
 	{
 		$arguments = $event->context->request->getParsedBody()['tx_shape_form'] ?? [];
 		// honeypot

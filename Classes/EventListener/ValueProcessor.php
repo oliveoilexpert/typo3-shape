@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Crypto\PasswordHashing;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\ValueProcessingEvent;
 
-final class ValueProcessingListener
+final class ValueProcessor
 {
 	public function __construct(
 		protected ?PasswordHashing\PasswordHashInterface $passwordHash = null

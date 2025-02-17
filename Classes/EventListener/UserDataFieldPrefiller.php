@@ -1,12 +1,12 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Event\FormRenderEvent;
 
-final class PrefillUserDataFormRenderListener
+final class UserDataFieldPrefiller
 {
 	#[AsEventListener]
 	public function __invoke(FormRenderEvent $event): void

@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
@@ -11,14 +11,14 @@ use UBOS\Shape\Domain\Record\RepeatableContainerRecord;
 use UBOS\Shape\Event;
 use UBOS\Shape\Domain\FormRuntime;
 
-final class RepeatableContainerListener
+final class RepeatableContainerHandler
 {
 	public function __construct(
 		protected EventDispatcher $eventDispatcher
 	) {}
 
-	#[AsEventListener(before: 'UBOS\Shape\Listener\RecordCreationListener')]
-	public function recordCreation(RecordCreationEvent $event): void
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreator')]
+	public function createRecord(RecordCreationEvent $event): void
 	{
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field'
 			&& $event->getRawRecord()->get('type') === 'repeatable-container') {
@@ -31,7 +31,7 @@ final class RepeatableContainerListener
 	}
 
 	#[AsEventListener]
-	public function fieldConditionResolution(Event\FieldConditionResolutionEvent $event): void
+	public function resolveFieldCondition(Event\FieldConditionResolutionEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -57,8 +57,8 @@ final class RepeatableContainerListener
 		}
 	}
 
-	#[AsEventListener(after: 'UBOS\Shape\Listener\ValueValidationListener')]
-	public function valueValidation(Event\ValueValidationEvent $event): void
+	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidatorProvider')]
+	public function validateValue(Event\ValueValidationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -69,7 +69,7 @@ final class RepeatableContainerListener
 			$event->result = $result;
 			return;
 		}
-		$validator = new FormRuntime\ValueValidator(
+		$validator = new FormRuntime\ValueValidation(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -85,8 +85,8 @@ final class RepeatableContainerListener
 		$event->result = $result;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\Listener\ValueSerializationListener')]
-	public function valueSerialization(Event\ValueSerializationEvent $event): void
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializer')]
+	public function serializeValue(Event\ValueSerializationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -97,7 +97,7 @@ final class RepeatableContainerListener
 			$event->serializedValue = $serializedValue;
 			return;
 		}
-		$serializer = new FormRuntime\ValueSerializer(
+		$serializer = new FormRuntime\ValueSerialization(
 			$event->context,
 			$this->eventDispatcher
 		);
@@ -117,8 +117,8 @@ final class RepeatableContainerListener
 		$event->serializedValue = $serializedValue;
 	}
 
-	#[AsEventListener(before: 'UBOS\Shape\Listener\ValueProcessingListener')]
-	public function valueProcessing(Event\ValueProcessingEvent $event): void
+	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessor')]
+	public function processValue(Event\ValueProcessingEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -129,7 +129,7 @@ final class RepeatableContainerListener
 			$event->processedValue = $processedValue;
 			return;
 		}
-		$processor = new FormRuntime\ValueProcessor(
+		$processor = new FormRuntime\ValueProcessing(
 			$event->context,
 			$this->eventDispatcher
 		);

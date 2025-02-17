@@ -8,7 +8,7 @@ use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-class ValueValidator
+class ValueValidation
 {
 	public function __construct(
 		protected Domain\FormRuntime\FormContext $context,

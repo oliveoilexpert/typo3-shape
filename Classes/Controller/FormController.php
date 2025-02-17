@@ -109,7 +109,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function isSpam(): bool
 	{
-		$event = new Event\SpamProtectionEvent($this->context);
+		$event = new Event\SpamAnalysisEvent($this->context);
 		$this->eventDispatcher->dispatch($event);
 		return (bool)$event->spamReasons;
 	}
@@ -181,7 +181,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$validator = new FormRuntime\ValueValidator($this->context, $this->eventDispatcher);
+		$validator = new FormRuntime\ValueValidation($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
@@ -205,7 +205,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		if (!$page->has('fields')) {
 			return;
 		}
-		$serializer = new FormRuntime\ValueSerializer($this->context, $this->eventDispatcher);
+		$serializer = new FormRuntime\ValueSerialization($this->context, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			if (!$field->has('name')) {
 				continue;
@@ -222,7 +222,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 
 	protected function processForm(): void
 	{
-		$processor = new FormRuntime\ValueProcessor(
+		$processor = new FormRuntime\ValueProcessing(
 			$this->context,
 			$this->eventDispatcher
 		);

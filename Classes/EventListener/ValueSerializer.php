@@ -1,13 +1,13 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\ValueSerializationEvent;
 
-final class ValueSerializationListener
+final class ValueSerializer
 {
 	#[AsEventListener]
 	public function __invoke(ValueSerializationEvent $event): void

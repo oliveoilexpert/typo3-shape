@@ -1,12 +1,12 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
 use UBOS\Shape\Domain\Record;
 
-final class RecordCreationListener
+final class RecordCreator
 {
 	#[AsEventListener]
 	public function __invoke(RecordCreationEvent $event): void

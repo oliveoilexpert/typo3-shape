@@ -5,9 +5,9 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use UBOS\Shape\Domain;
-use UBOS\Shape\Event\ValueSerializationEvent;
+use UBOS\Shape\Event\ValueProcessingEvent;
 
-class ValueSerializer
+class ValueProcessing
 {
 	public function __construct(
 		protected Domain\FormRuntime\FormContext $context,
@@ -16,15 +16,15 @@ class ValueSerializer
 	{
 	}
 
-	public function serialize(Domain\Record\FieldRecord $field, mixed $value): mixed
+	public function process(Domain\Record\FieldRecord $field, mixed $value): mixed
 	{
 		if (!$field->has('name')) {
 			return $value;
 		}
-		$event = new ValueSerializationEvent($this->context, $field, $value);
+		$event = new ValueProcessingEvent($this->context, $field, $value);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
-			return $event->serializedValue;
+			return $event->processedValue;
 		}
 		return $value;
 	}

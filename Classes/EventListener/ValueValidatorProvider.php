@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Listener;
+namespace UBOS\Shape\EventListener;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 use UBOS\Shape\Domain\Validator;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-final class ValueValidationListener
+final class ValueValidatorProvider
 {
 	#[AsEventListener]
 	public function __invoke(ValueValidationEvent $event): void
