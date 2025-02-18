@@ -2,10 +2,11 @@
 
 namespace UBOS\Shape\Domain\FormRuntime;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use UBOS\Shape\Event;
 
 class FormRuntime
 {
@@ -19,12 +20,13 @@ class FormRuntime
 		readonly public Core\Resource\ResourceStorageInterface $uploadStorage,
 		readonly public string                                 $parsedBodyKey,
 		readonly public bool                                   $isStepBack = false,
-		protected $conditionResolver = null,
-		protected $eventDispatcher = null,
-		protected ?array $spamReasons = null,
-)
+		protected ?Core\ExpressionLanguage\Resolver            $conditionResolver = null,
+		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
+		protected ?array                                       $spamReasons = null,
+		protected bool                                         $hasErrors = false,
+	)
 	{
-		$this->eventDispatcher = GeneralUtility::makeInstance(Core\Event\Dispatcher::class);
+		$this->eventDispatcher = GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
 	}
 
 	public function initialize(): FormRuntime
@@ -90,21 +92,6 @@ class FormRuntime
 		return $view->render();
 	}
 
-	public function validateForm(): void
-	{
-		if (!$this->form->has('pages')) {
-			return;
-		}
-		foreach ($this->form->get('pages') as $index => $page) {
-			$index += 1;
-			$this->validatePage($index);
-			if ($this->session->hasErrors) {
-				$this->session->previousPageIndex = $index;
-				break;
-			}
-		}
-	}
-
 	public function validatePage(int $pageIndex): void
 	{
 		$page = $this->form->get('pages')[$pageIndex - 1] ?? null;
@@ -115,18 +102,8 @@ class FormRuntime
 		foreach ($page->get('fields') as $field) {
 			$field->validationResult = $validator->validate($field, $this->getValue($field->getName()));
 			if ($field->validationResult->hasErrors()) {
-				$this->session->hasErrors = true;
+				$this->hasErrors = true;
 			}
-		}
-	}
-
-	public function serializeForm(): void
-	{
-		if (!$this->form->has('pages')) {
-			return;
-		}
-		foreach ($this->form->get('pages') as $index => $page) {
-			$this->serializePage($index + 1);
 		}
 	}
 
@@ -148,6 +125,31 @@ class FormRuntime
 			if (isset($this->session->values[$name.'__CONFIRM'])) {
 				$this->session->values[$name.'__CONFIRM'] = $serializedValue;
 			}
+		}
+	}
+
+	public function validateForm(): void
+	{
+		if (!$this->form->has('pages')) {
+			return;
+		}
+		foreach ($this->form->get('pages') as $index => $page) {
+			$index += 1;
+			$this->validatePage($index);
+			if ($this->hasErrors) {
+				$this->session->previousPageIndex = $index;
+				break;
+			}
+		}
+	}
+
+	public function serializeForm(): void
+	{
+		if (!$this->form->has('pages')) {
+			return;
+		}
+		foreach ($this->form->get('pages') as $index => $page) {
+			$this->serializePage($index + 1);
 		}
 	}
 
@@ -213,7 +215,7 @@ class FormRuntime
 		return $this->conditionResolver;
 	}
 
-	public function getFrontendUser(): Frontend\Authentication\FrontendUserAuthentication
+	public function getFrontendUser(): FrontendUserAuthentication
 	{
 		return $this->request->getAttribute('frontend.user');
 	}
@@ -221,11 +223,13 @@ class FormRuntime
 	{
 		return "tx_shape_c{$this->plugin?->getUid()}_f{$this->form->getUid()}";
 	}
-
-
 	public function getValue(string $name): mixed
 	{
-		return $this->postValues[$name] ?? $this->session->values[$name] ?? null;
+		return $this->session->values[$name] ?? null;
+	}
+	public function getHasErrors(): bool
+	{
+		return $this->hasErrors;
 	}
 	public function getSessionUploadFolder(): string
 	{

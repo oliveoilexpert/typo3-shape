@@ -19,12 +19,14 @@ class FormRuntimeBuilder
 	{
 		$contentData = self::getContentData($request, $settings);
 		if (!$contentData) {
+			//todo: custom exception
 			throw new \Exception('No content data found');
 		}
 		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		if (!$form) {
+			//todo: custom exception
 			throw new \Exception('No form found');
 		}
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
@@ -37,7 +39,6 @@ class FormRuntimeBuilder
 			$sessionData = (array)json_decode($request->getParsedBody()[$parsedBodyKey]['__session'] ?? '[]', true);
 			try {
 				$session = new SessionData(...$sessionData);
-				$session->hasErrors = false;
 			} catch (\Exception $e) {
 				$session = new SessionData();
 			}
@@ -84,9 +85,9 @@ class FormRuntimeBuilder
 		$key = "tx_shape_c{$plugin->getUid()}_f{$form->getUid()}";
 
 		try {
-			DebugUtility::debug(json_decode($frontendUserAuth->getKey('ses', $key), true));
+			//DebugUtility::debug(json_decode($frontendUserAuth->getKey('ses', $key), true));
 		} catch (\Exception $e) {
-			DebugUtility::debug($e);
+			//DebugUtility::debug($e);
 		}
 		return new FormRuntime(
 			$request,

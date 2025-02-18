@@ -50,7 +50,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 			$this->runtime->validatePage($submittedPageIndex);
 		}
 		$this->runtime->serializePage($submittedPageIndex);
-		if ($this->runtime->session->hasErrors) {
+		if ($this->runtime->getHasErrors()) {
 			return $this->formPage($submittedPageIndex);
 		}
 		return $this->formPage($pageIndex);
@@ -67,7 +67,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		}
 		$this->runtime->validateForm();
 		$this->runtime->serializeForm();
-		if ($this->runtime->session->hasErrors) {
+		if ($this->runtime->getHasErrors()) {
 			$firstPageWithErrors = $this->runtime->session->previousPageIndex;
 			return $this->formPage($firstPageWithErrors);
 		}

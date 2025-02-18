@@ -46,7 +46,6 @@ final class RepeatableContainerHandler
 		}
 		$fieldResolver = new FormRuntime\FieldConditionResolver(
 			$event->context,
-			$event->resolver,
 			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {

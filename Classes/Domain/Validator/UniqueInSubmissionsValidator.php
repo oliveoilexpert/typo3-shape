@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace UBOS\Shape\Domain\Validator;
 
 use TYPO3\CMS\Core;
-
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 final class UniqueInSubmissionsValidator extends AbstractValidator
