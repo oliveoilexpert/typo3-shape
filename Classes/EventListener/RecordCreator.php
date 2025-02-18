@@ -14,10 +14,6 @@ final class RecordCreator
 		if ($event->isPropagationStopped()) {
 			return;
 		}
-		if ($event->getRawRecord()->getMainType() === 'tx_shape_finisher') {
-			$this->setRecord($event, Record\FinisherRecord::class);
-			return;
-		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field') {
 			$this->setRecord($event, Record\FieldRecord::class);
 		}
