@@ -3,11 +3,11 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Extbase\Service\ExtensionService;
 
-class ContextBuilder
+class FormRuntimeBuilder
 {
 	public static function buildFromRequest(
 		RequestInterface $request,
@@ -15,10 +15,8 @@ class ContextBuilder
 			'pluginUid' => 0,
 			'uploadFolder' => '1:/user_upload/',
 		]
-	): Context
+	): FormRuntime
 	{
-		$extensionService = GeneralUtility::makeInstance(ExtensionService::class);
-		$pluginNamespace = $extensionService->getPluginNamespace($request->getControllerExtensionName(), $request->getControllerName());
 		$contentData = self::getContentData($request, $settings);
 		if (!$contentData) {
 			throw new \Exception('No content data found');
@@ -31,8 +29,12 @@ class ContextBuilder
 		}
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$cleanedPostValues = [];
-		if (!$request->getAttribute('frontend.cache.instruction')->isCachingAllowed()) {
-			$sessionData = (array)json_decode($request->getArguments()['session'] ?? '[]', true);
+		$parsedBodyKey = 'tx_shape_form';
+		if (
+			($request->getParsedBody()[$parsedBodyKey] ?? false)
+			&& $request->getArguments()['pluginUid'] == $plugin->getUid()
+		) {
+			$sessionData = (array)json_decode($request->getParsedBody()[$parsedBodyKey]['__session'] ?? '[]', true);
 			try {
 				$session = new SessionData(...$sessionData);
 				$session->hasErrors = false;
@@ -42,7 +44,7 @@ class ContextBuilder
 
 			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
-			$postValues = $request->getParsedBody()[$pluginNamespace][$form->get('name')] ?? [];
+			$postValues = $request->getParsedBody()[$parsedBodyKey][$form->get('name')] ?? [];
 			Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
 				$postValues,
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
@@ -77,7 +79,16 @@ class ContextBuilder
 			$session = new SessionData();
 			$isStepBack = false;
 		}
-		return new Context(
+		//Core\Session\UserSessionManager::create('FE')->collectGarbage(10);
+		$frontendUserAuth = $request->getAttribute('frontend.user');
+		$key = "tx_shape_c{$plugin->getUid()}_f{$form->getUid()}";
+
+		try {
+			DebugUtility::debug(json_decode($frontendUserAuth->getKey('ses', $key), true));
+		} catch (\Exception $e) {
+			DebugUtility::debug($e);
+		}
+		return new FormRuntime(
 			$request,
 			$settings,
 			$plugin,
@@ -85,7 +96,8 @@ class ContextBuilder
 			$session,
 			$cleanedPostValues,
 			$uploadStorage,
-			$isStepBack
+			$parsedBodyKey,
+			$isStepBack,
 		);
 	}
 
@@ -94,9 +106,12 @@ class ContextBuilder
 		array $settings
 	): ?array
 	{
-		$uid = $request->getArguments()['pluginUid'] ?? $settings['pluginUid'] ?: 0;
+		$uid = $settings['pluginUid'];
 		if (!$uid) {
-			return $request->getAttribute('currentContentObject')?->data;
+			if ($request->getAttribute('currentContentObject')?->data['CType']) {
+				return $request->getAttribute('currentContentObject')?->data;
+			}
+			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
 		return $queryBuilder

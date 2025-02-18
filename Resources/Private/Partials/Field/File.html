@@ -3,9 +3,9 @@
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textfield
 			name="{fieldAttributes.name}[]"
-		    type="{field.type}"
+		    type="file"
 		    additionalAttributes="{fieldAttributes}"
-			onchange="this.parentElement.querySelector('[data-yf-upload-list]').remove()"
+			onchange="this.parentElement.querySelector('[data-yf-upload-list]')?.remove()"
 			class="{blockClass}__control {blockClass}__{field.type}-control"/>
 
 	<f:if condition="{field.value}">

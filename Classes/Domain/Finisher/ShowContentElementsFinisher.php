@@ -14,7 +14,7 @@ class ShowContentElementsFinisher extends AbstractFinisher
 //		$response = new Core\Http\Response(null, 200, [], '');
 //		$stream = new Core\Http\Stream('php://temp', 'r+');
 //		$stream->write($html);
-		$this->runner->finishedActionArguments = [
+		$this->context->finishedActionArguments = [
 			'template' => 'Finisher/ShowContentElements',
 			'contentElements' => explode(',', $this->settings['contentElements'])
 		];

@@ -1,18 +1,20 @@
 
 <f:form.textfield autocomplete="off" name="__email" tabindex="-1" style="position:absolute;margin-left:-999em"/>
-<template id="tx-shape-focus-pass">
+<template>
     <f:form.textfield autocomplete="off" name="__focus_pass" tabindex="-1" style="position:absolute;margin-left:-999em"/>
 </template>
 <script>
-     window.requestAnimationFrame(() => {
-        setTimeout(() => {
-			  const tmpl = document.getElementById('tx-shape-focus-pass')
-			  const form = tmpl.closest('form')
-			  const frag = tmpl.content.cloneNode(true)
-			  form.addEventListener('focusin', () => {
-                  frag.children[0].value = "human"
-				  tmpl.parentElement.appendChild(frag)
-			  }, {once: true})
-        }, 1000)
-     })
+   {
+		const tmpl = document.currentScript.previousElementSibling
+		window.requestAnimationFrame(() => {
+			setTimeout(() => {
+				const form = tmpl.closest('form')
+				const frag = tmpl.content.cloneNode(true)
+				form.addEventListener('focusin', () => {
+					frag.children[0].value = 'human'
+					tmpl.parentElement.appendChild(frag)
+				}, {once: true})
+			}, 200)
+		})
+   }
 </script>

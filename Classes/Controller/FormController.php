@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase;
-use TYPO3\CMS\Frontend;
 use UBOS\Shape\Domain\FormRuntime;
-use UBOS\Shape\Domain;
-use UBOS\Shape\Event;
 
 
+// todo: move session persistence from hidden json field to session storage
 // todo: exceptions
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
 // todo: consent finisher
@@ -27,96 +23,88 @@ use UBOS\Shape\Event;
 
 class FormController extends Extbase\Mvc\Controller\ActionController
 {
-	protected FormRuntime\Context $context;
-	protected ?Core\ExpressionLanguage\Resolver $conditionResolver = null;
+	protected FormRuntime\FormRuntime $runtime;
 	protected string $fragmentPageTypeNum = '11510497112101';
-
-	public function __construct(
-		protected Core\Resource\StorageRepository $storageRepository,
-	) {}
-
+	
 	public function renderAction(): ResponseInterface
 	{
 		$pageType = $this->request->getQueryParams()['type'] ?? '';
 		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
-			return $this->renderLazyLoader();
+			return $this->lazyLoader();
 		}
-		$this->applyContext();
-		return $this->renderForm();
+		$this->initializeRuntime();
+		return $this->formPage();
 	}
 
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
-		$this->applyContext();
-		if ($this->isSpam()) {
-			return $this->redirect('render', arguments: ['spam' => 1]);
+		$this->initializeRuntime();
+		if (!$this->runtime->isRequestedPlugin()) {
+			return $this->formPage();
 		}
-		$previousPageRecord = $this->context->form->get('pages')[$this->context->session->previousPageIndex-1];
-		if (!$this->context->isStepBack) {
-			$this->validatePage($previousPageRecord);
+		if ($this->runtime->runSpamCheck()) {
+			return $this->formPage();
 		}
-		$this->serializePage($previousPageRecord);
-		if ($this->context->session->hasErrors) {
-			return $this->renderForm($this->context->session->previousPageIndex);
+		$submittedPageIndex = $this->runtime->session->previousPageIndex;
+		if (!$this->runtime->isStepBack) {
+			$this->runtime->validatePage($submittedPageIndex);
 		}
-		DebugUtility::debug($this->context->session->values);
-		return $this->renderForm($pageIndex);
+		$this->runtime->serializePage($submittedPageIndex);
+		if ($this->runtime->session->hasErrors) {
+			return $this->formPage($submittedPageIndex);
+		}
+		return $this->formPage($pageIndex);
 	}
 
 	public function submitAction(): ResponseInterface
 	{
-		$this->applyContext();
-		if ($this->isSpam()) {
-			return $this->redirect('render', arguments: ['spam' => 1]);
+		$this->initializeRuntime();
+		if (!$this->runtime->isRequestedPlugin()) {
+			return $this->formPage();
 		}
-		$this->validateForm();
-		$this->serializeForm();
-		if ($this->context->session->hasErrors) {
-			return $this->renderForm($this->context->session->previousPageIndex);
+		if ($this->runtime->runSpamCheck()) {
+			return $this->formPage();
 		}
-		$this->processForm();
-		return $this->executeFinishers();
+		$this->runtime->validateForm();
+		$this->runtime->serializeForm();
+		if ($this->runtime->session->hasErrors) {
+			$firstPageWithErrors = $this->runtime->session->previousPageIndex;
+			return $this->formPage($firstPageWithErrors);
+		}
+		$this->runtime->processForm();
+		$finishResult = $this->runtime->finishForm();
+		return $finishResult->response ?? $this->redirect('finished', arguments: $finishResult->finishedActionArguments);
 	}
 
 	public function finishedAction(): ResponseInterface
 	{
+		$this->initializeRuntime();
+		if (!$this->runtime->isRequestedPlugin()) {
+			return $this->formPage();
+		}
 		$arguments = $this->request->getArguments();
 		if ($arguments['template']) {
 			$this->view->getRenderingContext()->setControllerAction($arguments['template']);
 		}
-		$this->view->assignMultiple($arguments);
+		$variables = [
+			'plugin' => $this->runtime->plugin,
+			'form' => $this->runtime->form,
+			'settings' => $this->settings,
+			'arguments' => $arguments,
+		];
+		$this->view->assignMultiple($variables);
 		return $this->htmlResponse();
 	}
 
-	protected function applyContext(): void
+	protected function initializeRuntime(): void
 	{
-		$this->context = FormRuntime\ContextBuilder::buildFromRequest(
-			$this->request,
-			$this->settings
-		);
-		$resolver = new FormRuntime\FieldConditionResolver(
-			$this->context,
-			$this->getConditionResolver(),
-			$this->eventDispatcher
-		);
-		foreach ($this->context->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if ($field->has('name')) {
-					$field->setSessionValue($this->context->session->values[$field->getName()] ?? null);
-				}
-				$field->conditionResult = $resolver->evaluate($field);
-			}
-		}
+		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest($this->request, $this->settings)->initialize();
 	}
-
-	protected function isSpam(): bool
+	protected function formPage(int $pageIndex = 1): ResponseInterface
 	{
-		$event = new Event\SpamAnalysisEvent($this->context);
-		$this->eventDispatcher->dispatch($event);
-		return (bool)$event->spamReasons;
+		return $this->htmlResponse($this->runtime->renderPage($this->view, $pageIndex));
 	}
-
-	protected function renderLazyLoader(): ResponseInterface
+	public function lazyLoader(): ResponseInterface
 	{
 		$contentData = $this->request->getAttribute('currentContentObject')?->data;
 		$uri = $this->uriBuilder
@@ -130,177 +118,4 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		$this->view->assign('fetchUri', $uri);
 		return $this->htmlResponse();
 	}
-
-	protected function renderForm(int $pageIndex = 1): ?ResponseInterface
-	{
-		$lastPageIndex = count($this->context->form->get('pages'));
-		$currentPageRecord = $this->context->form->get('pages')[$pageIndex - 1];
-		$this->context->session->previousPageIndex = $pageIndex;
-		$viewVariables = [
-			'session' => $this->context->session,
-			'sessionJson' => json_encode($this->context->session),
-			'namespace' => $this->context->form->get('name'),
-			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
-			'plugin' => $this->context->plugin,
-			'form' => $this->context->form,
-			'settings' => $this->settings,
-			'currentPage' => $currentPageRecord,
-			'pageIndex' => $pageIndex,
-			'backStepPageIndex' => $pageIndex - 1 ?: null,
-			'forwardStepPageIndex' => $lastPageIndex === $pageIndex ? null : $pageIndex + 1,
-			'isFirstPage' => $pageIndex === 1,
-			'isLastPage' => $pageIndex === $lastPageIndex,
-			'spamProtectionTriggered' => $this->request->getArguments()['spam'] ?? false,
-		];
-
-		$event = new Event\BeforeFormRenderEvent($this->context, $viewVariables);
-		$this->eventDispatcher->dispatch($event);
-		$viewVariables = $event->getVariables();
-
-		$this->view->assignMultiple($viewVariables);
-		$this->view->setTemplate('Form');
-		return $this->htmlResponse();
-	}
-
-	protected function validateForm(): void
-	{
-		if (!$this->context->form->has('pages')) {
-			return;
-		}
-		$index = 1;
-		foreach ($this->context->form->get('pages') as $page) {
-			$this->validatePage($page);
-			if ($this->context->session->hasErrors) {
-				$this->context->session->previousPageIndex = $index;
-				break;
-			}
-			$index++;
-		}
-	}
-
-	protected function validatePage(Core\Domain\Record $page): void
-	{
-		if (!$page->has('fields')) {
-			return;
-		}
-		$validator = new FormRuntime\ValueValidator($this->context, $this->eventDispatcher);
-		foreach ($page->get('fields') as $field) {
-			$field->validationResult = $validator->validate($field, $this->context->getValue($field->getName()));
-			if ($field->validationResult->hasErrors()) {
-				$this->context->session->hasErrors = true;
-			}
-		}
-	}
-
-	protected function serializeForm(): void
-	{
-		if (!$this->context->form->has('pages')) {
-			return;
-		}
-		foreach ($this->context->form->get('pages') as $page) {
-			$this->serializePage($page);
-		}
-	}
-
-	protected function serializePage(Core\Domain\Record $page): void
-	{
-		if (!$page->has('fields')) {
-			return;
-		}
-		$serializer = new FormRuntime\ValueSerializer($this->context, $this->eventDispatcher);
-		foreach ($page->get('fields') as $field) {
-			if (!$field->has('name')) {
-				continue;
-			}
-			$name = $field->getName();
-			$serializedValue = $serializer->serialize($field, $this->context->getValue($name));
-			$field->setSessionValue($serializedValue);
-			$this->context->session->values[$name] = $serializedValue;
-			if (isset($this->context->session->values[$name.'__CONFIRM'])) {
-				$this->context->session->values[$name.'__CONFIRM'] = $serializedValue;
-			}
-		}
-	}
-
-	protected function processForm(): void
-	{
-		$processor = new FormRuntime\ValueProcessor(
-			$this->context,
-			$this->eventDispatcher
-		);
-		foreach ($this->context->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if (!$field->has('name')) {
-					continue;
-				}
-				$name = $field->getName();
-				$processedValue = $processor->process($field, $this->context->getValue($name));
-				$field->setSessionValue($processedValue);
-				$this->context->session->values[$name] = $processedValue;
-				if (isset($this->context->session->values[$name.'__CONFIRM'])) {
-					$this->context->session->values[$name.'__CONFIRM'] = $processedValue;
-				}
-			}
-		}
-	}
-
-	protected function executeFinishers(): ?ResponseInterface
-	{
-		$runner = new FormRuntime\FinisherRunner($this->context);
-		foreach ($this->context->form->get('finishers') as $finisher) {
-			if ($finisher->get('condition') ?? false) {
-				if (!$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
-					continue;
-				}
-			}
-			$runner->run($finisher);
-		}
-		return $runner->response ?? $this->redirect('finished', arguments: $runner->finishedActionArguments);
-	}
-
-	// todo: error responses
-	protected function errorResponse(string $message): ResponseInterface
-	{
-		return $this->htmlResponse($message);
-	}
-
-	protected function getConditionResolver(): Core\ExpressionLanguage\Resolver
-	{
-		if ($this->conditionResolver) {
-			return $this->conditionResolver;
-		}
-
-		$variables = [
-			'formValues' => $this->context->session->values,
-			'frontendUser' => $this->getFrontendUser(),
-			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
-			'site' => $this->request->getAttribute('site'),
-			'siteLanguage' => $this->request->getAttribute('language'),
-		];
-
-		$event = new Event\ConditionResolverCreationEvent($this->context, $variables);
-		$this->eventDispatcher->dispatch($event);
-		$variables = $event->getVariables();
-
-		$this->conditionResolver = GeneralUtility::makeInstance(
-			Core\ExpressionLanguage\Resolver::class,
-			'tx_shape', $variables
-		);
-		return $this->conditionResolver;
-	}
-
-	protected function getFrontendUser(): Frontend\Authentication\FrontendUserAuthentication
-	{
-		return $this->request->getAttribute('frontend.user');
-	}
-	protected function getSessionKey(): string
-	{
-		return "tx_shape_c{$this->context->plugin?->getUid()}_f{$this->context->form->getUid()}";
-	}
-
-	// use fe_session to store form session?
-	// how to handle garbage collection?
-	// Core\Session\UserSessionManager::create('FE')->collectGarbage(10);
-	// $this->getFrontendUser()->setKey('ses', $this->getSessionKey(), $this->context->session);
-	// DebugUtility::debug($this->getFrontendUser()->getKey('ses', $this->getSessionKey()));
 }

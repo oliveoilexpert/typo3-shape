@@ -8,15 +8,15 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
 
-final class FinisherRunner
+class FinisherContext
 {
 	public function __construct(
-		public readonly Context $context,
-		public ?ResponseInterface $response = null,
-		public array $finishedActionArguments = [],
+		public readonly FormRuntime $runtime,
+		public ?ResponseInterface   $response = null,
+		public array                $finishedActionArguments = [],
 	) {}
 
-	public function run(?Core\Domain\Record $record = null, string $className = '', array $settings = []): void
+	public function executeFinisher(?Core\Domain\Record $record = null, string $className = '', array $settings = []): void
 	{
 		if ($record) {
 			$settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
@@ -32,6 +32,4 @@ final class FinisherRunner
 		}
 		$finisher->execute();
 	}
-
-
 }

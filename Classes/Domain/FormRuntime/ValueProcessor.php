@@ -10,8 +10,8 @@ use UBOS\Shape\Event\ValueProcessingEvent;
 class ValueProcessor
 {
 	public function __construct(
-		protected Domain\FormRuntime\Context $context,
-		protected EventDispatcherInterface   $eventDispatcher,
+		protected Domain\FormRuntime\FormRuntime $context,
+		protected EventDispatcherInterface       $eventDispatcher,
 	)
 	{
 	}

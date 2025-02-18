@@ -10,10 +10,10 @@ use UBOS\Shape\Domain;
 final class ValueProcessingEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\Context $context,
-		public readonly Domain\Record\FieldRecord  $field,
-		public readonly mixed                      $value,
-		public mixed                               $processedValue = null,
+		public readonly Domain\FormRuntime\FormRuntime $context,
+		public readonly Domain\Record\FieldRecord      $field,
+		public readonly mixed                          $value,
+		public mixed                                   $processedValue = null,
 	) {}
 	public function isPropagationStopped(): bool
 	{

@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 final class FieldConditionResolutionEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\Context       $context,
+		public readonly Domain\FormRuntime\FormRuntime   $context,
 		public readonly Domain\Record\FieldRecord        $field,
 		public readonly Core\ExpressionLanguage\Resolver $resolver,
 		public ?bool                                     $result = null,

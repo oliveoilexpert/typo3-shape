@@ -26,6 +26,6 @@ class RedirectFinisher extends AbstractFinisher
 		if (!$url) {
 			return;
 		}
-		$this->runner->response = new Core\Http\RedirectResponse($url, $this->settings['statusCode']);
+		$this->context->response = new Core\Http\RedirectResponse($url, $this->settings['statusCode']);
 	}
 }

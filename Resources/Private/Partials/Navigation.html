@@ -3,7 +3,9 @@
         <button type="submit"
                 class="{buttonClass} {blockClass}__navigation__button -prev"
                 formnovalidate
-                formaction="{f:uri.action(action:'renderStep', arguments:{pageIndex:backStepPageIndex})}">
+                formaction="{f:uri.action(
+                action:'renderStep',
+                arguments:{pluginUid:plugin.uid, pageIndex:backStepPageIndex})}">
             <f:if condition="{currentPage.prev_label}">
                 <f:then>{currentPage.prev_label}</f:then>
                 <f:else>{f:translate(key:'label.prev_page')}</f:else>
