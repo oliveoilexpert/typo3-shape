@@ -1,13 +1,16 @@
 
 .yform__form {
 	--yf-field-width: 100%;
-	--yf-gap: 1.5em;
-	--yf-spacing: .5em;
-	--yf-error-dark-color: #721c24;
-	--yf-error-light-color: #f8d7da;
-	--yf-file-upload-dark-color: #004085;
-	--yf-file-upload-light-color: #cce5ff;
-
+	--yf-gap: 2.4rem;
+	--yf-spacing: .8rem;
+	--yf-info-dark: #004085;
+	--yf-info-light: #cce5ff;
+	--yf-success-dark: #155724;
+	--yf-success-light: #d4edda;
+	--yf-warning-dark: #856404;
+	--yf-warning-light: #fff3cd;
+	--yf-error-dark: #721c24;
+	--yf-error-light: #f8d7da;
 	* {
 		box-sizing: border-box;
 	}
@@ -19,7 +22,8 @@
 
 .yform__page__header {
 	width: 100%;
-	margin-bottom: var(--yf-gap);
+	margin: 0;
+	padding-bottom: var(--yf-gap);
 	font-size: 150%;
 }
 
@@ -29,6 +33,14 @@
 	margin: calc(var(--yf-gap) / -2);
 	padding: 0;
 	border: none;
+	& + & {
+		margin-top: var(--yf-gap);
+	}
+}
+
+.yform__fieldset__legend {
+	width: 100%;
+	padding: calc(var(--yf-gap) / 2);
 }
 
 .yform__field {
@@ -46,6 +58,7 @@
 
 	&.--hidden {
 		display: none;
+		visibility: hidden;
 	}
 }
 
@@ -69,30 +82,6 @@
 .yform__description {
 	margin-top: var(--yf-spacing);
 	font-size: smaller;
-}
-
-.yform__error {
-	display: none;
-	width: fit-content;
-	max-width: 100%;
-	margin-top: var(--yf-spacing);
-	padding: .5em .75em;
-	font-size: smaller;
-	line-height: 1.1;
-	border-radius: 5px;
-
-	&.--visible {
-		display: block;
-	}
-
-	@media (prefers-color-scheme: dark) {
-		color: var(--yf-error-light-color);
-		background: var(--yf-error-dark-color);
-	}
-	@media (prefers-color-scheme: light) {
-		color: var(--yf-error-dark-color);
-		background: var(--yf-error-light-color);
-	}
 }
 
 .yform__options-header {
@@ -135,35 +124,65 @@
 	width: auto;
 }
 
-.yform__tag-list {
+.yform__message-list {
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: var(--yf-spacing);
 	gap: .5em;
 }
 
-.yform__tag {
+.yform__message {
 	position: relative;
+	width: fit-content;
 	padding: .5em .75em;
 	font-size: smaller;
 	line-height: 1.1;
 	border-radius: 5px;
 
-	&:has(.yform__tag__icon) {
+	&:has(.yform__message__icon) {
 		padding-right: 2em;
 	}
 
+	&.--hidden {
+		display: none;
+		visibility: hidden;
+	}
+
 	@media (prefers-color-scheme: dark) {
-		color: var(--yf-file-upload-light-color);
-		background: var(--yf-file-upload-dark-color);
+		color: var(--yf-info-light);
+		background: var(--yf-info-dark);
+		&.-success {
+			color: var(--yf-success-light);
+			background: var(--yf-success-dark);
+		}
+		&.-warning {
+			color: var(--yf-warning-light);
+			background: var(--yf-warning-dark);
+		}
+		&.-error {
+			color: var(--yf-error-light);
+			background: var(--yf-error-dark);
+		}
 	}
 	@media (prefers-color-scheme: light) {
-		color: var(--yf-file-upload-dark-color);
-		background: var(--yf-file-upload-light-color);
+		color: var(--yf-info-dark);
+		background: var(--yf-info-light);
+		&.-success {
+			color: var(--yf-success-dark);
+			background: var(--yf-success-light);
+		}
+		&.-warning {
+			color: var(--yf-warning-dark);
+			background: var(--yf-warning-light);
+		}
+		&.-error {
+			color: var(--yf-error-dark);
+			background: var(--yf-error-light);
+		}
 	}
 }
 
-.yform__tag__icon {
+.yform__message__icon {
 	position: absolute;
 	padding-left: .5em;
 

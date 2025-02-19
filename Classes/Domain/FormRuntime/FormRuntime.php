@@ -21,12 +21,14 @@ class FormRuntime
 		readonly public string                                 $parsedBodyKey,
 		readonly public bool                                   $isStepBack = false,
 		protected ?Core\ExpressionLanguage\Resolver            $conditionResolver = null,
-		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
 		protected ?array                                       $spamReasons = null,
 		protected bool                                         $hasErrors = false,
+		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
+		protected ?Core\Crypto\HashService                     $hashService = null,
 	)
 	{
 		$this->eventDispatcher = GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
+		$this->hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
 	}
 
 	public function initialize(): FormRuntime
@@ -62,13 +64,15 @@ class FormRuntime
 
 	public function renderPage($view, int $pageIndex = 1): string
 	{
-		$this->getFrontendUser()->setKey('ses', $this->getSessionKey(), json_encode($this->session));
 		$lastPageIndex = count($this->form->get('pages'));
 		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
 		$this->session->previousPageIndex = $pageIndex;
 		$viewVariables = [
 			'session' => $this->session,
-			'sessionJson' => json_encode($this->session),
+			'serializedSession' => $this->hashService->appendHmac(
+				base64_encode(serialize($this->session)),
+				'__session'
+			),
 			'namespace' => $this->form->get('name'),
 			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
 			'plugin' => $this->plugin,

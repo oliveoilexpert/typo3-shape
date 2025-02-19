@@ -40,8 +40,9 @@ class SendEmailFinisher extends AbstractFinisher
 		$templateConfig = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['shape']['finishers']['sendEmail']['templates'][$template] ?? [];
 		$format = $templateConfig['format'] ?? Core\Mail\FluidEmail::FORMAT_BOTH;
 
+		$formValues = $this->getFormValues();
 		$variables = [
-			'formValues' => $this->getFormValues(),
+			'formValues' => $formValues,
 			'form' => $this->getForm(),
 			'settings' => $this->settings,
 			'parsed' => [
@@ -75,8 +76,8 @@ class SendEmailFinisher extends AbstractFinisher
 			$resourceFactory = GeneralUtility::makeInstance(Core\Resource\ResourceFactory::class);
 			foreach ($this->getForm()->get('pages') as $page) {
 				foreach ($page->get('fields') as $field) {
-					if ($field->get('type') === 'file' && isset($this->getFormValues()[$field->get('name')])) {
-						foreach ($this->getFormValues()[$field->get('name')] as $fileIdentifier) {
+					if ($field->get('type') === 'file' && isset($formValues[$field->get('name')])) {
+						foreach ($formValues[$field->get('name')] as $fileIdentifier) {
 							$file = $resourceFactory->getFileObjectFromCombinedIdentifier($fileIdentifier);
 							if ($file) {
 								$email->attach($file->getContents(), $file->getName(), $file->getMimeType());

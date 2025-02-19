@@ -8,35 +8,31 @@ use UBOS\Shape\Domain\FormRuntime;
 
 abstract class AbstractFinisher
 {
-
 	public function __construct(
 		protected readonly FormRuntime\FinisherContext $context,
 		protected array                                $settings = []
-	)
-	{
-	}
+	) {}
+
 	abstract public function execute(): void;
 
 	protected function getContext(): FormRuntime\FormRuntime
 	{
-		return $this->context->context;
+		return $this->context->runtime;
 	}
-
 	protected function getRequest(): \TYPO3\CMS\Extbase\Mvc\RequestInterface
 	{
-		return $this->context->context->request;
+		return $this->context->runtime->request;
 	}
 	protected function getPlugin(): Core\Domain\Record
 	{
-		return $this->context->context->plugin;
+		return $this->context->runtime->plugin;
 	}
 	protected function getForm(): Core\Domain\Record
 	{
-		return $this->context->context->form;
+		return $this->context->runtime->form;
 	}
 	protected function getFormValues(): array
 	{
-		return $this->context->context->session->values;
+		return $this->context->runtime->session->values;
 	}
-
 }

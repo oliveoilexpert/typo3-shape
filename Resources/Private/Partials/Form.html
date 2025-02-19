@@ -10,48 +10,56 @@
 		enctype="multipart/form-data">
 
 	<div>
-		<f:form.hidden name="__session" value='{sessionJson}'/>
+		<f:form.hidden name="__session" value='{serializedSession}'/>
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
 
 	<f:if condition="{spamReasons}">
 		<div class="{blockClass}__page">
-			<div class="{blockClass}__error --visible">
+			<div class="{blockClass}__message -warning">
 				{f:translate(key:'label.spam_protection_triggered')}
-				<f:for each="{spamReasons}" as="reason">
-					<p>{reason.message}</p>
-				</f:for>
 			</div>
 		</div>
 	</f:if>
 
 	<f:if condition="{currentPage.type} == 'summary'">
-		<f:then>
-			<div class="{blockClass}__page">
-			<f:if condition="{currentPage.title}">
-				<header class="{blockClass}__page__header">{currentPage.title}</header>
-			</f:if>
-			<f:for each="{form.pages}" as="page">
-				<fieldset class="{blockClass}__fieldset -summary-step" disabled>
-					<f:alias map="{fields: page.fields}">
-						<f:render partial="FieldList" arguments="{_all}"/>
-					</f:alias>
-				</fieldset>
-			</f:for>
-			</div>
-		</f:then>
 		<f:else>
 			<div class="{blockClass}__page">
-				<f:if condition="{currentPage.title}">
-					<header class="{blockClass}__page__header">{currentPage.title}</header>
-				</f:if>
 				<fieldset class="{blockClass}__fieldset">
+					<f:if condition="{currentPage.title}">
+						<legend class="{blockClass}__fieldset__legend {blockClass}__page__header">
+							{currentPage.title}
+						</legend>
+					</f:if>
 					<f:alias map="{fields: currentPage.fields}">
 						<f:render partial="FieldList" arguments="{_all}"/>
 					</f:alias>
 				</fieldset>
 			</div>
 		</f:else>
+		<f:then>
+			<div class="{blockClass}__page">
+				<f:if condition="{currentPage.title}">
+					<p class="{blockClass}__page__header">{currentPage.title}</p>
+				</f:if>
+				<f:variable name="arrivedAtCurrent" value="0"/>
+				<f:for each="{form.pages}" as="page">
+					<f:if condition="{page.uid} == {currentPage.uid}">
+						<f:variable name="arrivedAtCurrent" value="1"/>
+					</f:if>
+					<f:if condition="!{arrivedAtCurrent}">
+						<fieldset class="{blockClass}__fieldset -summary-step" disabled>
+							<f:if condition="{page.title}">
+								<legend class="{blockClass}__fieldset__legend">{page.title}</legend>
+							</f:if>
+							<f:alias map="{fields: page.fields}">
+								<f:render partial="FieldList" arguments="{_all}"/>
+							</f:alias>
+						</fieldset>
+					</f:if>
+				</f:for>
+			</div>
+		</f:then>
 	</f:if>
 
 	<f:render partial="Navigation" arguments="{_all}"/>

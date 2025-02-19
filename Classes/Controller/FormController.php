@@ -39,7 +39,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function renderStepAction(int $pageIndex = 1): ResponseInterface
 	{
 		$this->initializeRuntime();
-		if (!$this->runtime->isRequestedPlugin()) {
+		if (!$this->runtime->isRequestedPlugin() || !$this->runtime->session->id) {
 			return $this->formPage();
 		}
 		if ($this->runtime->runSpamCheck()) {
@@ -59,7 +59,7 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	public function submitAction(): ResponseInterface
 	{
 		$this->initializeRuntime();
-		if (!$this->runtime->isRequestedPlugin()) {
+		if (!$this->runtime->isRequestedPlugin() || !$this->runtime->session->id) {
 			return $this->formPage();
 		}
 		if ($this->runtime->runSpamCheck()) {

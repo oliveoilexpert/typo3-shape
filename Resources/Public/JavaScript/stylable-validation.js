@@ -7,12 +7,12 @@
 			control.addEventListener('invalid', e => {
 				e.preventDefault()
 				form.querySelector('[data-yf-control]:invalid').focus()
-				error.classList.add('--visible')
+				error.classList.remove('--hidden')
 				error.innerHTML = `<div>${control.dataset.yfValidationMessage || control.validationMessage}</div>`
 			})
 			control.addEventListener('change', () => {
 				if (control.validity.valid) {
-					error.classList.remove('--visible')
+					error.classList.add('--hidden')
 				}
 			})
 		})

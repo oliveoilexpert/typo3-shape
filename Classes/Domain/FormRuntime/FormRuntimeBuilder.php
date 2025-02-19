@@ -17,7 +17,7 @@ class FormRuntimeBuilder
 		]
 	): FormRuntime
 	{
-		$contentData = self::getContentData($request, $settings);
+		$contentData = self::getContentDataFromRequest($request, $settings);
 		if (!$contentData) {
 			//todo: custom exception
 			throw new \Exception('No content data found');
@@ -36,12 +36,7 @@ class FormRuntimeBuilder
 			($request->getParsedBody()[$parsedBodyKey] ?? false)
 			&& $request->getArguments()['pluginUid'] == $plugin->getUid()
 		) {
-			$sessionData = (array)json_decode($request->getParsedBody()[$parsedBodyKey]['__session'] ?? '[]', true);
-			try {
-				$session = new SessionData(...$sessionData);
-			} catch (\Exception $e) {
-				$session = new SessionData();
-			}
+			$session = self::getSessionFromRequest($request);
 
 			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
 			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
@@ -80,15 +75,6 @@ class FormRuntimeBuilder
 			$session = new SessionData();
 			$isStepBack = false;
 		}
-		//Core\Session\UserSessionManager::create('FE')->collectGarbage(10);
-		$frontendUserAuth = $request->getAttribute('frontend.user');
-		$key = "tx_shape_c{$plugin->getUid()}_f{$form->getUid()}";
-
-		try {
-			//DebugUtility::debug(json_decode($frontendUserAuth->getKey('ses', $key), true));
-		} catch (\Exception $e) {
-			//DebugUtility::debug($e);
-		}
 		return new FormRuntime(
 			$request,
 			$settings,
@@ -102,7 +88,26 @@ class FormRuntimeBuilder
 		);
 	}
 
-	protected static function getContentData(
+	protected static function getSessionFromRequest(
+		RequestInterface $request,
+	): SessionData
+	{
+		$hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
+		$parsedBodyKey = 'tx_shape_form';
+		$serializedSessionWithHmac = $request->getParsedBody()[$parsedBodyKey]['__session'] ?? null;
+		if (!$serializedSessionWithHmac) {
+			return new SessionData();
+		}
+		try {
+			$serializedSession = $hashService->validateAndStripHmac($serializedSessionWithHmac, '__session');
+		} catch (\Exception $e) {
+			throw new \Exception('Invalid session data');
+		}
+		return unserialize(base64_decode($serializedSession));
+
+	}
+
+	protected static function getContentDataFromRequest(
 		RequestInterface $request,
 		array $settings
 	): ?array

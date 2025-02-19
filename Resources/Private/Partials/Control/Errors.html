@@ -1,5 +1,5 @@
 <f:if condition="{field.name}">
-    <div class="{blockClass}__error{f:if(condition:'{field.validationResult.errors}', then:' --visible')}" data-yf-error>
+    <div class="{blockClass}__error{f:if(condition:'!{field.validationResult.errors}', then:' --hidden')}" data-yf-error>
         <f:if condition="{field.validation_message}">
             <f:then>
                 <div>{field.validation_message}</div>
