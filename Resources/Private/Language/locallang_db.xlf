@@ -134,11 +134,11 @@
 			<trans-unit id="finisher.form_parents"><source>Used on</source></trans-unit>
 			<trans-unit id="finisher.title"><source>Title</source></trans-unit>
 			<trans-unit id="finisher.type"><source>Type</source></trans-unit>
-			<trans-unit id="finisher.type.item.save_submission"><source>Save submission</source></trans-unit>
-			<trans-unit id="finisher.type.item.consent"><source>Mail consent (Double-Opt-in)</source></trans-unit>
-			<trans-unit id="finisher.type.item.save_to_database"><source>Save to database</source></trans-unit>
-			<trans-unit id="finisher.type.item.send_email"><source>Send email</source></trans-unit>
-			<trans-unit id="finisher.type.item.show_content_elements"><source>Show content elements</source></trans-unit>
+			<trans-unit id="finisher.type.item.save_submission"><source>Save Submission</source></trans-unit>
+			<trans-unit id="finisher.type.item.consent"><source>Mail Consent (Double-Opt-in)</source></trans-unit>
+			<trans-unit id="finisher.type.item.save_to_database"><source>Save to Database</source></trans-unit>
+			<trans-unit id="finisher.type.item.send_email"><source>Send Email</source></trans-unit>
+			<trans-unit id="finisher.type.item.show_content_elements"><source>Show Content Elements</source></trans-unit>
 			<trans-unit id="finisher.type.item.redirect"><source>Redirect</source></trans-unit>
 			<trans-unit id="finisher.condition"><source>Condition</source></trans-unit>
 			<trans-unit id="finisher.condition.description"><source>Condition in Symfony Expression Language.</source></trans-unit>
