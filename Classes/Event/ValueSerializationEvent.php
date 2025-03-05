@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 final class ValueSerializationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $context,
+		public readonly Domain\FormRuntime\FormRuntime $runtime,
 		public readonly Domain\Record\FieldRecord      $field,
 		public readonly mixed                          $value,
 		public mixed                                   $serializedValue = null,

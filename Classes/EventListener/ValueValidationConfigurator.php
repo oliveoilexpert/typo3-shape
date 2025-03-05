@@ -54,7 +54,7 @@ final class ValueValidationConfigurator
 			$step = $field->get('step') ?? 1;
 			$offset = $field->get('min') ?? $field->get('default_value') ?? 0;
 			$event->addValidator($this->makeValidator(
-				Validator\NumberStepRangeValidator::class,
+				Validator\MultipleOfInRangeValidator::class,
 				[
 					'offset' => $offset,
 					'step' => $step,
@@ -73,7 +73,6 @@ final class ValueValidationConfigurator
 				['array' => $optionValues]
 			));
 		}
-		// would be problem if one were to add a combination type field, e.g. select + text input
 		if ($field->has('field_options') && $value && in_array($type, ['multi-select','multi-checkbox'])) {
 			$optionValues = [];
 			foreach ($field->get('field_options') as $option) {
@@ -84,10 +83,10 @@ final class ValueValidationConfigurator
 				['array' => $optionValues]
 			));
 		}
-		if ($field->has('confirm_input') && $field->get('confirm_input') && $value && isset($event->context->session->values[$field->get('name').'__CONFIRM'])) {
+		if ($field->has('confirm_input') && $field->get('confirm_input') && $value && isset($event->runtime->session->values[$field->get('name').'__CONFIRM'])) {
 			$event->addValidator($this->makeValidator(
 				Validator\EqualValidator::class,
-				['value' => $event->context->session->values[$field->get('name').'__CONFIRM'] ?? null]
+				['value' => $event->runtime->session->values[$field->get('name').'__CONFIRM'] ?? null]
 			));
 		}
 		if (in_array($type, ['date','datetime-local','time','week','month']) && $value) {

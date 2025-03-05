@@ -5,7 +5,7 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use UBOS\Shape\Domain;
 use UBOS\Shape\Event;
 
 class FormRuntime
@@ -15,20 +15,19 @@ class FormRuntime
 		readonly public array                                  $settings,
 		readonly public Core\Domain\Record                     $plugin,
 		readonly public Core\Domain\Record                     $form,
-		readonly public SessionData                            $session,
+		readonly public FormSession                            $session,
 		readonly public array                                  $postValues,
 		readonly public Core\Resource\ResourceStorageInterface $uploadStorage,
 		readonly public string                                 $parsedBodyKey,
 		readonly public bool                                   $isStepBack = false,
 		protected ?Core\ExpressionLanguage\Resolver            $conditionResolver = null,
 		protected ?array                                       $spamReasons = null,
+		protected array 									   $messages = [],
 		protected bool                                         $hasErrors = false,
 		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
-		protected ?Core\Crypto\HashService                     $hashService = null,
 	)
 	{
 		$this->eventDispatcher = GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
-		$this->hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
 	}
 
 	public function initialize(): FormRuntime
@@ -48,36 +47,47 @@ class FormRuntime
 		return $this;
 	}
 
-	public function runSpamCheck(): bool
+	public function findSpamReasons(): array
 	{
 		$event = new Event\SpamAnalysisEvent($this);
 		$this->eventDispatcher->dispatch($event);
 		$this->spamReasons = $event->spamReasons;
-		return (bool)$this->spamReasons;
+		return $this->spamReasons;
 	}
 
 	public function isRequestedPlugin(): bool
 	{
+		if (!isset($this->request->getArguments()['pluginUid'])) {
+			return true;
+		}
 		$uid = $this->settings['pluginUid'] ?: $this->request->getAttribute('currentContentObject')?->data['uid'] ?? $this->request->getArguments()['pluginUid'] ?? null;
 		return $this->request->getArguments()['pluginUid'] == $uid;
+	}
+
+	public function isFormPostRequest(): bool
+	{
+		return $this->request->getMethod() === 'POST' && array_key_exists($this->parsedBodyKey, $this->request->getParsedBody());
+	}
+
+	public function addMessages(array $messages): void
+	{
+		$this->messages = array_merge($this->messages, $messages);
 	}
 
 	public function renderPage($view, int $pageIndex = 1): string
 	{
 		$lastPageIndex = count($this->form->get('pages'));
 		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
-		$this->session->previousPageIndex = $pageIndex;
+		$this->session->returnPageIndex = $pageIndex;
 		$viewVariables = [
 			'session' => $this->session,
-			'serializedSession' => $this->hashService->appendHmac(
-				base64_encode(serialize($this->session)),
-				'__session'
-			),
+			'serializedSession' => FormSession::serialize($this->session),
 			'namespace' => $this->form->get('name'),
-			'action' => $pageIndex < $lastPageIndex ? 'renderStep' : 'submit',
+			'action' =>  'run',
 			'plugin' => $this->plugin,
 			'form' => $this->form,
 			'settings' => $this->settings,
+			'messages' => $this->messages,
 			'spamReasons' => $this->spamReasons,
 			'currentPage' => $currentPageRecord,
 			'pageIndex' => $pageIndex,
@@ -104,7 +114,7 @@ class FormRuntime
 		}
 		$validator = new ValueValidator($this, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
-			$field->validationResult = $validator->validate($field, $this->getValue($field->getName()));
+			$field->validationResult = $validator->validate($field, $this->getFieldValue($field));
 			if ($field->validationResult->hasErrors()) {
 				$this->hasErrors = true;
 			}
@@ -122,13 +132,8 @@ class FormRuntime
 			if (!$field->has('name')) {
 				continue;
 			}
-			$name = $field->getName();
-			$serializedValue = $serializer->serialize($field, $this->getValue($name));
-			$field->setSessionValue($serializedValue);
-			$this->session->values[$name] = $serializedValue;
-			if (isset($this->session->values[$name.'__CONFIRM'])) {
-				$this->session->values[$name.'__CONFIRM'] = $serializedValue;
-			}
+			$serializedValue = $serializer->serialize($field, $this->getFieldValue($field));
+			$this->setFieldValue($field, $serializedValue);
 		}
 	}
 
@@ -138,10 +143,9 @@ class FormRuntime
 			return;
 		}
 		foreach ($this->form->get('pages') as $index => $page) {
-			$index += 1;
 			$this->validatePage($index);
 			if ($this->hasErrors) {
-				$this->session->previousPageIndex = $index;
+				$this->session->returnPageIndex = $index + 1;
 				break;
 			}
 		}
@@ -168,13 +172,8 @@ class FormRuntime
 				if (!$field->has('name')) {
 					continue;
 				}
-				$name = $field->getName();
-				$processedValue = $processor->process($field, $this->getValue($name));
-				$field->setSessionValue($processedValue);
-				$this->session->values[$name] = $processedValue;
-				if (isset($this->session->values[$name.'__CONFIRM'])) {
-					$this->session->values[$name.'__CONFIRM'] = $processedValue;
-				}
+				$processedValue = $processor->process($field, $this->getFieldValue($field));
+				$this->setFieldValue($field, $processedValue);
 			}
 		}
 	}
@@ -183,10 +182,9 @@ class FormRuntime
 	{
 		$context = new FinisherContext($this);
 		foreach ($this->form->get('finishers') as $finisher) {
-			if ($finisher->get('condition') ?? false) {
-				if (!$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
-					continue;
-				}
+			if ($finisher->get('condition')
+				&& !$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
+				continue;
 			}
 			$context->executeFinisher($finisher);
 		}
@@ -202,7 +200,7 @@ class FormRuntime
 
 		$variables = [
 			'formValues' => $this->session->values,
-			'frontendUser' => $this->getFrontendUser(),
+			'frontendUser' => $this->request->getAttribute('frontend.user'),
 			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
 			'site' => $this->request->getAttribute('site'),
 			'siteLanguage' => $this->request->getAttribute('language'),
@@ -219,17 +217,18 @@ class FormRuntime
 		return $this->conditionResolver;
 	}
 
-	public function getFrontendUser(): FrontendUserAuthentication
+	public function getFieldValue(Domain\Record\FieldRecord $field): mixed
 	{
-		return $this->request->getAttribute('frontend.user');
+		return $this->session->values[$field->getName()] ?? null;
 	}
-	public function getSessionKey(): string
+	public function setFieldValue(Domain\Record\FieldRecord $field, mixed $value): void
 	{
-		return "tx_shape_c{$this->plugin?->getUid()}_f{$this->form->getUid()}";
-	}
-	public function getValue(string $name): mixed
-	{
-		return $this->session->values[$name] ?? null;
+		$field->setSessionValue($value);
+		$name = $field->getName();
+		$this->session->values[$name] = $value;
+		if (isset($this->session->values[$name.'__CONFIRM'])) {
+			$this->session->values[$name.'__CONFIRM'] = $value;
+		}
 	}
 	public function getHasErrors(): bool
 	{
@@ -237,6 +236,6 @@ class FormRuntime
 	}
 	public function getSessionUploadFolder(): string
 	{
-		return explode(':', $this->settings['uploadFolder'])[1] . $this->session->id . '/';
+		return explode(':', $this->settings['uploadFolder'])[1] . $this->session->getId() . '/';
 	}
 }

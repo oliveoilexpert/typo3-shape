@@ -47,10 +47,10 @@
 	box-sizing: border-box;
 	width: var(--yf-field-width);
 	padding: calc(var(--yf-gap) / 2);
+	margin-bottom: calc(var(--yf-spacing) * -1);
 	@media (max-width: 768px) {
 		min-width: 50%;
 	}
-
 	&.-summary-step {
 		pointer-events: none;
 		opacity: 0.8;
@@ -60,12 +60,19 @@
 		display: none;
 		visibility: hidden;
 	}
+	.yform__control,
+	.yform__label,
+	.yform__description,
+	.yform__message,
+	p {
+		margin-bottom: var(--yf-spacing);
+	}
 }
 
 .yform__label {
 	display: block;
-	margin-bottom: var(--yf-spacing);
-
+	padding-block: 0;
+	margin-block: 0;
 	&.-for-checkbox, &.-for-radio {
 		display: inline-block;
 	}
@@ -73,27 +80,27 @@
 
 .yform__control {
 	width: 100%;
-
 	&[disabled] {
 		opacity: 0.6;
 	}
 }
 
 .yform__description {
-	margin-top: var(--yf-spacing);
+	padding-block: 0;
+	margin-block: 0;
 	font-size: smaller;
 }
 
 .yform__options-header {
-	margin-block: var(--yf-spacing);
+	padding-block: 0;
+	margin-block: 0;
 	opacity: 0.5;
+	label + & {
+		margin-top: var(--yf-spacing);
+	}
 }
 
 .yform__spacing {
-	margin-top: var(--yf-spacing);
-}
-
-.yform__confirm__label {
 	margin-top: var(--yf-spacing);
 }
 
@@ -108,9 +115,6 @@
 }
 
 .yform__button {
-	padding: 0.5em 1em;
-	border: 2px solid currentColor;
-	border-radius: 10px;
 }
 
 .yform__header-field {
@@ -126,15 +130,20 @@
 
 .yform__message-list {
 	display: flex;
+	flex-direction: column;
 	flex-wrap: wrap;
 	margin-top: var(--yf-spacing);
 	gap: .5em;
+	&.-row {
+		flex-direction: row;
+	}
 }
 
 .yform__message {
 	position: relative;
 	width: fit-content;
 	padding: .5em .75em;
+	margin-block: 0;
 	font-size: smaller;
 	line-height: 1.1;
 	border-radius: 5px;
@@ -215,7 +224,7 @@
 
 .yform__repeatable__item {
 	width: 100%;
-	padding: calc(var(--yf-gap) / 1);
+	padding: calc(var(--yf-gap) / 2);
 	border: 1px solid color-mix(in srgb, currentColor 50%, transparent 50%);
 	border-radius: 5px;
 	animation: show-repeatable-item 0.4s;

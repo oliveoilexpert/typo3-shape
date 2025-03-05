@@ -67,7 +67,7 @@ $columns = [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => Util::selectItemsHelper([
+			'items' => [
 				['', ''],
 				[Util::t('finisher.type.item.save_submission'),
 					'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher',
@@ -87,7 +87,7 @@ $columns = [
 				[Util::t('finisher.type.item.redirect'),
 					'UBOS\Shape\Domain\Finisher\RedirectFinisher',
 					'apps-pagetree-page-shortcut-external'],
-			]),
+			],
 		],
 	],
 	'condition' => [

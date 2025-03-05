@@ -37,9 +37,10 @@
 			<trans-unit id="label.confirm_input"><source>Confirm</source></trans-unit>
 			<trans-unit id="label.password_saved"><source>Password saved</source></trans-unit>
 			<trans-unit id="label.enter_custom_value"><source>Enter custom value:</source></trans-unit>
-			<trans-unit id="label.spam_protection_triggered"><source>Your submission could not be validated. Please try again.</source></trans-unit>
 
-			<trans-unit id="label.submit_message"><source>Thank you, your submission was successful.</source></trans-unit>
+			<trans-unit id="label.not_requested_plugin"><source>Starting this form will reset progress on another form that you are currently completing.</source></trans-unit>
+			<trans-unit id="label.not_form_post_request"><source>This form process was started in another session. Please resume your original session or start here.</source></trans-unit>
+			<trans-unit id="label.suspected_spam"><source>Your submission was flagged as spam. Please try again.</source></trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -9,10 +9,10 @@
 			class="{blockClass}__control {blockClass}__{field.type}-control"/>
 
 	<f:if condition="{field.value}">
-		<div class="{blockClass}__message-list" data-yf-upload-list>
+		<div class="{blockClass}__message-list -row" data-yf-upload-list>
 			<f:for each="{field.value}" as="uploadedFilePath">
 				<f:if condition="{uploadedFilePath -> shape:isString()}">
-					<div class="{blockClass}__message">
+					<p class="{blockClass}__message">
 						<f:form.hidden value="{uploadedFilePath}" name="{namespace}[{field.name}__PROXY][]"/>
 						{uploadedFilePath -> shape:basename() -> f:format.crop(maxCharacters:20)}
 						<button class="{blockClass}__message__icon"
@@ -20,7 +20,7 @@
 								aria-label="{f:translate(key:'label.remove_upload')}">
 							<f:render partial="Icon/Close"/>
 						</button>
-					</div>
+					</p>
 				</f:if>
 			</f:for>
 		</div>

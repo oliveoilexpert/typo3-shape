@@ -10,7 +10,7 @@ use UBOS\Shape\Domain;
 final class SpamAnalysisEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $context,
+		public readonly Domain\FormRuntime\FormRuntime $runtime,
 		public array                                   $spamReasons = [],
 	) {}
 }

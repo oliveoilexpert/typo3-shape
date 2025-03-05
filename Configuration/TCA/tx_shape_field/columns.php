@@ -46,8 +46,7 @@ $columns = [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => Util::selectItemsHelper([
-
+			'items' => [
 				[Util::t('field.type.item.text'), 'text', 'form-text', 'text-inputs'],
 				[Util::t('field.type.item.textarea'), 'textarea', 'form-textarea', 'text-inputs'],
 				[Util::t('field.type.item.email'), 'email', 'form-email', 'text-inputs'],
@@ -83,7 +82,7 @@ $columns = [
 				[Util::t('field.type.item.content-header'), 'content-header', 'content-header', 'no-input'],
 				[Util::t('field.type.item.content-rte'), 'content-rte', 'form-static-text', 'no-input'],
 				[Util::t('field.type.item.content-element'), 'content-element', 'form-content-element', 'no-input'],
-			]),
+			],
 			'itemGroups' => [
 				'text-inputs' => Util::t('field.type.item_group.text-inputs'),
 				'select-inputs' => Util::t('field.type.item_group.select-inputs'),
@@ -174,19 +173,19 @@ $columns = [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => Util::selectItemsHelper([
+			'items' => [
 				['Default', 'default'],
-			]),
+			],
 		],
 	],
 	'label_layout' => [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
-			'items' => Util::selectItemsHelper([
+			'items' => [
 				['Default', 'default'],
 				['Hidden', 'hidden'],
-			]),
+			],
 		],
 	],
 	'width' => [
@@ -329,7 +328,7 @@ $columns = [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'default' => '',
-			'items' => Util::selectItemsHelper([
+			'items' => [
 				['','','','basic'],
 				['off', 'off', '', 'basic'],
 				['on', 'on', '', 'basic'],
@@ -394,7 +393,7 @@ $columns = [
 				['current-password', 'current-password', '', 'password'],
 				['new-password', 'new-password', '', 'password'],
 				['one-time-code', 'one-time-code', '', 'password'],
-			]),
+			],
 			'itemGroups' => [
 				'basic' => Util::t('field.autocomplete.basic'),
 				'name' => Util::t('field.autocomplete.name'),
@@ -414,7 +413,7 @@ $columns = [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'default' => '',
-			'items' => Util::selectItemsHelper([
+			'items' => [
 				['', ''],
 				['shipping', 'shipping ', '', 'address-group'],
 				['billing', 'billing ', '', 'address-group'],
@@ -424,7 +423,7 @@ $columns = [
 				['mobile', 'mobile ', '', 'contact-type'],
 				['fax', 'fax ', '', 'contact-type'],
 				['page', 'page ', '', 'contact-type'],
-			]),
+			],
 			'itemGroups' => [
 				'address-group' => Util::t('field.autocomplete_modifier.address-group'),
 				'contact-type' => Util::t('field.autocomplete_modifier.contact-type'),

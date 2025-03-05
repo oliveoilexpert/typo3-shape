@@ -19,15 +19,21 @@ class FinisherContext
 	public function executeFinisher(?Core\Domain\Record $record = null, string $className = '', array $settings = []): void
 	{
 		if ($record) {
+			$className = $record->get('type');
 			$settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
 				->convertFlexFormContentToArray($record->getRawRecord()->get('settings'));
-			$className = $record->get('type');
+		}
+		if (!class_exists($className)) {
+			// todo: throw exception
+			return;
 		}
 		$finisher = new $className(
 			$this,
 			$settings,
+			$record
 		);
 		if (!($finisher instanceof Domain\Finisher\AbstractFinisher)) {
+			// todo: throw exception
 			return;
 		}
 		$finisher->execute();

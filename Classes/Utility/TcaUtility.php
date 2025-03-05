@@ -4,29 +4,11 @@ namespace UBOS\Shape\Utility;
 
 use TYPO3\CMS\Core;
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-
 /**
  * Utility class for TCA manipulation
  */
 class TcaUtility
 {
-	public static function selectItemHelper(array $item): array
-	{
-		return [
-			'label' => $item[0] ?? $item['label'],
-			'value' => $item[1] ?? $item['value'],
-			'icon' => $item[2] ?? $item['icon'] ??  '',
-			'group' => $item[3] ?? $item['group'] ?? '',
-		];
-	}
-
-	public static function selectItemsHelper(array $items): array
-	{
-		return array_map(function($item) {
-			return self::selectItemHelper($item);
-		}, $items);
-	}
 
 	/**
 	 * Returns LLL:EXT:...:... string
@@ -54,7 +36,7 @@ class TcaUtility
 		string $position = 'after:--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.extended,'
 	): void
 	{
-		ExtensionManagementUtility::addToAllTCAtypes(
+		Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
 			'tx_shape_field',
 			$newFields,
 			$typeList,

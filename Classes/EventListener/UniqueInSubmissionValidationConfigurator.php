@@ -18,8 +18,8 @@ final class UniqueInSubmissionValidationConfigurator
 		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Domain\Validator\UniqueInSubmissionsValidator::class);
 		$validator->setOptions([
 			'fieldName' => $field->getName(),
-			'pluginUid' => $event->context->plugin->getUid(),
-			'formUid' => $event->context->form->getUid(),
+			'pluginUid' => $event->runtime->plugin->getUid(),
+			'formUid' => $event->runtime->form->getUid(),
 		]);
 		$event->addValidator($validator);
 	}

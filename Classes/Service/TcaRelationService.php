@@ -88,7 +88,7 @@ class TcaRelationService
 				'tx_shape_field',
 				'page_parents'
 			);
-		} elseif ($fieldsType === 'inline') {
+		} else if ($fieldsType === 'inline') {
 			$this->mirrorCSVRelation(
 				'tx_shape_field',
 				'page_parents',
@@ -111,7 +111,7 @@ class TcaRelationService
 				'tx_shape_finisher',
 				'form_parents'
 			);
-		} elseif ($finishersType === 'inline') {
+		} else if ($finishersType === 'inline') {
 			$this->mirrorCSVRelation(
 				'tx_shape_finisher',
 				'form_parents',

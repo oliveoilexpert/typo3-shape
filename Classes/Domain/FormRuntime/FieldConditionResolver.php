@@ -10,7 +10,7 @@ use UBOS\Shape\Event\FieldConditionResolutionEvent;
 class FieldConditionResolver
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormRuntime $context,
+		protected Domain\FormRuntime\FormRuntime $runtime,
 		protected EventDispatcherInterface       $eventDispatcher
 	)
 	{
@@ -22,9 +22,9 @@ class FieldConditionResolver
 			return true;
 		}
 		$event = new FieldConditionResolutionEvent(
-			$this->context,
+			$this->runtime,
 			$field,
-			$this->context->getConditionResolver(),
+			$this->runtime->getConditionResolver(),
 		);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {

@@ -5,12 +5,12 @@ routeEnhancers:
     extension: Shape
     plugin: Form
     routes:
+      - routePath: '/{pluginLabel}{pluginUid}-{stepLabel}-{pageIndex}'
+        _controller: 'Form::run'
+      - routePath: '/{pluginLabel}{pluginUid}-{submitLabel}'
+        _controller: 'Form::run'
       - routePath: '/{pluginLabel}{pluginUid}-{finishedLabel}'
         _controller: 'Form::finished'
-      - routePath: '/{pluginLabel}{pluginUid}-{submitLabel}'
-        _controller: 'Form::submit'
-      - routePath: '/{pluginLabel}{pluginUid}-{stepLabel}-{pageIndex}'
-        _controller: 'Form::renderStep'
       - routePath: '/'
         _controller: 'Form::render'
     aspects:

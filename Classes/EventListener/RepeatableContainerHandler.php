@@ -45,7 +45,7 @@ final class RepeatableContainerHandler
 			return;
 		}
 		$fieldResolver = new FormRuntime\FieldConditionResolver(
-			$event->context,
+			$event->runtime,
 			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
@@ -69,7 +69,7 @@ final class RepeatableContainerHandler
 			return;
 		}
 		$validator = new FormRuntime\ValueValidator(
-			$event->context,
+			$event->runtime,
 			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
@@ -97,7 +97,7 @@ final class RepeatableContainerHandler
 			return;
 		}
 		$serializer = new FormRuntime\ValueSerializer(
-			$event->context,
+			$event->runtime,
 			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
@@ -129,7 +129,7 @@ final class RepeatableContainerHandler
 			return;
 		}
 		$processor = new FormRuntime\ValueProcessor(
-			$event->context,
+			$event->runtime,
 			$this->eventDispatcher
 		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {

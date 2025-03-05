@@ -7,7 +7,7 @@ namespace UBOS\Shape\Domain\Validator;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
-final class NumberStepRangeValidator extends AbstractValidator
+final class MultipleOfInRangeValidator extends AbstractValidator
 {
     protected $supportedOptions = [
         'step' => [1, 'The number value should be a multiple of', 'float'],

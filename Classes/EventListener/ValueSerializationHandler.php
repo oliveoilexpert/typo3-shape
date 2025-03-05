@@ -37,8 +37,8 @@ final class ValueSerializationHandler
 	 */
 	protected function saveUploadedFiles(array $files, ValueSerializationEvent $event): array
 	{
-		$folderPath = $event->context->getSessionUploadFolder();
-		$uploadStorage = $event->context->uploadStorage;
+		$folderPath = $event->runtime->getSessionUploadFolder();
+		$uploadStorage = $event->runtime->uploadStorage;
 		if (!$uploadStorage->hasFolder($folderPath)) {
 			$uploadStorage->createFolder($folderPath);
 		}

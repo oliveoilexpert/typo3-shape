@@ -14,16 +14,10 @@
 		<f:render partial="SpamProtection" arguments="{_all}"/>
 	</div>
 
-	<f:if condition="{spamReasons}">
-		<div class="{blockClass}__page">
-			<div class="{blockClass}__message -warning">
-				{f:translate(key:'label.spam_protection_triggered')}
-			</div>
-		</div>
-	</f:if>
+	<f:render partial="Messages" arguments="{_all}"/>
 
-	<f:if condition="{currentPage.type} == 'summary'">
-		<f:else>
+	<f:if condition="{currentPage.type} !== 'summary'">
+		<f:then>
 			<div class="{blockClass}__page">
 				<fieldset class="{blockClass}__fieldset">
 					<f:if condition="{currentPage.title}">
@@ -36,8 +30,8 @@
 					</f:alias>
 				</fieldset>
 			</div>
-		</f:else>
-		<f:then>
+		</f:then>
+		<f:else>
 			<div class="{blockClass}__page">
 				<f:if condition="{currentPage.title}">
 					<p class="{blockClass}__page__header">{currentPage.title}</p>
@@ -59,7 +53,7 @@
 					</f:if>
 				</f:for>
 			</div>
-		</f:then>
+		</f:else>
 	</f:if>
 
 	<f:render partial="Navigation" arguments="{_all}"/>

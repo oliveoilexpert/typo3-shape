@@ -2,24 +2,25 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use UBOS\Shape\Domain\FormRuntime;
 
 abstract class AbstractFinisher
 {
 	public function __construct(
 		protected readonly FormRuntime\FinisherContext $context,
-		protected array                                $settings = []
+		protected array                                $settings = [],
+		protected ?Core\Domain\Record				   $record = null,
 	) {}
 
 	abstract public function execute(): void;
 
-	protected function getContext(): FormRuntime\FormRuntime
+	protected function getRuntime(): FormRuntime\FormRuntime
 	{
 		return $this->context->runtime;
 	}
-	protected function getRequest(): \TYPO3\CMS\Extbase\Mvc\RequestInterface
+	protected function getRequest(): RequestInterface
 	{
 		return $this->context->runtime->request;
 	}

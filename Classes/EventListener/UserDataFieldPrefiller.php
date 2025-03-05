@@ -11,7 +11,7 @@ final class UserDataFieldPrefiller
 	#[AsEventListener]
 	public function __invoke(BeforeFormRenderEvent $event): void
 	{
-		$feAuth = $event->context->request->getAttribute('frontend.user');
+		$feAuth = $event->runtime->request->getAttribute('frontend.user');
 		if (!$feAuth->getUserId()) {
 			return;
 		}
@@ -24,7 +24,7 @@ final class UserDataFieldPrefiller
 		if (!$userData) {
 			return;
 		}
-		foreach ($event->context->form->get('pages') as $page) {
+		foreach ($event->runtime->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if (!$field->has('user_prefill_column')) {
 					continue;

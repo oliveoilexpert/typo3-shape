@@ -10,7 +10,7 @@ use UBOS\Shape\Event\ValueProcessingEvent;
 class ValueProcessor
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormRuntime $context,
+		protected Domain\FormRuntime\FormRuntime $runtime,
 		protected EventDispatcherInterface       $eventDispatcher,
 	)
 	{
@@ -21,7 +21,7 @@ class ValueProcessor
 		if (!$field->has('name')) {
 			return $value;
 		}
-		$event = new ValueProcessingEvent($this->context, $field, $value);
+		$event = new ValueProcessingEvent($this->runtime, $field, $value);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
 			return $event->processedValue;

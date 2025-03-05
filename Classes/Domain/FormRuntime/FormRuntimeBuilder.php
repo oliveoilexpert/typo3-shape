@@ -36,9 +36,18 @@ class FormRuntimeBuilder
 			($request->getParsedBody()[$parsedBodyKey] ?? false)
 			&& $request->getArguments()['pluginUid'] == $plugin->getUid()
 		) {
-			$session = self::getSessionFromRequest($request);
+			$serializedSessionWithHmac = $request->getParsedBody()[$parsedBodyKey]['__session'] ?? null;
+			if (!$serializedSessionWithHmac) {
+				$session = new FormSession();
+			} else {
+				try {
+					$session = FormSession::validateAndUnserialize($serializedSessionWithHmac);
+				} catch (\Exception $e) {
+					$session = new FormSession();
+				}
+			}
 
-			$session->id = $session->id ?: GeneralUtility::makeInstance(Core\Crypto\Random::class)->generateRandomHexString(40);
+			$session->getId();
 			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
 			$postValues = $request->getParsedBody()[$parsedBodyKey][$form->get('name')] ?? [];
 			Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
@@ -46,8 +55,9 @@ class FormRuntimeBuilder
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
 			);
 
+			Core\Utility\DebugUtility::debug($session);
 			$pageIndex = $request->getArguments()['pageIndex'] ?? 1;
-			$isStepBack = ($session->previousPageIndex ?? 1) > $pageIndex;
+			$isStepBack = $session->returnPageIndex > $pageIndex;
 
 			// only keep post values that can be mapped to fields
 			// substitute missing values with proxy values, if possible (e.g. for file fields)
@@ -72,7 +82,7 @@ class FormRuntimeBuilder
 				$cleanedPostValues
 			);
 		} else {
-			$session = new SessionData();
+			$session = new FormSession();
 			$isStepBack = false;
 		}
 		return new FormRuntime(
@@ -86,25 +96,6 @@ class FormRuntimeBuilder
 			$parsedBodyKey,
 			$isStepBack,
 		);
-	}
-
-	protected static function getSessionFromRequest(
-		RequestInterface $request,
-	): SessionData
-	{
-		$hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
-		$parsedBodyKey = 'tx_shape_form';
-		$serializedSessionWithHmac = $request->getParsedBody()[$parsedBodyKey]['__session'] ?? null;
-		if (!$serializedSessionWithHmac) {
-			return new SessionData();
-		}
-		try {
-			$serializedSession = $hashService->validateAndStripHmac($serializedSessionWithHmac, '__session');
-		} catch (\Exception $e) {
-			throw new \Exception('Invalid session data');
-		}
-		return unserialize(base64_decode($serializedSession));
-
 	}
 
 	protected static function getContentDataFromRequest(

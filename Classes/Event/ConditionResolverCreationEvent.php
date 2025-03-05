@@ -9,7 +9,7 @@ use UBOS\Shape\Domain;
 final class ConditionResolverCreationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $context,
+		public readonly Domain\FormRuntime\FormRuntime $runtime,
 		protected array                                $variables
 	) {}
 	public function getVariables(): array

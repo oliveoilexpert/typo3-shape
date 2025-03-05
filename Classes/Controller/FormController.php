@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core;
-use TYPO3\CMS\Extbase;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain\FormRuntime;
 
 
-// todo: move session persistence from hidden json field to session storage
 // todo: exceptions
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
 // todo: consent finisher
@@ -21,7 +19,7 @@ use UBOS\Shape\Domain\FormRuntime;
 // todo: "validation_message" inline elements in fields where you select the error type (e.g. "number_step_range.maximum") and set a custom message; considerations: would only work for server side validation, so maybe not worth it, especially since most validations also happen on the client, so you would never see te custom message in most cases
 // note: upload and radio fields will not be in POST values if no value is set
 
-class FormController extends Extbase\Mvc\Controller\ActionController
+class FormController extends ActionController
 {
 	protected FormRuntime\FormRuntime $runtime;
 	protected string $fragmentPageTypeNum = '11510497112101';
@@ -36,39 +34,34 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 		return $this->formPage();
 	}
 
-	public function renderStepAction(int $pageIndex = 1): ResponseInterface
+	public function runAction(int $pageIndex = 0): ResponseInterface
 	{
 		$this->initializeRuntime();
-		if (!$this->runtime->isRequestedPlugin() || !$this->runtime->session->id) {
-			return $this->formPage();
+		if (!$this->runtime->isRequestedPlugin()) {
+			return $this->formPage(messages: [['key' => 'label.not_requested_plugin', 'type' => 'warning']]);
 		}
-		if ($this->runtime->runSpamCheck()) {
-			return $this->formPage();
+		if (!$this->runtime->isFormPostRequest()) {
+			return $this->formPage(messages: [['key' => 'label.not_form_post_request', 'type' => 'info']]);
 		}
-		$submittedPageIndex = $this->runtime->session->previousPageIndex;
-		if (!$this->runtime->isStepBack) {
-			$this->runtime->validatePage($submittedPageIndex);
+		if ($this->runtime->findSpamReasons()) {
+			return $this->formPage(messages: [['key' => 'label.suspected_spam', 'type' => 'error']]);
 		}
-		$this->runtime->serializePage($submittedPageIndex);
-		if ($this->runtime->getHasErrors()) {
-			return $this->formPage($submittedPageIndex);
-		}
-		return $this->formPage($pageIndex);
-	}
-
-	public function submitAction(): ResponseInterface
-	{
-		$this->initializeRuntime();
-		if (!$this->runtime->isRequestedPlugin() || !$this->runtime->session->id) {
-			return $this->formPage();
-		}
-		if ($this->runtime->runSpamCheck()) {
-			return $this->formPage();
+		// pageIndex = 0 means form submit
+		if ($pageIndex) {
+			$submittedPageIndex = $this->runtime->session->returnPageIndex;
+			if (!$this->runtime->isStepBack) {
+				$this->runtime->validatePage($submittedPageIndex);
+			}
+			$this->runtime->serializePage($submittedPageIndex);
+			if ($this->runtime->getHasErrors()) {
+				return $this->formPage($submittedPageIndex);
+			}
+			return $this->formPage($pageIndex);
 		}
 		$this->runtime->validateForm();
 		$this->runtime->serializeForm();
 		if ($this->runtime->getHasErrors()) {
-			$firstPageWithErrors = $this->runtime->session->previousPageIndex;
+			$firstPageWithErrors = $this->runtime->session->returnPageIndex;
 			return $this->formPage($firstPageWithErrors);
 		}
 		$this->runtime->processForm();
@@ -100,8 +93,11 @@ class FormController extends Extbase\Mvc\Controller\ActionController
 	{
 		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest($this->request, $this->settings)->initialize();
 	}
-	protected function formPage(int $pageIndex = 1): ResponseInterface
+	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{
+		if ($messages) {
+			$this->runtime->addMessages($messages);
+		}
 		return $this->htmlResponse($this->runtime->renderPage($this->view, $pageIndex));
 	}
 	public function lazyLoader(): ResponseInterface
