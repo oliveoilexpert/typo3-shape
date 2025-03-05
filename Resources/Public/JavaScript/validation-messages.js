@@ -9,6 +9,6 @@
 			})
 		})
 	}
-	window.__tx_shape.processors.validityMessages = processNode
+	window.__t3_tx_shape.processors.validityMessages = processNode
 	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

@@ -27,13 +27,47 @@
                             </fieldWizard>
                         </config>
                     </storagePage>
-                    <mapping>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.mapping</label>
-                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.mapping.description</description>
+                    <whereColumn>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.whereColumn</label>
                         <config>
-                            <type>json</type>
+                            <type>input</type>
                         </config>
-                    </mapping>
+                    </whereColumn>
+                    <whereValue>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.whereValue</label>
+                        <config>
+                            <type>input</type>
+                        </config>
+                    </whereValue>
+                    <columns>
+                        <title>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.columns</title>
+                        <type>array</type>
+                        <section>1</section>
+                        <el>
+                            <column>
+                                <title>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.column</title>
+                                <type>array</type>
+                                <el>
+                                    <name>
+                                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.columnName</label>
+                                        <config>
+                                            <type>input</type>
+                                            <size>255</size>
+                                            <eval>trim</eval>
+                                        </config>
+                                    </name>
+                                    <value>
+                                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.saveToDatabase.columnValue</label>
+                                        <config>
+                                            <type>input</type>
+                                            <size>255</size>
+                                            <eval>trim</eval>
+                                        </config>
+                                    </value>
+                                </el>
+                            </column>
+                        </el>
+                    </columns>
                 </el>
             </ROOT>
         </general>

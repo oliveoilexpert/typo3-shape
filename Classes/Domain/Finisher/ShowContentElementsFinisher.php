@@ -7,13 +7,12 @@ use TYPO3\CMS\Core;
 
 class ShowContentElementsFinisher extends AbstractFinisher
 {
+	protected array $settings = [
+		'contentElements' => ''
+	];
+
 	public function execute(): void
 	{
-//		$this->view->assign('contentElementUids', explode(',', $this->settings['contentElements']));
-//		$html = $this->view->render('Finisher/ShowContentElements');
-//		$response = new Core\Http\Response(null, 200, [], '');
-//		$stream = new Core\Http\Stream('php://temp', 'r+');
-//		$stream->write($html);
 		$this->context->finishedActionArguments = [
 			'template' => 'Finisher/ShowContentElements',
 			'contentElements' => explode(',', $this->settings['contentElements'])

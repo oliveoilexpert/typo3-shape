@@ -10,21 +10,21 @@ use UBOS\Shape\Utility\TemplateVariableParser;
 
 class SendEmailFinisher extends AbstractFinisher
 {
+	protected array $settings = [
+		'subject' => '',
+		'body' => '',
+		'attachUploads' => false,
+		'template' => '',
+		'senderAddress' => '',
+		'senderName' => '',
+		'recipientAddresses' => '',
+		'ccRecipientAddresses' => '',
+		'bccRecipientAddresses' => '',
+		'replyToAddresses' => '',
+	];
+
 	public function execute(): void
 	{
-		$this->settings = array_merge([
-			'subject' => '',
-			'body' => '',
-			'attachUploads' => false,
-			'template' => '',
-			'senderAddress' => '',
-			'senderName' => '',
-			'recipientAddresses' => '',
-			'ccRecipientAddresses' => '',
-			'bccRecipientAddresses' => '',
-			'replyToAddresses' => '',
-		], $this->settings);
-
 		$recipients = $this->getAddresses($this->settings['recipientAddresses']);
 		if (!$recipients || !$this->settings['subject']) {
 			return;

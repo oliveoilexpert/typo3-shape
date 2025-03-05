@@ -11,7 +11,6 @@
 		if (!tmpl) return
 		const i = tmpl.dataset.iteration
 		let clone = tmpl.content.cloneNode(true)
-		console.log(clone)
 		clone.querySelectorAll('[data-yf-condition]').forEach(wrap => {
 			const cond = wrap.dataset.yfCondition
 			if (!cond) return
@@ -31,7 +30,7 @@
 		let nodes = [...clone.childNodes]
 		container.appendChild(clone)
 		nodes.forEach(node => {
-			if (node.nodeType == Node.ELEMENT_NODE) window.__tx_shape.process(node)
+			if (node.nodeType == Node.ELEMENT_NODE) window.__t3_tx_shape.process(node)
 		})
 		tmpl.dataset.iteration = (parseInt(i) + 1).toString()
 	}
@@ -51,6 +50,6 @@
 			btn.addEventListener('click', removeButtonHandler)
 		})
 	}
-	window.__tx_shape.processors.repeatableContainer = processNode
+	window.__t3_tx_shape.processors.repeatableContainer = processNode
 	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

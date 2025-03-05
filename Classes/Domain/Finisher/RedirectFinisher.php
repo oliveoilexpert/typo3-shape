@@ -8,12 +8,13 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class RedirectFinisher extends AbstractFinisher
 {
+	protected array $settings = [
+		'uri' => '',
+		'statusCode' => 303,
+	];
+
 	public function execute(): void
 	{
-		$this->settings = array_merge([
-			'uri' => '',
-			'statusCode' => 303,
-		], $this->settings);
 		if (!$this->settings['uri']) {
 			return;
 		}

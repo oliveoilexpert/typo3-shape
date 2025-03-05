@@ -17,6 +17,6 @@
 			})
 		})
 	}
-	window.__tx_shape.processors.stylableValidation = processNode
+	window.__t3_tx_shape.processors.stylableValidation = processNode
 	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

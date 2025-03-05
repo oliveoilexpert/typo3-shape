@@ -10,14 +10,15 @@ use TYPO3\CMS\Extbase;
 class SaveSubmissionFinisher extends AbstractFinisher
 {
 	protected string $tableName = 'tx_shape_form_submission';
+	protected array $settings = [
+		'storagePage' => '',
+		'connectToLanguageParentForm' => false,
+		'saveUserData' => false,
+		'excludedFields' => '',
+	];
+
 	public function execute(): void
 	{
-		$this->settings = array_merge([
-			'storagePage' => '',
-			'connectToLanguageParentForm' => false,
-			'saveUserData' => false,
-			'excludedFields' => '',
-		], $this->settings);
 		$formValues = $this->getFormValues();
 		if ($this->settings['excludedFields']) {
 			$excludeFields = GeneralUtility::trimExplode(',', $this->settings['excludedFields'], true);

@@ -6,16 +6,20 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase;
+use UBOS\Shape\Utility\TemplateVariableParser;
 
 class SaveToDatabaseFinisher extends AbstractFinisher
 {
+	protected array $settings = [
+		'table' => '',
+		'storagePage' => '',
+		'whereColumn' => '',
+		'whereValue' => '',
+		'columns' => [],
+	];
+
 	public function execute(): void
 	{
-		$this->settings = array_merge([
-			'table' => '',
-			'storagePage' => '',
-			'mapping' => [],
-		], $this->settings);
 		if (!$this->settings['table']) {
 			return;
 		}
@@ -23,11 +27,14 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			->getQueryBuilderForTable($this->settings['table']);
 		$values = [
 			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
+			'tstamp' => time(),
 		];
 
-		foreach ($this->settings['mapping'] as $column => $field) {
-			if (!$field) continue;
-			$value = $this->getFormValues()[$field] ?? $field;
+		foreach ($this->settings['columns'] as $item) {
+			$column = $item['column'] ?? null;
+			if (!$column) continue;
+			$name = $column['name'];
+			$value = $this->parseWithValues($column['value']);
 			if (is_array($value)) {
 				try {
 					$value = implode(',', $value);
@@ -35,10 +42,26 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 					$value = json_encode($value);
 				}
 			}
-			$values[$column] = $value;
+			$values[$name] = $value;
 		}
-		$queryBuilder->insert($this->settings['table'])
-			->values($values)
-			->executeStatement();
+
+		if ($this->settings['whereColumn'] && $this->settings['whereValue']) {
+			$whereColumn = $this->settings['whereColumn'];
+			$whereValue = $this->parseWithValues($this->settings['whereValue']);
+			$queryBuilder->update($this->settings['table'])
+				->where($queryBuilder->expr()->eq($whereColumn, $whereValue))
+				->set($values)
+				->executeStatement();
+		} else {
+			$values['crdate'] = time();
+			$queryBuilder->insert($this->settings['table'])
+				->values($values)
+				->executeStatement();
+		}
+	}
+
+	protected function parseWithValues(string $string): string
+	{
+		return TemplateVariableParser::parse($string, $this->getFormValues());
 	}
 }

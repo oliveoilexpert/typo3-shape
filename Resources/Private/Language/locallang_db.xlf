@@ -171,8 +171,12 @@
 
 			<trans-unit id="flexform.finisher.saveToDatabase.table"><source>Table Name</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveToDatabase.storagePage"><source>Storage Page</source></trans-unit>
-			<trans-unit id="flexform.finisher.saveToDatabase.mapping"><source>Table-Form-Mapping</source></trans-unit>
-			<trans-unit id="flexform.finisher.saveToDatabase.mapping.description"><source>JSON mapping table columns to form fields ("column_name": "field-name").</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.whereColumn"><source>Update Row where Column ...</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.whereValue"><source>... equals Value</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.columns"><source>Columns</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.column"><source>Column</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.columnName"><source>Name</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.columnValue"><source>Value</source></trans-unit>
 
 			<trans-unit id="flexform.finisher.showContentElements.contentElements"><source>Content Elements</source></trans-unit>
 

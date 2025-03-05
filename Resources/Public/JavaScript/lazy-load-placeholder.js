@@ -3,7 +3,7 @@
 	fetch(ph.dataset.fetch).then(r => r.text()).then(html => {
 		ph.insertAdjacentHTML('beforebegin', html)
 		window.requestAnimationFrame(() => {
-			window.__tx_shape.process(ph.previousElementSibling)
+			window.__t3_tx_shape.process(ph.previousElementSibling)
 			ph.remove()
 		})
 	})

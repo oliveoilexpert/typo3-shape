@@ -1,4 +1,4 @@
-if (!window.__tx_shape) window.__tx_shape = {
+if (!window.__t3_tx_shape) window.__t3_tx_shape = {
 	processors: {},
-	process: el => Object.entries(window.__tx_shape.processors).forEach(([key, proc]) => proc(el))
+	process: el => Object.entries(window.__t3_tx_shape.processors).forEach(([key, proc]) => proc(el))
 }

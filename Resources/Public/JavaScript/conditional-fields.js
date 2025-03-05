@@ -28,6 +28,6 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		})
 		window.requestAnimationFrame(() => evaluateConditions(form))
 	}
-	window.__tx_shape.processors.conditionalFields = processNode
+	window.__t3_tx_shape.processors.conditionalFields = processNode
 	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
 }

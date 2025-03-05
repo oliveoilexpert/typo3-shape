@@ -55,7 +55,6 @@ class FormRuntimeBuilder
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
 			);
 
-			Core\Utility\DebugUtility::debug($session);
 			$pageIndex = $request->getArguments()['pageIndex'] ?? 1;
 			$isStepBack = $session->returnPageIndex > $pageIndex;
 

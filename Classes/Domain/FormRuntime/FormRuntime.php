@@ -79,6 +79,11 @@ class FormRuntime
 		$lastPageIndex = count($this->form->get('pages'));
 		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
 		$this->session->returnPageIndex = $pageIndex;
+//		foreach ($this->form->get('finishers') as $finisher) {
+//			$finSettings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
+//				->convertFlexFormContentToArray($finisher->getRawRecord()->get('settings'));
+//			Core\Utility\DebugUtility::debug($finSettings);
+//		}
 		$viewVariables = [
 			'session' => $this->session,
 			'serializedSession' => FormSession::serialize($this->session),

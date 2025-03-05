@@ -8,11 +8,14 @@ use UBOS\Shape\Domain\FormRuntime;
 
 abstract class AbstractFinisher
 {
+	protected array $settings = [];
 	public function __construct(
 		protected readonly FormRuntime\FinisherContext $context,
-		protected array                                $settings = [],
 		protected ?Core\Domain\Record				   $record = null,
-	) {}
+		array                                		   $settings = [],
+	) {
+		$this->settings = array_merge($this->settings, $settings);
+	}
 
 	abstract public function execute(): void;
 
