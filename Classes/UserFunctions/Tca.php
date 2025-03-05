@@ -4,6 +4,7 @@ namespace UBOS\Shape\UserFunctions;
 
 use TYPO3\CMS\Backend\Form\FormDataProvider\TcaSlug;
 use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 class Tca
 {
@@ -17,18 +18,17 @@ class Tca
 			return;
 		}
 		$row = $params['row'];
-		$label = $row['label'];
+		$type = is_array($row['type']) ? $row['type'][0] : $row['type'];
+		$label = is_array($row['label']) ? $row['label'][0] : $row['label'];
 		if (!$row['label'] && !$row['type']) {
 			return;
 		}
-		if (is_array($label)) {
-			$label = $label[0] ?? '';
+		$required = '';
+		if ($row['required']) {
+			$required = '*';
 		}
-		$type = $row['type'];
-		if (is_array($type)) {
-			$type = $type[0] ?? '';
-		}
-		$params['title'] = "{$label}<small>[{$type}]</small>";
+		$type = BackendUtility::getProcessedValue('tx_shape_field', 'type', $type);
+		$params['title'] = "{$label}{$required}  <small style='opacity:.65;'>({$type})</small>";
 	}
 
 	/**

@@ -1,20 +1,29 @@
 
-<f:form.textfield autocomplete="off" name="__email" tabindex="-1" style="position:absolute;margin-left:-999em"/>
-<template>
-    <f:form.textfield autocomplete="off" name="__focus_pass" tabindex="-1" style="position:absolute;margin-left:-999em"/>
-</template>
-<script>
-   {
-		const tmpl = document.currentScript.previousElementSibling
-		window.requestAnimationFrame(() => {
-			setTimeout(() => {
-				const form = tmpl.closest('form')
-				const frag = tmpl.content.cloneNode(true)
-				form.addEventListener('focusin', () => {
-					frag.children[0].value = 'human'
-					tmpl.parentElement.appendChild(frag)
-				}, { once: true })
-			}, 200)
-		})
-   }
-</script>
+<f:if condition="{settings.spamProtection.honeypot.enabled}">
+    <f:form.textfield autocomplete="off"
+                      name="{settings.spamProtection.honeypot.fieldName}"
+                      tabindex="-1" style="position:absolute;margin-left:-999em"/>
+</f:if>
+<f:if condition="{settings.spamProtection.focusPass.enabled}">
+    <template>
+        <f:form.textfield autocomplete="off"
+                          name="{settings.spamProtection.focusPass.fieldName}"
+                          data-focus-pass="{settings.spamProtection.focusPass.value}"
+                          tabindex="-1" style="position:absolute;margin-left:-999em"/>
+    </template>
+    <script>
+       {
+            const tmpl = document.currentScript.previousElementSibling
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    const form = tmpl.closest('form')
+                    const frag = tmpl.content.cloneNode(true)
+                    form.addEventListener('focusin', () => {
+                        frag.children[0].value = frag.children[0].dataset.focusPass
+                        tmpl.parentElement.appendChild(frag)
+                    }, { once: true })
+                }, 200)
+            })
+       }
+    </script>
+</f:if>

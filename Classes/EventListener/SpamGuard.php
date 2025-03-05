@@ -14,14 +14,19 @@ final class SpamGuard
 	public function __invoke(SpamAnalysisEvent $event): void
 	{
 		$parameters = $event->runtime->request->getParsedBody()[$event->runtime->parsedBodyKey] ?? [];
+		$protection = $event->runtime->settings['spamProtection'];
 		// honeypot
-		if ($event->runtime->settings['spamProtection']['honeypot'] && ($parameters['__email'] ?? '')) {
+		if ($protection['honeypot']['enabled']
+			&& ($parameters[$protection['honeypot']['fieldName']] ?? '')
+		) {
 			$event->spamReasons['honeypot'] = [
 				'message' => 'Honeypot field was filled.',
 			];
 		}
 		// focus field must be set
-		if ($event->runtime->settings['spamProtection']['focusPass'] && ($parameters['__focus_pass'] ?? '') !== 'human') {
+		if ($protection['focusPass']['enabled']
+			&& ($parameters[$protection['focusPass']['fieldName']] ?? '') !== $protection['focusPass']['value']
+		) {
 			$event->spamReasons['focusPass'] = [
 				'message' => 'Focus Pass field that fills via JavaScript on focusin event was not filled correctly.',
 			];

@@ -1,3 +1,21 @@
+plugin.tx_shape {
+    settings {
+        pluginUid = 0
+        uploadFolder = 1:/user_upload/
+        spamProtection {
+            honeypot {
+                enabled = 1
+                fieldName = __email
+            }
+            focusPass {
+                enabled = 1
+                fieldName = __focus_pass
+                value = human
+            }
+        }
+    }
+}
+
 lib.tx_shape.contentElementRendering = RECORDS
 lib.tx_shape.contentElementRendering {
     tables = tt_content
@@ -25,16 +43,5 @@ tx_shape_form_fragment {
         admPanel = 0
         index_enable = 0
         no_cache = 1
-    }
-}
-
-plugin.tx_shape {
-    settings {
-        pluginUid = 0
-        uploadFolder = 1:/user_upload/
-        spamProtection {
-            honeypot = 1
-            focusPass = 1
-        }
     }
 }
