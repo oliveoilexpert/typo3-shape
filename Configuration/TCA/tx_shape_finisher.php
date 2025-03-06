@@ -67,6 +67,7 @@ $columns = [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
+			'required' => true,
 			'items' => [
 				['', ''],
 				[Util::t('finisher.type.item.save_submission'),

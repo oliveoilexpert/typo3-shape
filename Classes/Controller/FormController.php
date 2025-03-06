@@ -22,7 +22,7 @@ use UBOS\Shape\Domain\FormRuntime;
 class FormController extends ActionController
 {
 	protected FormRuntime\FormRuntime $runtime;
-	protected string $fragmentPageTypeNum = '11510497112101';
+	protected string $fragmentPageTypeNum = '1741218626';
 	
 	public function renderAction(): ResponseInterface
 	{

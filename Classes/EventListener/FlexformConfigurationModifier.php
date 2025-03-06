@@ -20,7 +20,7 @@ final readonly class FlexformConfigurationModifier
 		) {
 			$dataStructure = $event->getDataStructure();
 			$dataStructure['sheets']['mail']['ROOT']['el']['template']['config']['items'] = [];
-			$mailTemplates = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['shape']['finishers']['sendEmail']['templates'];
+			$mailTemplates = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['shape']['finishers']['sendEmail']['templates'];
 			foreach ($mailTemplates as $template => $config) {
 				$dataStructure['sheets']['mail']['ROOT']['el']['template']['config']['items'][] = [
 					'label' => $config['label'],

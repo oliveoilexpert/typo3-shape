@@ -18,8 +18,8 @@ class Tca
 			return;
 		}
 		$row = $params['row'];
-		$type = is_array($row['type']) ? $row['type'][0] : $row['type'];
-		$label = is_array($row['label']) ? $row['label'][0] : $row['label'];
+		$type = is_array($row['type']) ? $row['type'][0] ?? '' : $row['type'];
+		$label = is_array($row['label']) ? $row['label'][0] ?? '' : $row['label'];
 		if (!$row['label'] && !$row['type']) {
 			return;
 		}

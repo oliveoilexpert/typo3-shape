@@ -37,7 +37,7 @@ class SendEmailFinisher extends AbstractFinisher
 		);
 		$subject = $this->parseWithValues($this->settings['subject']);
 		$template = $this->settings['template'] ?: 'Finisher/SendEmail/Default';
-		$templateConfig = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['shape']['finishers']['sendEmail']['templates'][$template] ?? [];
+		$templateConfig = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['shape']['finishers']['sendEmail']['templates'][$template] ?? [];
 		$format = $templateConfig['format'] ?? Core\Mail\FluidEmail::FORMAT_BOTH;
 
 		$formValues = $this->getFormValues();
@@ -50,7 +50,7 @@ class SendEmailFinisher extends AbstractFinisher
 			]
 		];
 		foreach ($templateConfig['fields'] ?? [] as $key => $config) {
-			if ($config['templateVariableParser']) {
+			if ($config['templateVariableParser'] ?? false) {
 				$variables['parsed'][$key] = $this->parseWithValues($this->settings[$key] ?? '');
 			}
 		}
