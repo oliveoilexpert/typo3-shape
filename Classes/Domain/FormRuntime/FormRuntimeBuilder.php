@@ -19,24 +19,29 @@ class FormRuntimeBuilder
 		]
 	): FormRuntime
 	{
-		$contentData = self::getContentDataFromRequest($request, $settings);
+		$contentData = self::getPluginContentElementData($request, $settings);
 		if (!$contentData) {
 			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
 		}
-		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
-			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
+		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
+
 		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		if (!$form || $form->getMainType() !== 'tx_shape_form') {
-			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record settings do not contain a valid "tx_shape_form" record.', 1741369825);
+			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $contentData['uid'] .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
 		}
+
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
-		$cleanedPostValues = [];
 		$parsedBodyKey = 'tx_shape_form';
+		$cleanedPostValues = [];
+
 		if (
 			($request->getParsedBody()[$parsedBodyKey] ?? false)
 			&& $request->getArguments()['pluginUid'] == $plugin->getUid()
 		) {
-			$serializedSessionWithHmac = $request->getParsedBody()[$parsedBodyKey]['__session'] ?? null;
+			$postBody = $request->getParsedBody()[$parsedBodyKey];
+
+			// unserialize session from post body or create new session
+			$serializedSessionWithHmac = $postBody['__session'] ?? null;
 			if (!$serializedSessionWithHmac) {
 				$session = new FormSession();
 			} else {
@@ -46,17 +51,14 @@ class FormRuntimeBuilder
 					$session = new FormSession();
 				}
 			}
-
 			$session->getId();
-			// manually create values form parsed body and uploaded files because get arguments uses array_merge_recursive to merge parsed body and uploaded files
-			$postValues = $request->getParsedBody()[$parsedBodyKey][$form->get('name')] ?? [];
+
+			// manually create values form parsed body and uploaded files because getArguments() uses array_merge_recursive to merge parsed body and uploaded files, which is not what we want
+			$postValues = $postBody[$form->get('name')] ?? [];
 			Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
 				$postValues,
 				$request->getUploadedFiles()[$form->get('name')] ?? [],
 			);
-
-			$pageIndex = $request->getArguments()['pageIndex'] ?? 1;
-			$isStepBack = $session->returnPageIndex > $pageIndex;
 
 			// only keep post values that can be mapped to fields
 			// substitute missing values with proxy values, if possible (e.g. for file fields)
@@ -80,10 +82,15 @@ class FormRuntimeBuilder
 				$session->values,
 				$cleanedPostValues
 			);
+
+			$pageIndex = $request->getArguments()['pageIndex'] ?? 1;
+			$isStepBack = $session->returnPageIndex > $pageIndex;
+
 		} else {
 			$session = new FormSession();
 			$isStepBack = false;
 		}
+
 		return new FormRuntime(
 			$request,
 			$settings,
@@ -98,7 +105,7 @@ class FormRuntimeBuilder
 		);
 	}
 
-	protected static function getContentDataFromRequest(
+	protected static function getPluginContentElementData(
 		RequestInterface $request,
 		array $settings
 	): ?array
