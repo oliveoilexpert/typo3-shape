@@ -86,16 +86,16 @@ final class DateTimeRangeValidator extends AbstractValidator
 		if ($format === 'Y-\WW' && preg_match('/^(\d{4})-W(\d{1,2})$/', $value, $matches)) {
 			$year = (int)$matches[1];
 			$week = (int)$matches[2];
-			$dto = new \DateTime();
-			$dto->setISODate($year, $week, 1)->setTime(0, 0, 0);
+			$date = new \DateTime();
+			$date->setISODate($year, $week, 1)->setTime(0, 0, 0);
 		} else {
-			$dto = \DateTime::createFromFormat($format, $value);
+			$date = \DateTime::createFromFormat('!'. $format, $value);
 		}
-		if (!$dto && $optionName) {
+		if (!$date && $optionName) {
 			throw new InvalidValidationOptionsException(
 				'The option "'. $optionName .'" ('. $value .') could not be converted to \DateTime from format "'. $this->options['format'] .'".'
 				, 1739104743);
 		}
-		return $dto;
+		return $date;
 	}
 }

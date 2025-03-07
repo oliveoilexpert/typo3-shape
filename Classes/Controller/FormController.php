@@ -9,14 +9,12 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain\FormRuntime;
 
 
-// todo: exceptions
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
 // todo: consent finisher
 // todo: delete/move uploads finisher?
 // todo: webhook finisher?
 // todo: rate limiter finisher?
 // todo: all settings for plugin: disable server validation?,
-// todo: "validation_message" inline elements in fields where you select the error type (e.g. "number_step_range.maximum") and set a custom message; considerations: would only work for server side validation, so maybe not worth it, especially since most validations also happen on the client, so you would never see te custom message in most cases
 // note: upload and radio fields will not be in POST values if no value is set
 
 class FormController extends ActionController
