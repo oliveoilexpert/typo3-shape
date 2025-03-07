@@ -28,8 +28,7 @@ class FinisherContext
 				->convertFlexFormContentToArray($record->getRawRecord()->get('settings'));
 		}
 		if (!class_exists($finisherClassName)) {
-			// todo: throw exception
-			return;
+			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that exists.', 1741369248);
 		}
 		$finisher = new $finisherClassName(
 			$this,
@@ -37,7 +36,7 @@ class FinisherContext
 			$record
 		);
 		if (!($finisher instanceof Domain\Finisher\AbstractFinisher)) {
-			// todo: throw exception
+			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Domain\Finisher\AbstractFinisher.', 1741369249);
 			return;
 		}
 		$finisher->execute();

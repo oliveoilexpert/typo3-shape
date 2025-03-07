@@ -28,10 +28,9 @@ final class ValueValidationConfigurator
 			));
 		}
 		if ($field->has('pattern') && $field->get('pattern') && $value) {
-			$pattern = $field->get('pattern');
 			$event->addValidator($this->makeValidator(
 				Validator\HTMLPatternValidator::class,
-				['pattern' => $pattern]
+				['pattern' => $field->get('pattern')]
 			));
 		}
 		if ($type === 'email' && $value) {
@@ -51,13 +50,11 @@ final class ValueValidationConfigurator
 			));
 		}
 		if (($type === 'number' || $type === 'range') && $value !== null) {
-			$step = $field->get('step') ?? 1;
-			$offset = $field->get('min') ?? $field->get('default_value') ?? 0;
 			$event->addValidator($this->makeValidator(
 				Validator\MultipleOfInRangeValidator::class,
 				[
-					'offset' => $offset,
-					'step' => $step,
+					'step' => $field->get('step') ?? 1,
+					'offset' => $field->get('min') ?? $field->get('default_value') ?? 0,
 					'minimum' => $field->get('min') ?? null,
 					'maximum' => $field->get('max') ?? null
 				]
@@ -90,48 +87,22 @@ final class ValueValidationConfigurator
 			));
 		}
 		if (in_array($type, ['date','datetime-local','time','week','month']) && $value) {
-			$format = Domain\Record\FieldRecord::DATETIME_FORMATS[$type];
-			$min = $field->get('min');
-			$max = $field->get('max');
-			if ($format === 'Y-\WW') {
-				if ($min) {
-					$dto = new \DateTime();
-					[$year, $week] = explode('-W', $min);
-					$dto->setISODate((int)$year, (int)$week);
-					$min = $dto->format('Y-m-d');
-				}
-
-				if ($max) {
-					$dto = new \DateTime();
-					[$year, $week] = explode('-W', $max);
-					$dto->setISODate((int)$year, (int)$week);
-					$dto->modify('+6 days');
-					$max = $dto->format('Y-m-d');
-				}
-
-				$dto = new \DateTime();
-				[$year, $week] = explode('-W', $value);
-				$dto->setISODate((int)$year, (int)$week);
-				$value = $dto->format('Y-m-d');
-
-				$format = 'Y-m-d';
-			}
-
-			// todo: doesnt work for time, need to implement DateTimeRangeValidator
-			$value = \DateTime::createFromFormat($format, $value);
 			$event->addValidator($this->makeValidator(
-				Validator\DateRangeValidator::class,
+				Validator\DateTimeRangeValidator::class,
 				[
-					'minimum' => $min,
-					'maximum' => $max,
-					'format' => $format
+					'minimum' => $field->get('min'),
+					'maximum' => $field->get('max'),
+					'format' => Domain\Record\FieldRecord::DATETIME_FORMATS[$type]
 				]
 			));
 		}
 		if ($type !== 'file' && is_array($value) && $field->has('min') && $field->has('max')) {
 			$event->addValidator($this->makeValidator(
 				Validator\CountValidator::class,
-				['minimum' => $field->get('min'), 'maximum' => $field->get('max')]
+				[
+					'minimum' => $field->get('min'),
+					'maximum' => $field->get('max')
+				]
 			));
 		}
 		if ($type === 'file' && $value) {
@@ -154,11 +125,12 @@ final class ValueValidationConfigurator
 					));
 				}
 				if ($field->get('min') || $field->get('max')) {
-					$min = ($field->get('min') ?? '0') . 'K';
-					$max = $field->get('max') ? ($field->get('max') . 'K') : (PHP_INT_MAX . 'B');
 					$fileValidator->addValidator($this->makeValidator(
 						ExtbaseValidator\FileSizeValidator::class,
-						['minimum' => $min, 'maximum' => $max]
+						[
+							'minimum' => ($field->get('min') ?? '0') . 'K',
+							'maximum' => $field->get('max') ? ($field->get('max') . 'K') : (PHP_INT_MAX . 'B')
+						]
 					));
 				}
 			}

@@ -6,6 +6,7 @@ use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use UBOS\Shape\Domain;
 
 class FormRuntimeBuilder
 {
@@ -20,15 +21,13 @@ class FormRuntimeBuilder
 	{
 		$contentData = self::getContentDataFromRequest($request, $settings);
 		if (!$contentData) {
-			//todo: throw exception
-			throw new \Exception('No content data found');
+			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
 		}
 		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
-		if (!$form) {
-			//todo: throw exception
-			throw new \Exception('No form found');
+		if (!$form || $form->getMainType() !== 'tx_shape_form') {
+			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record settings do not contain a valid "tx_shape_form" record.', 1741369825);
 		}
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$cleanedPostValues = [];

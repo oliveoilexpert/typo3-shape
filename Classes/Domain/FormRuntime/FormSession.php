@@ -29,7 +29,7 @@ class FormSession
 			FormSession::SECRET
 		);
 	}
-	public static function validateAndUnserialize(string $serializedSessionWithHmac): FormSession
+	public static function validateAndUnserialize(string $serializedSessionWithHmac): bool|FormSession
 	{
 		$hashService = Core\Utility\GeneralUtility::makeInstance(Core\Crypto\HashService::class);
 		try {
@@ -38,8 +38,7 @@ class FormSession
 				FormSession::SECRET
 			);
 		} catch (\Exception $e) {
-			// todo: throw a more specific exception
-			throw new \Exception('Invalid session data');
+			throw $e;
 		}
 		return unserialize(base64_decode($serializedSession));
 	}

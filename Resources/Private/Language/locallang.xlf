@@ -3,7 +3,7 @@
 	<file source-language="en" datatype="plaintext" original="EXT:shape/Resources/Private/Language/locallang.xlf">
 		<header/>
 		<body>
-			<trans-unit id="validation.error.date_range.type"><source>Value must be a valid DateTime.</source></trans-unit>
+			<trans-unit id="validation.error.date_range.type"><source>Value is not a valid Date/Time.</source></trans-unit>
 			<trans-unit id="validation.error.date_range.minimum"><source>Date/Time must be %s or later.</source></trans-unit>
 			<trans-unit id="validation.error.date_range.maximum"><source>Date/Time must be %s or earlier.</source></trans-unit>
 			<trans-unit id="validation.error.combined_file_identifier"><source>Uploaded file could not be found.</source></trans-unit>
