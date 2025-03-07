@@ -20,14 +20,14 @@ class FormRuntimeBuilder
 	{
 		$contentData = self::getContentDataFromRequest($request, $settings);
 		if (!$contentData) {
-			//todo: custom exception
+			//todo: throw exception
 			throw new \Exception('No content data found');
 		}
 		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)
 			->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
 		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		if (!$form) {
-			//todo: custom exception
+			//todo: throw exception
 			throw new \Exception('No form found');
 		}
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);

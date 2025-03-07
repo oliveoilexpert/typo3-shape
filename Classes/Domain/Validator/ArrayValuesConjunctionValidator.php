@@ -27,7 +27,7 @@ final class ArrayValuesConjunctionValidator extends AbstractCompositeValidator
     public function validate(mixed $value): Result
     {
 		if (!is_array($value)) {
-			throw new \InvalidArgumentException('The value must be an array.', 1622450733);
+			throw new \InvalidArgumentException('Value must be an array.', 1741367481);
 		}
         $result = new Result();
         /** @var AbstractValidator $validator */

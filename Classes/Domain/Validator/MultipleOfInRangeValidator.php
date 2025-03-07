@@ -11,7 +11,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
 {
     protected $supportedOptions = [
         'step' => [1, 'The number value should be a multiple of', 'float'],
-		'offset' => [0, 'The number that is subtracted from value before doing step validation', 'float'],
+		'offset' => [0, 'The number that is subtracted from value before doing multiple of validation', 'float'],
 		'minimum' => [null, 'The minimum value to accept', 'float'],
 		'maximum' => [null, 'The maximum value to accept', 'float'],
 		'precision' => [12, 'The number of decimal places to consider', 'integer'],

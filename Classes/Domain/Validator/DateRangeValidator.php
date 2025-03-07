@@ -17,7 +17,8 @@ final class DateRangeValidator extends AbstractValidator
 
     public function isValid(mixed $value): void
     {
-        $this->validateOptions();
+        $this->processDateOption('minimum');
+		$this->processDateOption('maximum');
 
         if (!($value instanceof \DateTime)) {
             $this->addError(
@@ -61,26 +62,17 @@ final class DateRangeValidator extends AbstractValidator
         }
     }
 
-    protected function validateOptions(): void
-    {
-        if (!empty($this->options['minimum'])) {
-            $minimum = \DateTime::createFromFormat($this->options['format'], $this->options['minimum']);
-            if (!($minimum instanceof \DateTime)) {
-                $message = sprintf('The option "minimum" (%s) could not be converted to \DateTime from format "%s".', $this->options['minimum'], $this->options['format']);
-                throw new InvalidValidationOptionsException($message, 1739104740);
-            }
-            $minimum->modify('midnight');
-            $this->options['minimum'] = $minimum;
-        }
-
-        if (!empty($this->options['maximum'])) {
-            $maximum = \DateTime::createFromFormat($this->options['format'], $this->options['maximum']);
-            if (!($maximum instanceof \DateTime)) {
-                $message = sprintf('The option "maximum" (%s) could not be converted to \DateTime from format "%s".', $this->options['maximum'], $this->options['format']);
-                throw new InvalidValidationOptionsException($message, 1739104741);
-            }
-            $maximum->modify('midnight');
-            $this->options['maximum'] = $maximum;
-        }
-    }
+	protected function processDateOption(string $optionKey): void
+	{
+		if (empty($this->options[$optionKey])) {
+			return;
+		}
+		$date = \DateTime::createFromFormat($this->options['format'], $this->options[$optionKey]);
+		if (!($date instanceof \DateTime)) {
+			$message = sprintf('The option "'. $optionKey .'" (%s) could not be converted to \DateTime from format "%s".', $this->options[$optionKey], $this->options['format']);
+			throw new InvalidValidationOptionsException($message, 1739104741);
+		}
+		$date->modify('midnight');
+		$this->options[$optionKey] = $date;
+	}
 }

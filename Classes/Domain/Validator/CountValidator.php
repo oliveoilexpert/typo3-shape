@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Domain\Validator;
 
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 final class CountValidator extends AbstractValidator

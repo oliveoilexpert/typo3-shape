@@ -32,7 +32,7 @@ final class HTMLPatternValidator extends AbstractValidator
 			);
 		}
 		if ($result === false) {
-			throw new InvalidValidationOptionsException('HTMLPatternValidator regular expression "' . $regex . '" contained an error.', 1739395516);
+			throw new InvalidValidationOptionsException('Regular expression "' . $regex . '" created from pattern "'. $pattern .'" contained an error.', 1739395516);
 		}
 	}
 
@@ -48,5 +48,4 @@ final class HTMLPatternValidator extends AbstractValidator
 		// Add delimiters and unicode modifier
 		return '/^' . $htmlPattern . '$/u';
 	}
-
 }

@@ -17,8 +17,7 @@ final class InArrayValidator extends AbstractValidator
 	public function isValid(mixed $value): void
 	{
 		if (!is_array($this->options['array'])) {
-			$message = sprintf('Option "array" must be of type array');
-			throw new InvalidValidationOptionsException($message, 1739105353);
+			throw new InvalidValidationOptionsException('Option "array" must be of type array.', 1739105353);
 		}
 		if (!in_array($value, $this->options['array'], (bool)$this->options['strict'])) {
 			$this->addError(
