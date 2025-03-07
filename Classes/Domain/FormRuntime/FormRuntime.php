@@ -13,6 +13,7 @@ class FormRuntime
 	public function __construct(
 		readonly public RequestInterface                       $request,
 		readonly public array                                  $settings,
+		readonly public Core\View\ViewInterface 			   $view,
 		readonly public Core\Domain\Record                     $plugin,
 		readonly public Core\Domain\Record                     $form,
 		readonly public FormSession                            $session,
@@ -74,7 +75,7 @@ class FormRuntime
 		$this->messages = array_merge($this->messages, $messages);
 	}
 
-	public function renderPage($view, int $pageIndex = 1): string
+	public function renderPage(int $pageIndex = 1): string
 	{
 		$lastPageIndex = count($this->form->get('pages'));
 		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
@@ -106,9 +107,9 @@ class FormRuntime
 		$this->eventDispatcher->dispatch($event);
 		$viewVariables = $event->getVariables();
 
-		$view->assignMultiple($viewVariables);
-		$view->setTemplate('Form');
-		return $view->render();
+		$this->view->assignMultiple($viewVariables);
+		$this->view->getRenderingContext()->setControllerAction()('Form');
+		return $this->view->render();
 	}
 
 	public function validatePage(int $pageIndex): void

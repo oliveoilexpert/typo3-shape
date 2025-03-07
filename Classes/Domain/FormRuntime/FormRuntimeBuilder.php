@@ -11,6 +11,7 @@ class FormRuntimeBuilder
 {
 	public static function buildFromRequest(
 		RequestInterface $request,
+		Core\View\ViewInterface $view,
 		array $settings = [
 			'pluginUid' => 0,
 			'uploadFolder' => '1:/user_upload/',
@@ -87,6 +88,7 @@ class FormRuntimeBuilder
 		return new FormRuntime(
 			$request,
 			$settings,
+			$view,
 			$plugin,
 			$form,
 			$session,

@@ -19,7 +19,7 @@ class FinisherContext
 	public function executeFinisher(
 		?Core\Domain\Record $record = null,
 		string $finisherClassName = '',
-		array $settings = []
+		array $settings = [],
 	): void
 	{
 		if ($record) {
@@ -33,8 +33,8 @@ class FinisherContext
 		}
 		$finisher = new $finisherClassName(
 			$this,
-			$record,
 			$settings,
+			$record
 		);
 		if (!($finisher instanceof Domain\Finisher\AbstractFinisher)) {
 			// todo: throw exception

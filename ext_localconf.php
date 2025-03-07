@@ -7,8 +7,6 @@ defined('TYPO3') or die();
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['shape'] = ['UBOS\Shape\ViewHelpers'];
 $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['tx_shape_input_field'] = 'EXT:shape/Configuration/RTE/InputField.yaml';
 
-$GLOBALS['TYPO3_CONF_VARS']['MAIL']['templateRootPaths'][1741218626] = 'EXT:shape/Resources/Private/Templates/Mail/';
-
 $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['shape'] = [
 	'finishers' => [
 		'sendEmail' => [

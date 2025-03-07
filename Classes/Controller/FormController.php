@@ -91,14 +91,18 @@ class FormController extends ActionController
 
 	protected function initializeRuntime(): void
 	{
-		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest($this->request, $this->settings)->initialize();
+		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest(
+			$this->request,
+			$this->settings,
+			$this->view
+		)->initialize();
 	}
 	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{
 		if ($messages) {
 			$this->runtime->addMessages($messages);
 		}
-		return $this->htmlResponse($this->runtime->renderPage($this->view, $pageIndex));
+		return $this->htmlResponse($this->runtime->renderPage($pageIndex));
 	}
 	public function lazyLoader(): ResponseInterface
 	{

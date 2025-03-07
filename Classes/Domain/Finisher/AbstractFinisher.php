@@ -11,8 +11,8 @@ abstract class AbstractFinisher
 	protected array $settings = [];
 	public function __construct(
 		protected readonly FormRuntime\FinisherContext $context,
-		protected ?Core\Domain\Record				   $record = null,
 		array                                		   $settings = [],
+		protected ?Core\Domain\Record				   $record = null,
 	) {
 		$this->settings = array_merge($this->settings, $settings);
 	}
@@ -38,5 +38,13 @@ abstract class AbstractFinisher
 	protected function getFormValues(): array
 	{
 		return $this->context->runtime->session->values;
+	}
+	protected function getPluginSettings(): array
+	{
+		return $this->context->runtime->settings;
+	}
+	protected function getView(): Core\View\ViewInterface
+	{
+		return $this->context->runtime->view;
 	}
 }

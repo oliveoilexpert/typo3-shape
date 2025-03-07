@@ -35,13 +35,6 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			if (!$column) continue;
 			$name = $column['name'];
 			$value = $this->parseWithValues($column['value']);
-			if (is_array($value)) {
-				try {
-					$value = implode(',', $value);
-				} catch (\Throwable $e) {
-					$value = json_encode($value);
-				}
-			}
 			$values[$name] = $value;
 		}
 
