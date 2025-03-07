@@ -7,6 +7,7 @@ namespace UBOS\Shape\Domain\FormRuntime;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Domain;
+use UBOS\Shape\Event\BeforeFinisherExecutionEvent;
 
 class FinisherContext
 {
@@ -39,6 +40,12 @@ class FinisherContext
 			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Domain\Finisher\AbstractFinisher.', 1741369249);
 			return;
 		}
+		$event = new BeforeFinisherExecutionEvent($finisher);
+		$this->eventDispatcher->dispatch($event);
+		if ($event->cancelled) {
+			return;
+		}
+		$finisher = $event->finisher;
 		$finisher->execute();
 	}
 }

@@ -10,9 +10,9 @@ abstract class AbstractFinisher
 {
 	protected array $settings = [];
 	public function __construct(
-		protected readonly FormRuntime\FinisherContext $context,
-		array                                		   $settings = [],
-		protected ?Core\Domain\Record				   $record = null,
+		public readonly FormRuntime\FinisherContext $context,
+		array                                		$settings = [],
+		public readonly ?Core\Domain\Record			$record = null,
 	) {
 		$this->settings = array_merge($this->settings, $settings);
 	}

@@ -44,7 +44,8 @@ class FormController extends ActionController
 		if ($this->runtime->findSpamReasons()) {
 			return $this->formPage(messages: [['key' => 'label.suspected_spam', 'type' => 'error']]);
 		}
-		// pageIndex = 0 means form submit
+		// pageIndex is 1-based
+		// if pageIndex is 0, the form is being submitted
 		if ($pageIndex) {
 			$submittedPageIndex = $this->runtime->session->returnPageIndex;
 			if (!$this->runtime->isStepBack) {
@@ -91,9 +92,9 @@ class FormController extends ActionController
 	{
 		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest(
 			$this->request,
+			$this->view,
 			$this->settings,
-			$this->view
-		)->initialize();
+		)->initializeFieldState();
 	}
 	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{

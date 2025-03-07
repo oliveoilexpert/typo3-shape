@@ -31,7 +31,7 @@ class FormRuntime
 		$this->eventDispatcher = GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
 	}
 
-	public function initialize(): FormRuntime
+	public function initializeFieldState(): FormRuntime
 	{
 		$resolver = new FieldConditionResolver(
 			$this,
