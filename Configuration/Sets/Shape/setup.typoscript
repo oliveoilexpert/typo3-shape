@@ -1,4 +1,17 @@
 plugin.tx_shape {
+    view {
+        templateRootPaths {
+            0 = EXT:shape/Resources/Private/Templates/
+        }
+        partialRootPaths {
+            0 = EXT:shape/Resources/Private/Partials/
+        }
+        layoutRootPaths {
+            0 = EXT:shape/Resources/Private/Layouts/
+        }
+    }
+}
+plugin.tx_shape_form {
     settings {
         form = 0
         uploadFolder = 1:/user_upload/
@@ -16,18 +29,12 @@ plugin.tx_shape {
                 value = human
             }
         }
-        deleteAfterApproval = 0
     }
-    view {
-        templateRootPaths {
-            0 = EXT:shape/Resources/Private/Templates/
-        }
-        partialRootPaths {
-            0 = EXT:shape/Resources/Private/Partials/
-        }
-        layoutRootPaths {
-            0 = EXT:shape/Resources/Private/Layouts/
-        }
+}
+plugin.tx_shape_consent {
+    settings {
+        pluginPage = 0
+        deleteAfterApproval = 0
     }
 }
 

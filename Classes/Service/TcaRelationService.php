@@ -38,7 +38,7 @@ class TcaRelationService
 			$targetQuery
 				->update($targetTable)
 				->set($targetColumn, '')
-				->executeQuery();
+				->executeStatement();
 		}
 		// find all target records
 		$targetRows = $targetQuery
@@ -71,7 +71,7 @@ class TcaRelationService
 				->where(
 					$targetQuery->expr()->eq('uid', $targetUid)
 				)
-				->executeQuery();
+				->executeStatement();
 		}
 	}
 

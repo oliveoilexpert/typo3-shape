@@ -140,18 +140,12 @@ class FormRuntimeBuilder
 			}
 			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
-		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-		$data = $queryBuilder
-			->select('*')
-			->from('tt_content')
-			->where(
-				$queryBuilder->expr()->eq('uid', $uid)
-			)
-			->executeQuery()->fetchAllAssociative()[0] ?? null;
-		if (!$data) {
+		$contentRepository = new Domain\Repository\ContentRepository();
+		$record = $contentRepository->findByUid($uid, true);
+		if (!$record) {
 			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
 		}
-		return GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $data);
+		return $record;
 	}
 
 	protected static function getFormRecord(

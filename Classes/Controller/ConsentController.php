@@ -8,66 +8,78 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use UBOS\Shape\Domain\FormRuntime;
+use TYPO3\CMS\Extbase;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use UBOS\Shape\Domain;
 
 class ConsentController extends ActionController
 {
+	public function __construct(
+		protected Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
+		protected Domain\Repository\ContentRepository $contentRepository,
+		protected Domain\Repository\EmailConsentRepository $emailConsentRepository,
+	)
+	{}
+
 	public function approveAction(int $uid = 0, string $hash = ''): ResponseInterface
 	{
 		if (!$uid || !$hash) {
-			// todo: response with error message ?
-			return $this->htmlResponse('');
+			return $this->messageResponse([['key' => 'label.invalid_consent_request', 'type' => 'warning']]);
 		}
-		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tx_shape_email_consent');
-		$consent = $queryBuilder
-			->select('*')
-			->from('tx_shape_email_consent')
-			->where(
-				$queryBuilder->expr()->eq('uid', $uid)
-			)
-			->executeQuery()->fetchAllAssociative()[0] ?? null;
 
-		if (!$consent || $consent['state'] !== 'pending') {
-			// todo: response with error message ?
-			return $this->htmlResponse('consent state not pending');
-		}
-		if (time() > $consent['valid_until']) {
-			// todo: response with error message ?
-			return $this->htmlResponse('not valid anymore');
+		$consent = $this->emailConsentRepository->findByUid($uid);
+
+		if (!$consent) {
+			return $this->messageResponse([['key' => 'label.consent_not_found', 'type' => 'error']]);
 		}
 		if ($hash !== $consent['validation_hash']) {
-			// todo: response with error message
-			return $this->htmlResponse('wrong hash');
+			return $this->messageResponse([['key' => 'label.invalid_consent_hash', 'type' => 'error']]);
+		}
+		if ($consent['state'] !== 'pending') {
+			return $this->messageResponse([['key' => 'label.consent_not_pending', 'type' => 'info']]);
+		}
+		if (time() > $consent['valid_until']) {
+			return $this->messageResponse([['key' => 'label.consent_expired', 'type' => 'info']]);
 		}
 
 		if ($this->settings['deleteAfterApproval']) {
-			$queryBuilder
-				->delete('tx_shape_email_consent')
-				->where(
-					$queryBuilder->expr()->eq('uid', $uid)
-				)
-				->executeQuery();
+			$this->emailConsentRepository->deleteByUid($uid);
 		} else {
-			$queryBuilder
-				->update('tx_shape_email_consent')
-				->set('state', 'approved')
-				->where(
-					$queryBuilder->expr()->eq('uid', $uid)
-				)
-				->executeQuery();
+			$this->emailConsentRepository->updateByUid($uid, ['state' => 'approved', 'valid_until' => null]);
 		}
 
-		$session = FormRuntime\FormSession::validateAndUnserialize($consent['session']);
+		$session = Domain\FormRuntime\FormSession::validateAndUnserialize($consent['session']);
+
+		$this->contentRepository->setLanguageId($this->request->getAttribute('language')->getLanguageId());
+		$plugin = $this->contentRepository->findByUid($consent['plugin']);
+
+		// recreate request
+		$request = clone $this->request;
+		$contentObjectRenderer = Core\Utility\GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		$contentObjectRenderer->setRequest($request);
+		$contentObjectRenderer->start($plugin, 'tt_content');
+		$request = $request->withAttribute('currentContentObject', $contentObjectRenderer);
+
+		// get plugin configuration
+		$this->configurationManager->setRequest($request);
+		$formPluginConfiguration = $this->configurationManager->getConfiguration(
+			Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
+			'Shape',
+			'Form'
+		);
+
+		// recreate view
 		$view = clone $this->view;
 		$view->getRenderingContext()->setControllerName('Form');
-		$view->getRenderingContext()->setControllerAction('Form');
-		$runtime = FormRuntime\FormRuntimeBuilder::buildFromRequestAndSession(
-			$this->request,
+		$view->getRenderingContext()->getTemplatePaths()->setTemplateRootPaths($formPluginConfiguration['view']['templateRootPaths']);
+		$view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
+		$view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
+
+		$runtime = Domain\FormRuntime\FormRuntimeBuilder::buildFromRequestAndSession(
+			$request,
 			$session,
 			$view,
-			array_merge($this->settings, [
-				'pluginUid' => $consent['plugin_uid'],
-			])
+			$formPluginConfiguration['settings'],
 		);
 
 		$finishResult = $runtime->finishForm(['consentApproved' => true]);
@@ -75,8 +87,15 @@ class ConsentController extends ActionController
 			'finished',
 			controllerName: 'Form',
 			arguments: $finishResult->finishedActionArguments,
-			pageUid: $consent['plugin_pid'],
+			pageUid: $plugin['pid'],
 		);
 	}
 
+	protected function messageResponse(array $messages): ResponseInterface
+	{
+		$this->view->assign('messages', $messages);
+		$this->view->assign('plugin', $this->request->getAttribute('currentContentObject')->data);
+		$this->view->getRenderingContext()->setControllerAction('Messages');
+		return $this->htmlResponse();
+	}
 }

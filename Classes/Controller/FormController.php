@@ -25,6 +25,7 @@ class FormController extends ActionController
 	
 	public function renderAction(): ResponseInterface
 	{
+		DebugUtility::debug($this->request);
 		$pageType = $this->request->getQueryParams()['type'] ?? '';
 		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
 			return $this->lazyLoader();

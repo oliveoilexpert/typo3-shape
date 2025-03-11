@@ -32,7 +32,5 @@ CREATE TABLE tx_shape_form_submission
 
 CREATE TABLE tx_shape_email_consent
 (
-    state varchar(255) DEFAULT NULL,
-    email varchar(1024) DEFAULT NULL,
-    validation_hash varchar(255) DEFAULT NULL,
+    session text,
 );

@@ -28,12 +28,6 @@ $columns = [
 			'readOnly' => true,
 		]
 	],
-	'session' => [
-		'config' => [
-			'type' => 'text',
-			'readOnly' => true,
-		],
-	],
 	'form' => [
 		'config' => [
 			'type' => 'select',
@@ -50,7 +44,7 @@ $columns = [
 			'readOnly' => true,
 		],
 	],
-	'plugin_uid' => [
+	'plugin' => [
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
@@ -67,25 +61,9 @@ $columns = [
 			'readOnly' => true,
 		],
 	],
-	'plugin_pid' => [
-		'config' => [
-			'type' => 'select',
-			'renderType' => 'selectSingle',
-			'foreign_table' => 'pages',
-			'size' => 1,
-			'maxitems' => 1,
-			'hideSuggest' => true,
-			'fieldWizard' => [
-				'tableList' => [
-					'disabled' => true,
-				]
-			],
-			'readOnly' => true,
-		],
-	],
 	'email' => [
 		'config' => [
-			'type' => 'input',
+			'type' => 'email',
 			'readOnly' => true,
 		],
 	],
@@ -103,9 +81,21 @@ $columns = [
 
 		],
 	],
+	'session' => [
+		'config' => [
+			'type' => 'input',
+			'readOnly' => true,
+		],
+	],
+	'validation_hash' => [
+		'config' => [
+			'type' => 'input',
+			'readOnly' => true,
+		],
+	],
 ];
 foreach ($columns as $key => $column) {
-	$columns[$key]['label'] = Util::t('form_submission.' . $key);
+	$columns[$key]['label'] = Util::t('email_consent.' . $key);
 }
 $palettes = [
 	'general' => [
@@ -114,11 +104,9 @@ $palettes = [
 		--linebreak--,
 		state, email,
 		--linebreak--,
-		plugin_pid, plugin_uid,
+		plugin, form,
 		--linebreak--,
-		form,
-		--linebreak--,
-		session,',
+		validation_hash, session',
 	],
 ];
 $showItem = '

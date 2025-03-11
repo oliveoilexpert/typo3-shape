@@ -6,10 +6,10 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase;
+use UBOS\Shape\Domain;
 
 class SaveSubmissionFinisher extends AbstractFinisher
 {
-	protected string $tableName = 'tx_shape_form_submission';
 	protected array $settings = [
 		'storagePage' => '',
 		'connectToLanguageParentForm' => false,
@@ -45,11 +45,8 @@ class SaveSubmissionFinisher extends AbstractFinisher
 			$values['form'] = $this->getForm()->getUid();
 			$values['plugin'] = $this->getPlugin()->getUid();
 		}
-		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
-			->getQueryBuilderForTable($this->tableName);
-		$queryBuilder
-			->insert($this->tableName)
-			->values($values)
-			->executeQuery();
+
+		$submissionRepository = new Domain\Repository\FormSubmissionRepository();
+		$submissionRepository->create($values);
 	}
 }

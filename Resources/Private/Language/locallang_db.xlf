@@ -158,6 +158,16 @@
 			<trans-unit id="form_submission.user_agent"><source>User Agent</source></trans-unit>
 			<trans-unit id="form_submission.form_values"><source>Form Values</source></trans-unit>
 
+			<trans-unit id="email_consent.ctrl.title"><source>Email Consent</source></trans-unit>
+			<trans-unit id="email_consent.tstamp"><source>Timestamp</source></trans-unit>
+			<trans-unit id="email_consent.valid_until"><source>Valid until</source></trans-unit>
+			<trans-unit id="email_consent.state"><source>State</source></trans-unit>
+			<trans-unit id="email_consent.email"><source>Email</source></trans-unit>
+			<trans-unit id="email_consent.form"><source>Form</source></trans-unit>
+			<trans-unit id="email_consent.plugin"><source>Plugin</source></trans-unit>
+			<trans-unit id="email_consent.session"><source>Session</source></trans-unit>
+			<trans-unit id="email_consent.validation_hash"><source>Validation Hash</source></trans-unit>
+
 			<trans-unit id="flexform.form.form"><source>Form</source></trans-unit>
 			<trans-unit id="flexform.form.uploadFolder"><source>Upload Folder</source></trans-unit>
 			<trans-unit id="flexform.form.lazyLoad"><source>Lazy load uncached form</source></trans-unit>

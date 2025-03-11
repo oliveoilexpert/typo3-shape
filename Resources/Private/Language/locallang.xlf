@@ -41,6 +41,13 @@
 			<trans-unit id="label.not_requested_plugin"><source>Starting this form will reset progress on another form that you are currently completing.</source></trans-unit>
 			<trans-unit id="label.not_form_post_request"><source>This form process was started in another session. Please resume your original session or start here.</source></trans-unit>
 			<trans-unit id="label.suspected_spam"><source>Your submission was flagged as spam. Please try again.</source></trans-unit>
+
+			<trans-unit id="label.invalid_consent_request"><source>No email consent requested.</source></trans-unit>
+			<trans-unit id="label.consent_not_found"><source>The requested email consent could not be found.</source></trans-unit>
+			<trans-unit id="label.invalid_consent_hash"><source>The requested email consent could not be verified.</source></trans-unit>
+			<trans-unit id="label.consent_not_pending"><source>The requested email consent was already approved.</source></trans-unit>
+			<trans-unit id="label.consent_expired"><source>The requested email consent has expired.</source></trans-unit>
+
 		</body>
 	</file>
 </xliff>

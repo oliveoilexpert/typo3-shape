@@ -30,21 +30,21 @@ class EmailConsentFinisher extends AbstractFinisher
 		if (!$recipient || !$this->settings['subject'] || !$this->settings['consentPage']) {
 			return;
 		}
-
+		$consentPage = $this->settings['consentPage'] ?? $this->getPluginSettings()['consentPage'];
+		$storagePage = (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid());
 		$formValues = $this->getFormValues();
-		$tstamp = time();
+		$timestamp = time();
 		$serializedSession = Domain\FormRuntime\FormSession::serialize($this->getRuntime()->session);
 		$consentData = [
-			'crdate' => $tstamp,
-			'tstamp' => $tstamp,
-			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
+			'crdate' => $timestamp,
+			'tstamp' => $timestamp,
+			'pid' => $storagePage,
 			'state' => 'pending',
 			'session' => $serializedSession,
 			'form' => $this->getForm()->getUid(),
-			'plugin_uid' => $this->getPlugin()->getUid(),
-			'plugin_pid' => $this->getPlugin()->getPid(),
+			'plugin' => $this->getPlugin()->getUid(),
 			'email' => $recipient,
-			'valid_until' => $tstamp + $this->settings['validSeconds'],
+			'valid_until' => $timestamp + $this->settings['validSeconds'],
 		];
 
 		$hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
@@ -53,14 +53,8 @@ class EmailConsentFinisher extends AbstractFinisher
 			$consentData['email']
 		);
 
-		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)
-			->getQueryBuilderForTable($this->tableName);
-		$queryBuilder
-			->insert($this->tableName)
-			->values($consentData)
-			->executeQuery();
-
-		$consentUid = $queryBuilder->getConnection()->lastInsertId();
+		$emailConsentRepository = new Domain\Repository\EmailConsentRepository();
+		$consentUid = $emailConsentRepository->create($consentData);
 
 		$email = new Core\Mail\FluidEmail($this->getView()->getRenderingContext()->getTemplatePaths());
 		$senderAddress = new Address(
@@ -70,9 +64,10 @@ class EmailConsentFinisher extends AbstractFinisher
 		$subject = $this->parseWithValues($this->settings['subject']);
 		$template = $this->settings['template'];
 		$format = Core\Mail\FluidEmail::FORMAT_BOTH;
+
 		$uriBuilder = GeneralUtility::makeInstance(Extbase\Mvc\Web\Routing\UriBuilder::class);
 		$approveLink = $uriBuilder
-			->setTargetPageUid($this->settings['consentPage'])
+			->setTargetPageUid($consentPage)
 			->setRequest($this->getRequest())
 			->setCreateAbsoluteUri(true)
 			->uriFor(

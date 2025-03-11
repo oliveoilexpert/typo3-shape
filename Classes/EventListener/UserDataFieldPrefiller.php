@@ -5,6 +5,7 @@ namespace UBOS\Shape\EventListener;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use UBOS\Shape\Event\BeforeFormRenderEvent;
+use UBOS\Shape\Domain;
 
 final class UserDataFieldPrefiller
 {
@@ -15,13 +16,12 @@ final class UserDataFieldPrefiller
 		if (!$feAuth->getUserId()) {
 			return;
 		}
-		$queryBuilder = Core\Utility\GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('fe_users');
-		$userData = $queryBuilder
-			->select('*')
-			->from('fe_users')
-			->where($queryBuilder->expr()->eq('uid', $feAuth->getUserId()))
-			->executeQuery()->fetchAllAssociative()[0] ?? null;
-		if (!$userData) {
+
+		$genericRepository = new Domain\Repository\GenericRepository();
+		$genericRepository->tableName = 'fe_users';
+		$user = $genericRepository->findByUid($feAuth->getUserId());
+
+		if (!$user) {
 			return;
 		}
 		foreach ($event->runtime->form->get('pages') as $page) {
@@ -30,8 +30,8 @@ final class UserDataFieldPrefiller
 					continue;
 				}
 				$prefillColumn = $field->get('user_prefill_column');
-				if ($prefillColumn && isset($userData[$prefillColumn])) {
-					$field->prefill($userData[$prefillColumn]);
+				if ($prefillColumn && isset($user[$prefillColumn])) {
+					$field->prefill($user[$prefillColumn]);
 				}
 			}
 		}
