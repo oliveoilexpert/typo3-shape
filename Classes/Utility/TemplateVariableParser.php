@@ -65,6 +65,9 @@ class TemplateVariableParser
 		$arrayPath = trim($parts[0]);
 		$array = self::getValue($data, explode('.', $arrayPath));
 
+		if ($array === '') {
+			return '';
+		}
 		if (!is_array($array)) {
 			return '{{' . $path . '}}';
 		}

@@ -25,7 +25,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
         if (!is_numeric($value)) {
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.number_step_range.numeric',
+					'validation.error.multiple_of_in_range.numeric',
 					'shape',
 				),
 				1739395507
@@ -36,7 +36,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
 		if ($minimum !== null && $value < $minimum) {
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.number_step_range.minimum',
+					'validation.error.multiple_of_in_range.minimum',
 					'shape',
 					[$minimum]
 				),
@@ -49,7 +49,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
 		if ($maximum !== null && $value > $maximum) {
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.number_step_range.maximum',
+					'validation.error.multiple_of_in_range.maximum',
 					'shape',
 					[$maximum]
 				),
@@ -80,7 +80,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
 			if (count($nearestValues) === 1) {
 				$this->addError(
 					$this->translateErrorMessage(
-						'validation.error.number_step_range.nearest_single',
+						'validation.error.multiple_of_in_range.nearest_single',
 						'shape',
 						$nearestValues
 					),
@@ -91,7 +91,7 @@ final class MultipleOfInRangeValidator extends AbstractValidator
 			}
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.number_step_range.nearest',
+					'validation.error.multiple_of_in_range.nearest',
 					'shape',
 					$nearestValues
 				),

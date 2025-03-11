@@ -34,6 +34,8 @@ $ctrl = [
 		'UBOS\Shape\Domain\Finisher\SendEmailFinisher' => 'content-message',
 		'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher' => 'form-content-element',
 		'UBOS\Shape\Domain\Finisher\RedirectFinisher' => 'apps-pagetree-page-shortcut-external',
+		'UBOS\Shape\Domain\Finisher\EmailConsentFinisher' => 'actions-check-circle',
+
 	],
 ];
 $interface = [];
@@ -88,6 +90,9 @@ $columns = [
 				[Util::t('finisher.type.item.redirect'),
 					'UBOS\Shape\Domain\Finisher\RedirectFinisher',
 					'apps-pagetree-page-shortcut-external'],
+				[Util::t('finisher.type.item.email_consent'),
+					'UBOS\Shape\Domain\Finisher\EmailConsentFinisher',
+					'actions-check-circle'],
 			],
 		],
 	],
@@ -102,6 +107,7 @@ $columns = [
 				'items' => [
 					['Field value is true / not empty', 'value("field-id")'],
 					['Field value is equal to', 'value("field-id") == "some-value"'],
+					['URL Parameter is equal to', 'traverse(request.getQueryParams(), "parameter/path") == "some-value"'],
 					['Consent was approved', 'isConsentApproved()'],
 					['Consent was dismissed', 'isConsentDismissed()'],
 				],
@@ -131,6 +137,7 @@ $columns = [
 				'UBOS\Shape\Domain\Finisher\SendEmailFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SendEmailFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\RedirectFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/RedirectFinisher.xml',
 				'UBOS\Shape\Domain\Finisher\ShowContentElementsFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/ShowContentElementsFinisher.xml',
+				'UBOS\Shape\Domain\Finisher\EmailConsentFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/EmailConsentFinisher.xml',
 			],
 			'ds_pointerField' => 'type',
 		],

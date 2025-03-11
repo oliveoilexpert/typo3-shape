@@ -9,6 +9,7 @@ use UBOS\Shape\Domain\FormRuntime;
 abstract class AbstractFinisher
 {
 	protected array $settings = [];
+
 	public function __construct(
 		public readonly FormRuntime\FinisherContext $context,
 		array                                		$settings = [],

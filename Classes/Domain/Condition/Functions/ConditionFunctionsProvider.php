@@ -6,6 +6,7 @@ namespace UBOS\Shape\Domain\Condition\Functions;
 
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 
 class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 {
@@ -14,6 +15,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
         return [
             $this->getFormValueFunction(),
 			$this->getFormValueFunction('value'),
+			$this->getIsConsentApprovedFunction(),
         ];
     }
 
@@ -27,5 +29,17 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
             }
         );
     }
+
+	protected function getIsConsentApprovedFunction(): ExpressionFunction
+	{
+		return new ExpressionFunction(
+			'isConsentApproved',
+			static fn() => null, // Not implemented, we only use the evaluator
+			static function ($arguments, $default = false) {
+				DebugUtility::debug($arguments);
+				return $arguments['consentApproved'] ?? $default;
+			}
+		);
+	}
 
 }

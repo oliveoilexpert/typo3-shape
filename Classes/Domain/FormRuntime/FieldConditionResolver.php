@@ -4,14 +4,16 @@ namespace UBOS\Shape\Domain\FormRuntime;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Event\FieldConditionResolutionEvent;
 
 class FieldConditionResolver
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormRuntime $runtime,
-		protected EventDispatcherInterface       $eventDispatcher
+		protected Domain\FormRuntime\FormRuntime   $runtime,
+		protected Core\ExpressionLanguage\Resolver $resolver,
+		protected EventDispatcherInterface         $eventDispatcher
 	)
 	{
 	}
@@ -24,7 +26,7 @@ class FieldConditionResolver
 		$event = new FieldConditionResolutionEvent(
 			$this->runtime,
 			$field,
-			$this->runtime->getConditionResolver(),
+			$this->resolver
 		);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
@@ -32,4 +34,5 @@ class FieldConditionResolver
 		}
 		return $this->resolver->evaluate($field->get('display_condition'));
 	}
+
 }

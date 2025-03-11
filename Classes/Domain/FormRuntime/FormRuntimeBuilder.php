@@ -19,16 +19,8 @@ class FormRuntimeBuilder
 		]
 	): FormRuntime
 	{
-		$contentData = self::getPluginContentElementData($request, $settings);
-		if (!$contentData) {
-			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
-		}
-		$plugin = GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $contentData);
-
-		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
-		if (!$form || $form->getMainType() !== 'tx_shape_form') {
-			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $contentData['uid'] .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
-		}
+		$plugin = self::getPluginRecord($request, $settings);
+		$form = self::getFormRecord($plugin);
 
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
@@ -105,25 +97,71 @@ class FormRuntimeBuilder
 		);
 	}
 
-	protected static function getPluginContentElementData(
+	public static function buildFromRequestAndSession(
+		RequestInterface $request,
+		FormSession $session,
+		Core\View\ViewInterface $view,
+		array $settings = [
+			'pluginUid' => 0,
+			'uploadFolder' => '1:/user_upload/',
+		]
+	): FormRuntime
+	{
+		$plugin = self::getPluginRecord($request, $settings);
+		$form = self::getFormRecord($plugin);
+
+		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
+		$parsedBodyKey = 'tx_shape_form';
+
+		return new FormRuntime(
+			$request,
+			$settings,
+			$view,
+			$plugin,
+			$form,
+			$session,
+			[],
+			$uploadStorage,
+			$parsedBodyKey,
+			false,
+		);
+	}
+
+
+	protected static function getPluginRecord(
 		RequestInterface $request,
 		array $settings
-	): ?array
+	): Core\Domain\Record
 	{
 		$uid = $settings['pluginUid'];
 		if (!$uid) {
 			if ($request->getAttribute('currentContentObject')?->data['CType']) {
-				return $request->getAttribute('currentContentObject')?->data;
+				return GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $request->getAttribute('currentContentObject')?->data);
 			}
 			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
 		$queryBuilder = GeneralUtility::makeInstance(Core\Database\ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-		return $queryBuilder
+		$data = $queryBuilder
 			->select('*')
 			->from('tt_content')
 			->where(
 				$queryBuilder->expr()->eq('uid', $uid)
 			)
 			->executeQuery()->fetchAllAssociative()[0] ?? null;
+		if (!$data) {
+			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
+		}
+		return GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $data);
+	}
+
+	protected static function getFormRecord(
+		Core\Domain\Record $plugin
+	): Core\Domain\Record
+	{
+		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
+		if (!$form || $form->getMainType() !== 'tx_shape_form') {
+			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
+		}
+		return $form;
 	}
 }

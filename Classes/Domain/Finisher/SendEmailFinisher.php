@@ -43,8 +43,8 @@ class SendEmailFinisher extends AbstractFinisher
 		$formValues = $this->getFormValues();
 		$variables = [
 			'formValues' => $formValues,
-			'form' => $this->getForm(),
 			'settings' => $this->settings,
+			'runtime' => $this->getRuntime(),
 			'parsed' => [
 				'body' => $this->parseWithValues($this->settings['body'])
 			]

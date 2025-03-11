@@ -13,7 +13,10 @@
 			<trans-unit id="tab.content"><source>Content</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
-			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form record with individual Finishers</source></trans-unit>
+			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form Record.</source></trans-unit>
+
+			<trans-unit id="plugin.consent"><source>Shape Email Consent Finisher</source></trans-unit>
+			<trans-unit id="plugin.consent.description"><source>Plugin to process consent links.</source></trans-unit>
 
 			<trans-unit id="form.ctrl.title"><source>Form</source></trans-unit>
 			<trans-unit id="form.title"><source>Title</source></trans-unit>
@@ -140,6 +143,7 @@
 			<trans-unit id="finisher.type.item.send_email"><source>Send Email</source></trans-unit>
 			<trans-unit id="finisher.type.item.show_content_elements"><source>Show Content Elements</source></trans-unit>
 			<trans-unit id="finisher.type.item.redirect"><source>Redirect</source></trans-unit>
+			<trans-unit id="finisher.type.item.email_consent"><source>Email Consent (Double-Opt-in)</source></trans-unit>
 			<trans-unit id="finisher.condition"><source>Condition</source></trans-unit>
 			<trans-unit id="finisher.condition.description"><source>Condition in Symfony Expression Language.</source></trans-unit>
 			<trans-unit id="finisher.settings"><source>Settings</source></trans-unit>
@@ -195,6 +199,11 @@
 			<trans-unit id="flexform.finisher.sendEmail.senderAddress.description"><source>Falls back to [MAIL][defaultMailFromAddress].</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.senderName"><source>Sender Name</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.senderName.description"><source>Falls back to [MAIL][defaultMailFromName].</source></trans-unit>
+
+			<trans-unit id="flexform.finisher.emailConsent.storagePage"><source>Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.consentPage"><source>Consent Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.recipientAddress"><source>Recipient Email Address</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.validSeconds"><source>Expiration duration in seconds</source></trans-unit>
 
 		</body>
 	</file>

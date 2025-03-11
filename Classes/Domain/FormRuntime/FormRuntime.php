@@ -21,28 +21,22 @@ class FormRuntime
 		readonly public Core\Resource\ResourceStorageInterface $uploadStorage,
 		readonly public string                                 $parsedBodyKey,
 		readonly public bool                                   $isStepBack = false,
-		protected ?Core\ExpressionLanguage\Resolver            $conditionResolver = null,
 		protected ?array                                       $spamReasons = null,
 		protected array 									   $messages = [],
 		protected bool                                         $hasErrors = false,
 		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
 	)
 	{
-		$this->eventDispatcher = GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
+		$this->eventDispatcher = $this->eventDispatcher ?? GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
 	}
 
-	public function initializeFieldState(): FormRuntime
+	public function initializeFieldValuesFromSession(): FormRuntime
 	{
-		$resolver = new FieldConditionResolver(
-			$this,
-			$this->eventDispatcher
-		);
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if ($field->has('name')) {
 					$field->setSessionValue($this->session->values[$field->getName()] ?? null);
 				}
-				$field->conditionResult = $resolver->evaluate($field);
 			}
 		}
 		return $this;
@@ -80,11 +74,15 @@ class FormRuntime
 		$lastPageIndex = count($this->form->get('pages'));
 		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
 		$this->session->returnPageIndex = $pageIndex;
-//		foreach ($this->form->get('finishers') as $finisher) {
-//			$finSettings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
-//				->convertFlexFormContentToArray($finisher->getRawRecord()->get('settings'));
-//			Core\Utility\DebugUtility::debug($finSettings);
-//		}
+
+		// Resolve display conditions with "stepType" of page to be rendered
+		$resolver = new FieldConditionResolver($this, $this->createConditionResolver(['stepType' => $currentPageRecord->get('type')]), $this->eventDispatcher);
+		foreach ($this->form->get('pages') as $page) {
+			foreach ($page->get('fields') as $field) {
+				$field->conditionResult = $resolver->evaluate($field);
+			}
+		}
+
 		$viewVariables = [
 			'session' => $this->session,
 			'serializedSession' => FormSession::serialize($this->session),
@@ -108,7 +106,7 @@ class FormRuntime
 		$viewVariables = $event->getVariables();
 
 		$this->view->assignMultiple($viewVariables);
-		$this->view->getRenderingContext()->setControllerAction()('Form');
+		$this->view->getRenderingContext()->setControllerAction('Form');
 		return $this->view->render();
 	}
 
@@ -118,8 +116,12 @@ class FormRuntime
 		if (!$page || !$page->has('fields')) {
 			return;
 		}
+
+		// Resolve display conditions with "stepType" of the page fields are on, necessary before validation for required fields
+		$fieldResolver = new FieldConditionResolver($this, $this->createConditionResolver(['stepType' => $page->get('type')]), $this->eventDispatcher);
 		$validator = new ValueValidator($this, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
+			$field->conditionResult = $fieldResolver->evaluate($field);
 			$field->validationResult = $validator->validate($field, $this->getFieldValue($field));
 			if ($field->validationResult->hasErrors()) {
 				$this->hasErrors = true;
@@ -149,9 +151,10 @@ class FormRuntime
 			return;
 		}
 		foreach ($this->form->get('pages') as $index => $page) {
-			$this->validatePage($index);
+			$pageIndex = $index + 1;
+			$this->validatePage($pageIndex);
 			if ($this->hasErrors) {
-				$this->session->returnPageIndex = $index + 1;
+				$this->session->returnPageIndex = $pageIndex;
 				break;
 			}
 		}
@@ -184,12 +187,12 @@ class FormRuntime
 		}
 	}
 
-	public function finishForm(): FinisherContext
+	public function finishForm(array $conditionVariables = []): FinisherContext
 	{
-		$context = new FinisherContext($this);
+		$context = new FinisherContext($this, $this->eventDispatcher);
+		$resolver = $this->createConditionResolver($conditionVariables);
 		foreach ($this->form->get('finishers') as $finisher) {
-			if ($finisher->get('condition')
-				&& !$this->getConditionResolver()->evaluate($finisher->get('condition'))) {
+			if ($finisher->get('condition') && !$resolver->evaluate($finisher->get('condition'))) {
 				continue;
 			}
 			$context->executeFinisher($finisher);
@@ -198,29 +201,22 @@ class FormRuntime
 		return $context;
 	}
 
-	public function getConditionResolver(): Core\ExpressionLanguage\Resolver
+	public function createConditionResolver(array $variables): Core\ExpressionLanguage\Resolver
 	{
-		if ($this->conditionResolver) {
-			return $this->conditionResolver;
-		}
-
-		$variables = [
+		$variables = array_merge([
+			'formRuntime' => $this,
 			'formValues' => $this->session->values,
-			'frontendUser' => $this->request->getAttribute('frontend.user'),
 			'request' => new Core\ExpressionLanguage\RequestWrapper($this->request),
 			'site' => $this->request->getAttribute('site'),
-			'siteLanguage' => $this->request->getAttribute('language'),
-		];
-
+			'frontendUser' => $this->request->getAttribute('frontend.user'),
+		], $variables);
 		$event = new Event\ConditionResolverCreationEvent($this, $variables);
 		$this->eventDispatcher->dispatch($event);
-		$variables = $event->getVariables();
 
-		$this->conditionResolver = GeneralUtility::makeInstance(
+		return GeneralUtility::makeInstance(
 			Core\ExpressionLanguage\Resolver::class,
-			'tx_shape', $variables
+			'tx_shape', $event->getVariables()
 		);
-		return $this->conditionResolver;
 	}
 
 	public function getFieldValue(Domain\Record\FieldRecord $field): mixed

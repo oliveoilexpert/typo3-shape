@@ -1,6 +1,6 @@
 <?php
 
-use UBOS\Shape\Controller\FormController;
+use UBOS\Shape\Controller;
 
 defined('TYPO3') or die();
 
@@ -23,7 +23,15 @@ $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['shape'] = [
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
 	'Shape',
 	'Form',
-	[FormController::class => 'render, run, finished'],
-	[FormController::class => 'run, finished'],
+	[Controller\FormController::class => 'render, run, finished'],
+	[Controller\FormController::class => 'run, finished'],
+	'CType'
+);
+
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+	'Shape',
+	'Consent',
+	[Controller\ConsentController::class => 'approve'],
+	[Controller\ConsentController::class => 'approve'],
 	'CType'
 );

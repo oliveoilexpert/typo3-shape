@@ -440,6 +440,8 @@ $columns = [
 				'items' => [
 					['Field value is true / not empty', 'value("field-id")'],
 					['Field value is equal to', 'value("field-id") == "some-value"'],
+					['URL Parameter is equal to', 'traverse(request.getQueryParams(), "parameter/path")'],
+					['Step is not summary', 'stepType != "summary"'],
 				],
 			],
 		],

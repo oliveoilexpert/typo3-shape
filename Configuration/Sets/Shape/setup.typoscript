@@ -16,6 +16,7 @@ plugin.tx_shape {
                 value = human
             }
         }
+        deleteAfterApproval = 0
     }
     view {
         templateRootPaths {

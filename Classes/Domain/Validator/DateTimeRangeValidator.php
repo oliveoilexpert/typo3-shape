@@ -26,7 +26,7 @@ final class DateTimeRangeValidator extends AbstractValidator
 			// Handle non-string, non-DateTime, non-numeric values
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.date_range.type',
+					'validation.error.date_time_range.type',
 					'shape',
 					[gettype($value)]
 				),
@@ -42,7 +42,7 @@ final class DateTimeRangeValidator extends AbstractValidator
 		if (!$valueDate) {
 			$this->addError(
 				$this->translateErrorMessage(
-					'validation.error.date_range.type',
+					'validation.error.date_time_range.type',
 					'shape',
 					[$value]
 				),
@@ -54,7 +54,7 @@ final class DateTimeRangeValidator extends AbstractValidator
         if ($minimum && $valueDate < $minimum) {
             $this->addError(
                 $this->translateErrorMessage(
-                    'validation.error.date_range.minimum',
+                    'validation.error.date_time_range.minimum',
                     'shape',
                     [$minimum->format($format)]
                 ),
@@ -66,7 +66,7 @@ final class DateTimeRangeValidator extends AbstractValidator
         if ($maximum && $valueDate > $maximum) {
             $this->addError(
                 $this->translateErrorMessage(
-					'validation.error.date_range.maximum',
+					'validation.error.date_time_range.maximum',
                     'shape',
                     [$maximum->format($format)]
                 ),

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain\FormRuntime;
 
@@ -94,7 +95,7 @@ class FormController extends ActionController
 			$this->request,
 			$this->view,
 			$this->settings,
-		)->initializeFieldState();
+		)->initializeFieldValuesFromSession();
 	}
 	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{
