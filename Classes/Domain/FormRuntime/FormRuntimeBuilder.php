@@ -127,7 +127,6 @@ class FormRuntimeBuilder
 		);
 	}
 
-
 	protected static function getPluginRecord(
 		RequestInterface $request,
 		array $settings

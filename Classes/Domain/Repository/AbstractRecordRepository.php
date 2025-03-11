@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Domain\Repository;
 
-use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;

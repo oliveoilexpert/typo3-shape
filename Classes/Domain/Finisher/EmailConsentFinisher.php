@@ -53,8 +53,8 @@ class EmailConsentFinisher extends AbstractFinisher
 			$consentData['email']
 		);
 
-		$emailConsentRepository = new Domain\Repository\EmailConsentRepository();
-		$consentUid = $emailConsentRepository->create($consentData);
+		$consentRepository = new Domain\Repository\EmailConsentRepository();
+		$consentUid = $consentRepository->create($consentData);
 
 		$email = new Core\Mail\FluidEmail($this->getView()->getRenderingContext()->getTemplatePaths());
 		$senderAddress = new Address(

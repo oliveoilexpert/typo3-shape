@@ -17,7 +17,7 @@ class ConsentController extends ActionController
 	public function __construct(
 		protected Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
 		protected Domain\Repository\ContentRepository $contentRepository,
-		protected Domain\Repository\EmailConsentRepository $emailConsentRepository,
+		protected Domain\Repository\EmailConsentRepository $consentRepository,
 	)
 	{}
 
@@ -27,7 +27,7 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.invalid_consent_request', 'type' => 'warning']]);
 		}
 
-		$consent = $this->emailConsentRepository->findByUid($uid);
+		$consent = $this->consentRepository->findByUid($uid);
 
 		if (!$consent) {
 			return $this->messageResponse([['key' => 'label.consent_not_found', 'type' => 'error']]);
@@ -43,9 +43,9 @@ class ConsentController extends ActionController
 		}
 
 		if ($this->settings['deleteAfterApproval']) {
-			$this->emailConsentRepository->deleteByUid($uid);
+			$this->consentRepository->deleteByUid($uid);
 		} else {
-			$this->emailConsentRepository->updateByUid($uid, ['state' => 'approved', 'valid_until' => null]);
+			$this->consentRepository->updateByUid($uid, ['state' => 'approved', 'valid_until' => null]);
 		}
 
 		$session = Domain\FormRuntime\FormSession::validateAndUnserialize($consent['session']);
@@ -62,6 +62,7 @@ class ConsentController extends ActionController
 
 		// get plugin configuration
 		$this->configurationManager->setRequest($request);
+		$this->configurationManager->setConfiguration(['extensionName' => 'Shape', 'pluginName' => 'Form']);
 		$formPluginConfiguration = $this->configurationManager->getConfiguration(
 			Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
 			'Shape',
@@ -83,6 +84,8 @@ class ConsentController extends ActionController
 		);
 
 		$finishResult = $runtime->finishForm(['consentApproved' => true]);
+		Core\Utility\DebugUtility::debug($formPluginConfiguration);
+		return $this->htmlResponse('debugging');
 		return $finishResult->response ?? $this->redirect(
 			'finished',
 			controllerName: 'Form',

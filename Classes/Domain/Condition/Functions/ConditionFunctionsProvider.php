@@ -36,7 +36,6 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isConsentApproved',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = false) {
-				DebugUtility::debug($arguments);
 				return $arguments['consentApproved'] ?? $default;
 			}
 		);
