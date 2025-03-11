@@ -42,23 +42,24 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.consent_expired', 'type' => 'info']]);
 		}
 
-		if ($this->settings['deleteAfterApproval']) {
+		if ($this->settings['deleteAfterConfirmation']) {
 			$this->consentRepository->deleteByUid($uid);
 		} else {
 			$this->consentRepository->updateByUid($uid, ['state' => 'approved', 'valid_until' => null]);
 		}
 
-		$session = Domain\FormRuntime\FormSession::validateAndUnserialize($consent['session']);
-
 		$this->contentRepository->setLanguageId($this->request->getAttribute('language')->getLanguageId());
-		$plugin = $this->contentRepository->findByUid($consent['plugin']);
+		$plugin = $this->contentRepository->findByUid($consent['plugin'], true);
 
 		// recreate request
 		$request = clone $this->request;
 		$contentObjectRenderer = Core\Utility\GeneralUtility::makeInstance(ContentObjectRenderer::class);
 		$contentObjectRenderer->setRequest($request);
-		$contentObjectRenderer->start($plugin, 'tt_content');
+		$contentObjectRenderer->start($plugin->getRawRecord()->toArray(), 'tt_content');
 		$request = $request->withAttribute('currentContentObject', $contentObjectRenderer);
+
+		// recreate session
+		$session = Domain\FormRuntime\FormSession::validateAndUnserialize($consent['session']);
 
 		// get plugin configuration
 		$this->configurationManager->setRequest($request);
@@ -68,6 +69,7 @@ class ConsentController extends ActionController
 			'Shape',
 			'Form'
 		);
+		$settings = $formPluginConfiguration['settings'];
 
 		// recreate view
 		$view = clone $this->view;
@@ -76,21 +78,31 @@ class ConsentController extends ActionController
 		$view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
 		$view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
 
-		$runtime = Domain\FormRuntime\FormRuntimeBuilder::buildFromRequestAndSession(
+
+		$form = Domain\FormRuntime\FormRuntimeBuilder::getFormRecord($plugin);
+
+		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
+		$parsedBodyKey = 'tx_shape_form';
+
+		$runtime = new Domain\FormRuntime\FormRuntime(
 			$request,
-			$session,
+			$settings,
 			$view,
-			$formPluginConfiguration['settings'],
+			$plugin,
+			$form,
+			$session,
+			[],
+			$uploadStorage,
+			$parsedBodyKey,
+			false,
 		);
 
 		$finishResult = $runtime->finishForm(['consentApproved' => true]);
-		Core\Utility\DebugUtility::debug($formPluginConfiguration);
-		return $this->htmlResponse('debugging');
 		return $finishResult->response ?? $this->redirect(
 			'finished',
 			controllerName: 'Form',
 			arguments: $finishResult->finishedActionArguments,
-			pageUid: $plugin['pid'],
+			pageUid: $plugin->getPid(),
 		);
 	}
 

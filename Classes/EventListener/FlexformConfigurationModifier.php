@@ -30,7 +30,17 @@ final readonly class FlexformConfigurationModifier
 				];
 				if ($config['fields'] ?? false) {
 					foreach ($config['fields'] as $field => $fieldConfig) {
-						$dataStructure['sheets']['content']['ROOT']['el'][$field] = $fieldConfig;
+						if (!isset($dataStructure['sheets']['template'])) {
+							$dataStructure['sheets']['template'] = [
+								'ROOT' => [
+									'sheetTitle' => 'LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.template',
+									'type' => 'array',
+									'el' => [],
+								],
+							];
+						}
+						$fieldConfig['displayCond'] = 'FIELD:mail.template:=:' . $template;
+						$dataStructure['sheets']['template']['ROOT']['el'][$field] = $fieldConfig;
 					}
 				}
 			}

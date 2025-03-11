@@ -97,37 +97,7 @@ class FormRuntimeBuilder
 		);
 	}
 
-	public static function buildFromRequestAndSession(
-		RequestInterface $request,
-		FormSession $session,
-		Core\View\ViewInterface $view,
-		array $settings = [
-			'pluginUid' => 0,
-			'uploadFolder' => '1:/user_upload/',
-		]
-	): FormRuntime
-	{
-		$plugin = self::getPluginRecord($request, $settings);
-		$form = self::getFormRecord($plugin);
-
-		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
-		$parsedBodyKey = 'tx_shape_form';
-
-		return new FormRuntime(
-			$request,
-			$settings,
-			$view,
-			$plugin,
-			$form,
-			$session,
-			[],
-			$uploadStorage,
-			$parsedBodyKey,
-			false,
-		);
-	}
-
-	protected static function getPluginRecord(
+	public static function getPluginRecord(
 		RequestInterface $request,
 		array $settings
 	): Core\Domain\Record
@@ -147,7 +117,7 @@ class FormRuntimeBuilder
 		return $record;
 	}
 
-	protected static function getFormRecord(
+	public static function getFormRecord(
 		Core\Domain\Record $plugin
 	): Core\Domain\Record
 	{

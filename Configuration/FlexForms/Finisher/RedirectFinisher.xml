@@ -18,6 +18,7 @@
                                     <numIndex index="0">params</numIndex>
                                 </allowedOptions>
                             </appearance>
+                            <required>true</required>
                         </config>
                     </uri>
                 </el>

@@ -50,9 +50,7 @@ class SendEmailFinisher extends AbstractFinisher
 			]
 		];
 		foreach ($templateConfig['fields'] ?? [] as $key => $config) {
-			if ($config['templateVariableParser'] ?? false) {
-				$variables['parsed'][$key] = $this->parseWithValues($this->settings[$key] ?? '');
-			}
+			$variables['parsed'][$key] = $this->parseWithValues($this->settings[$key] ?? '');
 		}
 
 		$email

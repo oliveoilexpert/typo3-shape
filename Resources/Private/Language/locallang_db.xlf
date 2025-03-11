@@ -10,7 +10,8 @@
 			<trans-unit id="tab.finishers"><source>Finishers</source></trans-unit>
 			<trans-unit id="tab.lazyLoad"><source>Lazy Load</source></trans-unit>
 			<trans-unit id="tab.mail"><source>Mail</source></trans-unit>
-			<trans-unit id="tab.content"><source>Content</source></trans-unit>
+			<trans-unit id="tab.consent"><source>Consent</source></trans-unit>
+			<trans-unit id="tab.template"><source>Template</source></trans-unit>
 
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form Record.</source></trans-unit>
@@ -213,7 +214,8 @@
 			<trans-unit id="flexform.finisher.emailConsent.storagePage"><source>Storage Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.consentPage"><source>Consent Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.recipientAddress"><source>Recipient Email Address</source></trans-unit>
-			<trans-unit id="flexform.finisher.emailConsent.validSeconds"><source>Expiration duration in seconds</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.replyToAddress"><source>Reply-to Email Address</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.expirationPeriod"><source>Expiration time in seconds</source></trans-unit>
 
 		</body>
 	</file>

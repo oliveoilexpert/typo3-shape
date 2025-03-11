@@ -2,7 +2,7 @@
     <sheets>
         <general>
             <ROOT>
-                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.general</sheetTitle>
+                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.consent</sheetTitle>
                 <type>array</type>
                 <el>
                     <storagePage>
@@ -31,15 +31,16 @@
                                     <disabled>true</disabled>
                                 </tableList>
                             </fieldWizard>
+                            <required>true</required>
                         </config>
                     </consentPage>
-                    <validSeconds>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.validSeconds</label>
+                    <expirationPeriod>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.expirationPeriod</label>
                         <config>
                             <type>number</type>
                             <default>86400</default>
                         </config>
-                    </validSeconds>
+                    </expirationPeriod>
                 </el>
             </ROOT>
         </general>
@@ -53,12 +54,14 @@
                         <config>
                             <type>input</type>
                             <size>100</size>
+                            <required>true</required>
                         </config>
                     </recipientAddress>
                     <subject>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.subject</label>
                         <config>
                             <type>input</type>
+                            <required>true</required>
                         </config>
                     </subject>
                     <body>
@@ -69,6 +72,13 @@
                             <enableRichtext>1</enableRichtext>
                         </config>
                     </body>
+                    <replyToAddress>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.replyToAddress</label>
+                        <config>
+                            <type>input</type>
+                            <size>100</size>
+                        </config>
+                    </replyToAddress>
                 </el>
             </ROOT>
         </mail>

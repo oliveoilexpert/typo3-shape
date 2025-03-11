@@ -7,6 +7,7 @@
                 <el>
                     <template>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.template</label>
+                        <onChange>reload</onChange>
                         <config>
                             <type>select</type>
                             <renderType>selectSingle</renderType>
@@ -16,8 +17,17 @@
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.subject</label>
                         <config>
                             <type>input</type>
+                            <required>true</required>
                         </config>
                     </subject>
+                    <body>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body.description</description>
+                        <config>
+                            <type>text</type>
+                            <enableRichtext>1</enableRichtext>
+                        </config>
+                    </body>
                     <attachUploads>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.attachUploads</label>
                         <config>
@@ -27,22 +37,6 @@
                 </el>
             </ROOT>
         </mail>
-        <content>
-            <ROOT>
-                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.content</sheetTitle>
-                <type>array</type>
-                <el>
-                    <body>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body</label>
-                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.sendEmail.body.description</description>
-                        <config>
-                            <type>text</type>
-                            <enableRichtext>1</enableRichtext>
-                        </config>
-                    </body>
-                </el>
-            </ROOT>
-        </content>
         <recipient>
             <ROOT>
                 <sheetTitle>Recipients</sheetTitle>
@@ -54,6 +48,7 @@
                         <config>
                             <type>input</type>
                             <size>100</size>
+                            <required>true</required>
                         </config>
                     </recipientAddresses>
                     <ccRecipientAddresses>

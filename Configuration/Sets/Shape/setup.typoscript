@@ -30,12 +30,14 @@ plugin.tx_shape_form {
             }
         }
     }
+    ignoreFlexFormSettingsIfEmpty = uploadFolder, lazyLoadFragmentPage
 }
 plugin.tx_shape_consent {
     settings {
-        pluginPage = 0
-        deleteAfterApproval = 0
+        consentPage = 0
+        deleteAfterConfirmation = 0
     }
+    ignoreFlexFormSettingsIfEmpty = consentPage, deleteAfterConfirmation
 }
 
 lib.tx_shape.contentElementRendering = RECORDS

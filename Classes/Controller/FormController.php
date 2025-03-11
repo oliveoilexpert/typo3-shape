@@ -11,9 +11,7 @@ use UBOS\Shape\Domain\FormRuntime;
 
 
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
-// todo: consent finisher
 // todo: delete/move uploads finisher?
-// todo: webhook finisher?
 // todo: rate limiter finisher?
 // todo: all settings for plugin: disable server validation?,
 // note: upload and radio fields will not be in POST values if no value is set
