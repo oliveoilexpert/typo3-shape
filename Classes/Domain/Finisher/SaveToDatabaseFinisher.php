@@ -24,8 +24,7 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			return;
 		}
 
-		$genericRepository = new Domain\Repository\GenericRepository();
-		$genericRepository->tableName = $this->settings['table'];
+		$genericRepository = new Domain\Repository\GenericRepository($this->settings['table']);
 
 		$values = [
 			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
