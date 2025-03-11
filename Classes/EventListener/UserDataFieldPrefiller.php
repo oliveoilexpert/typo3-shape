@@ -17,7 +17,7 @@ final class UserDataFieldPrefiller
 			return;
 		}
 
-		$genericRepository = new Domain\Repository\GenericRepository('fe_users');
+		$genericRepository = new Domain\Repository\GenericRepository('fe_users', languageColumn: '');
 		$user = $genericRepository->findByUid($feAuth->getUserId());
 
 		if (!$user) {
