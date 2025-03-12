@@ -18,6 +18,7 @@ final class UniqueInSubmissionsValidator extends AbstractValidator
 
 	public function isValid(mixed $value): void
 	{
+		// todo: inject?
 		/** @var Domain\Repository\FormSubmissionRepository $submissionRepository */
 		$submissionRepository = Core\Utility\GeneralUtility::makeInstance(Domain\Repository\FormSubmissionRepository::class);
 		$isUnique = $submissionRepository->isUniqueValue(

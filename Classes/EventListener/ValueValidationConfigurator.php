@@ -139,9 +139,9 @@ final class ValueValidationConfigurator
 		$event->value = $value;
 	}
 
-	protected function makeValidator(string $validator, array $options = []): ExtbaseValidator\ValidatorInterface
+	protected function makeValidator(string $className, array $options = []): ExtbaseValidator\ValidatorInterface
 	{
-		$validator = Core\Utility\GeneralUtility::makeInstance($validator);
+		$validator = Core\Utility\GeneralUtility::makeInstance($className);
 		$validator->setOptions($options);
 		return $validator;
 	}

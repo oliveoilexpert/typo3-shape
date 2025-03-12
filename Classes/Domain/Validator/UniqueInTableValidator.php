@@ -18,6 +18,7 @@ final class UniqueInTableValidator extends AbstractValidator
 
 	public function isValid(mixed $value): void
 	{
+		// todo: inject?
 		/** @var Domain\Repository\GenericRepository $genericRepository */
 		$genericRepository = Core\Utility\GeneralUtility::makeInstance(Domain\Repository\GenericRepository::class);
 		$genericRepository->forTable($this->options['table']);
