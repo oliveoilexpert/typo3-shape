@@ -109,7 +109,8 @@ class FormRuntimeBuilder
 			}
 			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
-		$contentRepository = new Domain\Repository\ContentRepository();
+		/** @var Domain\Repository\ContentRepository $contentRepository */
+		$contentRepository = GeneralUtility::makeInstance(Domain\Repository\ContentRepository::class);
 		$record = $contentRepository->findByUid($uid, asRecord: true);
 		if (!$record) {
 			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);

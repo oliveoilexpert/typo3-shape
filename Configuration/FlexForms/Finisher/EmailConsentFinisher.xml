@@ -41,6 +41,28 @@
                             <default>86400</default>
                         </config>
                     </expirationPeriod>
+                    <expirationPeriod>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.expirationPeriod</label>
+                        <config>
+                            <type>number</type>
+                            <default>86400</default>
+                        </config>
+                    </expirationPeriod>
+                    <splitFinisherExecution>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.splitFinisherExecution</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.splitFinisherExecution.description</description>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </splitFinisherExecution>
+                    <deleteAfterConfirmation>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.deleteAfterConfirmation</label>
+                        <config>
+                            <type>check</type>
+                            <default>0</default>
+                        </config>
+                    </deleteAfterConfirmation>
                 </el>
             </ROOT>
         </general>

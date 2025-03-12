@@ -2,9 +2,7 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase;
 use UBOS\Shape\Domain;
 
@@ -17,15 +15,20 @@ class SaveSubmissionFinisher extends AbstractFinisher
 		'excludedFields' => '',
 	];
 
-	public function execute(): void
+	public function __construct(
+		protected Domain\Repository\FormSubmissionRepository $submissionRepository
+	) {}
+
+	public function executeInternal(): void
 	{
 		$formValues = $this->getFormValues();
 		if ($this->settings['excludedFields']) {
-			$excludeFields = GeneralUtility::trimExplode(',', $this->settings['excludedFields'], true);
+			$excludeFields = Core\Utility\GeneralUtility::trimExplode(',', $this->settings['excludedFields'], true);
 			$formValues = array_filter($formValues, function($key) use ($excludeFields) {
 				return !in_array($key, $excludeFields);
 			}, ARRAY_FILTER_USE_KEY);
 		}
+
 		$values = [
 			'crdate' => time(),
 			'tstamp' => time(),
@@ -46,7 +49,6 @@ class SaveSubmissionFinisher extends AbstractFinisher
 			$values['plugin'] = $this->getPlugin()->getUid();
 		}
 
-		$submissionRepository = new Domain\Repository\FormSubmissionRepository();
-		$submissionRepository->create($values);
+		$this->submissionRepository->create($values);
 	}
 }

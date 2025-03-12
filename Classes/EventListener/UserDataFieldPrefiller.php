@@ -17,12 +17,15 @@ final class UserDataFieldPrefiller
 			return;
 		}
 
-		$genericRepository = new Domain\Repository\GenericRepository('fe_users', languageColumn: false);
-		$user = $genericRepository->findByUid($feAuth->getUserId());
+		/** @var Domain\Repository\GenericRepository $genericRepository */
+		$genericRepository = Core\Utility\GeneralUtility::makeInstance(Domain\Repository\GenericRepository::class);
+		$genericRepository->forTable('fe_users');
 
+		$user = $genericRepository->findByUid($feAuth->getUserId());
 		if (!$user) {
 			return;
 		}
+
 		foreach ($event->runtime->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if (!$field->has('user_prefill_column')) {

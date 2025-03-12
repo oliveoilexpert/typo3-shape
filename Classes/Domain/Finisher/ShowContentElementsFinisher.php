@@ -2,7 +2,6 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 
 class ShowContentElementsFinisher extends AbstractFinisher
@@ -11,7 +10,7 @@ class ShowContentElementsFinisher extends AbstractFinisher
 		'contentElements' => ''
 	];
 
-	public function execute(): void
+	public function executeInternal(): void
 	{
 		$this->context->finishedActionArguments = [
 			'template' => 'Finisher/ShowContentElements',

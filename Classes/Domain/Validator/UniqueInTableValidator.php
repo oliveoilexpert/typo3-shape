@@ -18,7 +18,10 @@ final class UniqueInTableValidator extends AbstractValidator
 
 	public function isValid(mixed $value): void
 	{
-		$genericRepository = new Domain\Repository\GenericRepository($this->options['table']);
+		/** @var Domain\Repository\GenericRepository $genericRepository */
+		$genericRepository = Core\Utility\GeneralUtility::makeInstance(Domain\Repository\GenericRepository::class);
+		$genericRepository->forTable($this->options['table']);
+
 		$count = $genericRepository->countBy($this->options['column'], $value, excludeHidden: false);
 		if ($count) {
 			$this->addError(

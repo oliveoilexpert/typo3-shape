@@ -215,7 +215,11 @@
 			<trans-unit id="flexform.finisher.emailConsent.consentPage"><source>Consent Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.recipientAddress"><source>Recipient Email Address</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.replyToAddress"><source>Reply-to Email Address</source></trans-unit>
-			<trans-unit id="flexform.finisher.emailConsent.expirationPeriod"><source>Expiration time in seconds</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.expirationPeriod"><source>Expiration Time in Seconds</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.deleteAfterConfirmation"><source>Delete Consent Record after Confirmation</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.splitFinisherExecution"><source>Split Finisher Execution</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.splitFinisherExecution.description"><source>Finishers are re-run when Consent is confirmed. When enabled, Finishers before this are executed only on the initial form submission, Finishers after this are executed only on Consent Confirmation.
+			</source></trans-unit>
 
 		</body>
 	</file>

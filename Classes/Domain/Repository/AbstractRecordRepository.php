@@ -8,17 +8,22 @@ use Psr\Log;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+
+#[Autoconfigure(public: true)]
 abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 {
 	use Log\LoggerAwareTrait;
 
-	public function __construct(
-		protected ?Core\Database\ConnectionPool $connection = null,
-		protected ?Core\Domain\RecordFactory $recordFactory = null,
-	)
+	protected ?Core\Database\ConnectionPool $connectionPool = null;
+	protected ?Core\Domain\RecordFactory $recordFactory = null;
+	public function injectConnectionPool(Core\Database\ConnectionPool $connectionPool): void
 	{
-		$this->connection = $connection ?? Core\Utility\GeneralUtility::makeInstance(Core\Database\ConnectionPool::class);
-		$this->recordFactory = $recordFactory ?? Core\Utility\GeneralUtility::makeInstance(Core\Domain\RecordFactory::class);
+		$this->connectionPool = $connectionPool;
+	}
+	public function injectRecordFactory(Core\Domain\RecordFactory $recordFactory): void
+	{
+		$this->recordFactory = $recordFactory;
 	}
 
 	abstract public function getTableName(): string;
@@ -37,11 +42,6 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 	public function setLanguageId(int $languageId): void
 	{
 		$this->languageId = $languageId;
-	}
-
-	protected function getQueryBuilder(): QueryBuilder
-	{
-		return $this->connection->getQueryBuilderForTable($this->getTableName());
 	}
 
 	public function create(array $data): int
@@ -214,6 +214,11 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 			->delete($this->getTableName())
 			->where(...$where)
 			->executeStatement();
+	}
+
+	protected function getQueryBuilder(): QueryBuilder
+	{
+		return $this->connectionPool->getQueryBuilderForTable($this->getTableName());
 	}
 
 	protected function addDefaultClauses(

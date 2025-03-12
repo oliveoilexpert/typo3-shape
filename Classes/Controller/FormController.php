@@ -6,8 +6,11 @@ namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain\FormRuntime;
+use UBOS\Shape\Domain;
 
 
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
@@ -20,7 +23,7 @@ class FormController extends ActionController
 {
 	protected FormRuntime\FormRuntime $runtime;
 	protected string $fragmentPageTypeNum = '1741218626';
-	
+
 	public function renderAction(): ResponseInterface
 	{
 		$pageType = $this->request->getQueryParams()['type'] ?? '';

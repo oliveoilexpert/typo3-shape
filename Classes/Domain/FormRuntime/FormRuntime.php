@@ -25,9 +25,11 @@ class FormRuntime
 		protected array 									   $messages = [],
 		protected bool                                         $hasErrors = false,
 		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
+		protected ?Core\Service\FlexFormService 			   $flexFormService = null,
 	)
 	{
 		$this->eventDispatcher = $this->eventDispatcher ?? GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
+		$this->flexFormService = $this->flexFormService ?? GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
 	}
 
 	public function initializeFieldValuesFromSession(): FormRuntime
@@ -189,16 +191,35 @@ class FormRuntime
 
 	public function finishForm(array $conditionVariables = []): FinisherContext
 	{
-		$context = new FinisherContext($this, $this->eventDispatcher);
+		$context = new FinisherContext($this);
 		$resolver = $this->createConditionResolver($conditionVariables);
-		foreach ($this->form->get('finishers') as $finisher) {
-			if ($finisher->get('condition') && !$resolver->evaluate($finisher->get('condition'))) {
+		foreach ($this->form->get('finishers') as $finisherRecord) {
+			if ($finisherRecord->get('condition') && !$resolver->evaluate($finisherRecord->get('condition'))) {
 				continue;
 			}
-			$context->executeFinisher($finisher);
+			$this->executeFinisherRecord($finisherRecord, $context);
 		}
 		$context->finishedActionArguments['pluginUid'] = $this->plugin->getUid();
 		return $context;
+	}
+
+	public function executeFinisherRecord(Core\Domain\Record $record, FinisherContext $context): void
+	{
+		$finisherClassName = $record->get('type');
+		$finisher = Core\Utility\GeneralUtility::makeInstance($finisherClassName);
+		if (!($finisher instanceof Domain\Finisher\AbstractFinisher)) {
+			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Domain\Finisher\AbstractFinisher.', 1741369249);
+		}
+
+		// todo: maybe add "finisherDefaults". Problem is there's no good way to merge. ArrayUtility::mergeRecursiveWithOverrule either overwrites everything or discards empty values ('' and '0'), but we want to keep '0', otherwise checkboxes can't overwrite with false. Extbase has "ignoreFlexFormSettingsIfEmpty" but that doesn't really solve the problem either. To have booleans with default values, we'd need to render them as selects with values '', '0', '1' and then only ignore ''.
+		//$defaultSettings = $this->settings['finisherDefaults'][$finisherClassName] ?? [];
+		$settings = $this->flexFormService->convertFlexFormContentToArray($record->getRawRecord()->get('settings'));
+		$event = new Event\BeforeFinisherExecutionEvent($context, $finisher, $settings);
+		$this->eventDispatcher->dispatch($event);
+		if ($event->cancelled) {
+			return;
+		}
+		$event->finisher->execute($event->context, $event->settings);
 	}
 
 	public function createConditionResolver(array $variables): Core\ExpressionLanguage\Resolver

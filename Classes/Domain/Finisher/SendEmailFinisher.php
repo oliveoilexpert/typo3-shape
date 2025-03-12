@@ -2,10 +2,8 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use UBOS\Shape\Utility\TemplateVariableParser;
 
 class SendEmailFinisher extends AbstractFinisher
@@ -23,7 +21,12 @@ class SendEmailFinisher extends AbstractFinisher
 		'replyToAddresses' => '',
 	];
 
-	public function execute(): void
+	public function __construct(
+		protected Core\Mail\MailerInterface $mailer,
+		protected Core\Resource\ResourceFactory $resourceFactory,
+	) {}
+
+	public function executeInternal(): void
 	{
 		$recipients = $this->getAddresses($this->settings['recipientAddresses']);
 		if (!$recipients || !$this->settings['subject']) {
@@ -71,12 +74,11 @@ class SendEmailFinisher extends AbstractFinisher
 			$email->replyTo(...$this->getAddresses($this->settings['replyToAddresses']));
 		}
 		if ($this->settings['attachUploads']) {
-			$resourceFactory = GeneralUtility::makeInstance(Core\Resource\ResourceFactory::class);
 			foreach ($this->getForm()->get('pages') as $page) {
 				foreach ($page->get('fields') as $field) {
 					if ($field->get('type') === 'file' && isset($formValues[$field->get('name')])) {
 						foreach ($formValues[$field->get('name')] as $fileIdentifier) {
-							$file = $resourceFactory->getFileObjectFromCombinedIdentifier($fileIdentifier);
+							$file = $this->resourceFactory->getFileObjectFromCombinedIdentifier($fileIdentifier);
 							if ($file) {
 								$email->attach($file->getContents(), $file->getName(), $file->getMimeType());
 							}
@@ -85,14 +87,15 @@ class SendEmailFinisher extends AbstractFinisher
 				}
 			}
 		}
-		GeneralUtility::makeInstance(Core\Mail\MailerInterface::class)->send($email);
+
+		$this->mailer->send($email);
 	}
 
 	protected function getAddresses(string $addressList): array
 	{
 		$addressList = TemplateVariableParser::parse($addressList, $this->getFormValues());
 		$addresses = [];
-		foreach (GeneralUtility::trimExplode(',', $addressList, true) as $address) {
+		foreach (Core\Utility\GeneralUtility::trimExplode(',', $addressList, true) as $address) {
 			if (str_starts_with($address, '{{')) {
 				continue;
 			}

@@ -13,5 +13,5 @@ class ContentRepository extends AbstractRecordRepository
 		return 'tt_content';
 	}
 
-	protected string $localizationParentColumn = 'l18n_parent';
+	protected string|false $localizationParentColumn = 'l18n_parent';
 }

@@ -7,15 +7,17 @@ namespace UBOS\Shape\Controller;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Extbase;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain;
+use UBOS\Shape\Domain\FormRuntime;
 
 class ConsentController extends ActionController
 {
 	public function __construct(
 		protected Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
+		protected Core\Resource\StorageRepository $storageRepository,
 		protected Domain\Repository\ContentRepository $contentRepository,
 		protected Domain\Repository\EmailConsentRepository $consentRepository,
 	)
@@ -42,12 +44,53 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.consent_expired', 'type' => 'info']]);
 		}
 
-		if ($this->settings['deleteAfterConfirmation']) {
+		$consentSettings = json_decode($consent['finisher_settings'], true);
+
+		if ($consentSettings['deleteAfterConfirmation']) {
 			$this->consentRepository->deleteByUid($uid);
 		} else {
 			$this->consentRepository->updateByUid($uid, ['status' => 'approved', 'valid_until' => null]);
 		}
 
+		$runtime = $this->recreateFormRuntime($consent);
+
+		$finishResult = $this->executeRuntimeFinishers($runtime, $consentSettings);
+		return $finishResult->response ?? $this->redirect(
+			'finished',
+			controllerName: 'Form',
+			arguments: $finishResult->finishedActionArguments,
+			pageUid: $runtime->plugin->getPid(),
+		);
+	}
+
+	protected function executeRuntimeFinishers(
+		FormRuntime\FormRuntime $runtime,
+		array $consentSettings
+	): FormRuntime\FinisherContext
+	{
+		$context = new FormRuntime\FinisherContext($runtime);
+		$resolver = $runtime->createConditionResolver(['consentStatus' => 'approved']);
+		$skipFinisher = $consentSettings['splitFinisherExecution'];
+		foreach ($runtime->form->get('finishers') as $finisherRecord) {
+			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {
+				$skipFinisher = false;
+				continue;
+			}
+			if ($skipFinisher) {
+				continue;
+			}
+			if ($finisherRecord->get('condition') && !$resolver->evaluate($finisherRecord->get('condition'))) {
+				continue;
+			}
+			$runtime->executeFinisherRecord($finisherRecord, $context);
+		}
+		$context->finishedActionArguments['pluginUid'] = $runtime->plugin->getUid();
+		return $context;
+	}
+
+	protected function recreateFormRuntime(array $consent): FormRuntime\FormRuntime
+	{
+		// get plugin
 		$this->contentRepository->setLanguageId($this->request->getAttribute('language')->getLanguageId());
 		$plugin = $this->contentRepository->findByUid($consent['plugin'], asRecord: true);
 
@@ -59,7 +102,7 @@ class ConsentController extends ActionController
 		$request = $request->withAttribute('currentContentObject', $contentObjectRenderer);
 
 		// recreate session
-		$session = Domain\FormRuntime\FormSession::validateAndUnserialize($consent['session']);
+		$session = FormRuntime\FormSession::validateAndUnserialize($consent['session']);
 
 		// get plugin configuration
 		$this->configurationManager->setRequest($request);
@@ -78,12 +121,12 @@ class ConsentController extends ActionController
 		$view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
 		$view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
 
-		$form = Domain\FormRuntime\FormRuntimeBuilder::getFormRecord($plugin);
+		$form = FormRuntime\FormRuntimeBuilder::getFormRecord($plugin);
 
-		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
+		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
 
-		$runtime = new Domain\FormRuntime\FormRuntime(
+		return new FormRuntime\FormRuntime(
 			$request,
 			$settings,
 			$view,
@@ -94,14 +137,6 @@ class ConsentController extends ActionController
 			$uploadStorage,
 			$parsedBodyKey,
 			false,
-		);
-
-		$finishResult = $runtime->finishForm(['consentStatus' => 'approved']);
-		return $finishResult->response ?? $this->redirect(
-			'finished',
-			controllerName: 'Form',
-			arguments: $finishResult->finishedActionArguments,
-			pageUid: $plugin->getPid(),
 		);
 	}
 

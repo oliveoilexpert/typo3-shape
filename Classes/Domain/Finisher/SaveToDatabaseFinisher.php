@@ -2,9 +2,7 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
-use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Utility\TemplateVariableParser;
 
@@ -18,13 +16,17 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 		'columns' => [],
 	];
 
-	public function execute(): void
+	public function __construct(
+		protected Domain\Repository\GenericRepository $genericRepository
+	) {}
+
+	public function executeInternal(): void
 	{
 		if (!$this->settings['table']) {
 			return;
 		}
 
-		$genericRepository = new Domain\Repository\GenericRepository($this->settings['table']);
+		$this->genericRepository->forTable($this->settings['table']);
 
 		$values = [
 			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
@@ -42,10 +44,10 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 		if ($this->settings['whereColumn'] && $this->settings['whereValue']) {
 			$whereColumn = $this->settings['whereColumn'];
 			$whereValue = $this->parseWithValues($this->settings['whereValue']);
-			$genericRepository->updateBy($whereColumn, $whereValue, $values);
+			$this->genericRepository->updateBy($whereColumn, $whereValue, $values);
 		} else {
 			$values['crdate'] = time();
-			$genericRepository->create($values);
+			$this->genericRepository->create($values);
 		}
 	}
 

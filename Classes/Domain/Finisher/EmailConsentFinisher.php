@@ -4,7 +4,6 @@ namespace UBOS\Shape\Domain\Finisher;
 
 use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Utility\TemplateVariableParser;
@@ -22,22 +21,24 @@ class EmailConsentFinisher extends AbstractFinisher
 		'replyToAddress' => '',
 		'expirationPeriod' => 86400,
 		'storagePage' => 0,
+		'splitFinisherExecution' => true,
 	];
 
-	public function execute(): void
+	public function __construct(
+		protected Core\Crypto\HashService $hashService,
+		protected Core\Mail\MailerInterface $mailer,
+		protected Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
+		protected Extbase\Mvc\Web\Routing\UriBuilder $uriBuilder,
+		protected Domain\Repository\EmailConsentRepository $consentRepository,
+	) {}
+
+	public function executeInternal(): void
 	{
 		$recipientAddress = $this->parseWithValues($this->settings['recipientAddress']);
 		if (!$recipientAddress || !$this->settings['subject'] || !$this->settings['consentPage']) {
+			// todo: invalid finisher settings exception
 			return;
 		}
-
-		$configurationManager = GeneralUtility::makeInstance(Extbase\Configuration\ConfigurationManagerInterface::class);
-		$configurationManager->setConfiguration(['extensionName' => 'Shape', 'pluginName' => 'Consent']);
-		$consentPluginSettings = $this->configurationManager->getConfiguration(
-			Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-			'Shape',
-			'Consent'
-		);
 
 		$storagePage = (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid());
 		$formValues = $this->getFormValues();
@@ -48,20 +49,20 @@ class EmailConsentFinisher extends AbstractFinisher
 			'tstamp' => $timestamp,
 			'pid' => $storagePage,
 			'status' => 'pending',
-			'session' => $serializedSession,
+			'email' => $recipientAddress,
 			'form' => $this->getForm()->getUid(),
 			'plugin' => $this->getPlugin()->getUid(),
-			'email' => $recipientAddress,
+			'session' => $serializedSession,
+			'finisher_settings' => json_encode($this->settings),
 			'valid_until' => $timestamp + $this->settings['expirationPeriod'],
 		];
 
-		$hashService = GeneralUtility::makeInstance(Core\Crypto\HashService::class);
-		$consentData['validation_hash'] = $hashService->hmac(
+		$consentData['validation_hash'] = $this->hashService->hmac(
 			$consentData['session'] . '_' . $consentData['crdate'],
 			$consentData['email']
 		);
-		$consentRepository = new Domain\Repository\EmailConsentRepository();
-		$consentUid = $consentRepository->create($consentData);
+
+		$consentUid = $this->consentRepository->create($consentData);
 
 		$subject = $this->parseWithValues($this->settings['subject']);
 		$template = $this->settings['template'];
@@ -72,8 +73,8 @@ class EmailConsentFinisher extends AbstractFinisher
 		);
 		$replyToAddress = $this->settings['replyToAddress'] ? $this->parseWithValues($this->settings['replyToAddress']) : null;
 
-		$uriBuilder = GeneralUtility::makeInstance(Extbase\Mvc\Web\Routing\UriBuilder::class);
-		$approveLink = $uriBuilder
+		$approveLink = $this->uriBuilder
+			->reset()
 			->setTargetPageUid($this->settings['consentPage'])
 			->setRequest($this->getRequest())
 			->setCreateAbsoluteUri(true)
@@ -107,11 +108,11 @@ class EmailConsentFinisher extends AbstractFinisher
 			$email->replyTo($replyToAddress);
 		}
 
-		GeneralUtility::makeInstance(Core\Mail\MailerInterface::class)->send($email);
+		$this->mailer->send($email);
 
-		//if ($pluginSettings['splitFinishers']) {
-			//$this->context->cancelled = true;
-		//}
+		if ($this->settings['splitFinisherExecution']) {
+			$this->context->cancelled = true;
+		}
 	}
 
 	protected function parseWithValues(string $string): string

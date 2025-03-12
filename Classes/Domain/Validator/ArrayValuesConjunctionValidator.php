@@ -30,8 +30,8 @@ final class ArrayValuesConjunctionValidator extends AbstractCompositeValidator
 			throw new \InvalidArgumentException('Value must be an array.', 1741367481);
 		}
         $result = new Result();
-        /** @var AbstractValidator $validator */
 		foreach ($value as $item) {
+			/** @var AbstractValidator $validator */
 			foreach ($this->getValidators() as $validator) {
 				$result->merge($validator->validate($item));
 			}

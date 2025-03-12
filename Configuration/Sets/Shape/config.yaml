@@ -6,5 +6,3 @@ dependencies:
 settings:
   template:
     default: true
-  dog:
-    test: true

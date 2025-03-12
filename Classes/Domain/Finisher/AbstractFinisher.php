@@ -2,29 +2,28 @@
 
 namespace UBOS\Shape\Domain\Finisher;
 
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use UBOS\Shape\Domain\FormRuntime;
 
+#[Autoconfigure(public: true, shared: false)]
 abstract class AbstractFinisher
 {
 	protected array $settings = [];
+	protected FormRuntime\FinisherContext $context;
 
-	public function __construct(
-		public readonly FormRuntime\FinisherContext $context,
-		array                                		$settings = [],
-		public readonly ?Core\Domain\Record			$record = null,
-	) {
-		$defaultSettings = $context->runtime->settings['finisherDefaults'][static::class] ?? [];
-		$this->settings = array_merge($defaultSettings, $this->settings);
-		foreach ($settings as $key => $value) {
-			if ($value !== '') {
-				$this->settings[$key] = $value;
-			}
+	final public function execute(FormRuntime\FinisherContext $context, array $settings): void
+	{
+		if ($context->cancelled) {
+			return;
 		}
+		$this->context = $context;
+		Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($this->settings, $settings);
+		$this->executeInternal();
 	}
 
-	abstract public function execute(): void;
+	abstract public function executeInternal(): void;
 
 	protected function getRuntime(): FormRuntime\FormRuntime
 	{

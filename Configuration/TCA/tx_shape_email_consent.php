@@ -87,6 +87,12 @@ $columns = [
 			'readOnly' => true,
 		],
 	],
+	'finisher_settings' => [
+		'config' => [
+			'type' => 'json',
+			'readOnly' => true,
+		],
+	],
 	'validation_hash' => [
 		'config' => [
 			'type' => 'input',
@@ -106,7 +112,9 @@ $palettes = [
 		--linebreak--,
 		plugin, form,
 		--linebreak--,
-		validation_hash, session',
+		validation_hash, session,
+		--linebreak--,
+		finisher_settings',
 	],
 ];
 $showItem = '

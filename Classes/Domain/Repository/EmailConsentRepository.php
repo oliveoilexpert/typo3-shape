@@ -13,8 +13,5 @@ class EmailConsentRepository extends AbstractRecordRepository
 		return 'tx_shape_email_consent';
 	}
 
-	public function isLanguageAware(): bool
-	{
-		return false;
-	}
+	protected string|false $languageColumn = false;
 }
