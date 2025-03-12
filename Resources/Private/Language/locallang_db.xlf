@@ -162,7 +162,7 @@
 			<trans-unit id="email_consent.ctrl.title"><source>Email Consent</source></trans-unit>
 			<trans-unit id="email_consent.tstamp"><source>Timestamp</source></trans-unit>
 			<trans-unit id="email_consent.valid_until"><source>Valid until</source></trans-unit>
-			<trans-unit id="email_consent.state"><source>State</source></trans-unit>
+			<trans-unit id="email_consent.status"><source>State</source></trans-unit>
 			<trans-unit id="email_consent.email"><source>Email</source></trans-unit>
 			<trans-unit id="email_consent.form"><source>Form</source></trans-unit>
 			<trans-unit id="email_consent.plugin"><source>Plugin</source></trans-unit>

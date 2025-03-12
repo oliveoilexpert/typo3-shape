@@ -24,10 +24,10 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 	abstract public function getTableName(): string;
 
 	protected ?int $languageId = null;
-	protected string $hiddenColumn = 'hidden';
-	protected string $deletedColumn = 'deleted';
-	protected string $languageColumn = 'sys_language_uid';
-	protected string $localizationParentColumn = 'l10n_parent';
+	protected string|false $hiddenColumn = 'hidden';
+	protected string|false $deletedColumn = 'deleted';
+	protected string|false $languageColumn = 'sys_language_uid';
+	protected string|false $localizationParentColumn = 'l10n_parent';
 
 	public function isLanguageAware(): bool
 	{
@@ -54,25 +54,44 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		return (int)$builder->getConnection()->lastInsertId();
 	}
 
-	public function findAll(bool $asRecord = false): array
+	public function findAll(
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+		bool $asRecord = false,
+	): array
 	{
-		return $this->findWhere([], $asRecord);
+		$builder = $this->getQueryBuilder();
+		return $this->findWhere($builder, [], $excludeHidden, $excludeDeleted, $currentLanguage, $asRecord);
 	}
 
-	public function findBy(string $column, mixed $value, bool $asRecord = false): array
+	public function findBy(
+		string $column,
+		mixed $value,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+		bool $asRecord = false
+	): array
 	{
 		$builder = $this->getQueryBuilder();
 		$where = [
 			$builder->expr()->eq($column, $builder->createNamedParameter($value)),
 		];
-		return $this->findWhere($builder, $where, $asRecord);
+		return $this->findWhere($builder, $where, $excludeHidden, $excludeDeleted, $currentLanguage, $asRecord);
 	}
 
-	public function findByUid(int $uid, bool $asRecord = false): Core\Domain\Record|array|null
+	public function findByUid(
+		int $uid,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+		bool $asRecord = false
+	): Core\Domain\Record|array|null
 	{
 		$builder = $this->getQueryBuilder();
 		$where = [];
-		if ($this->isLanguageAware()) {
+		if ($currentLanguage && $this->isLanguageAware() && $this->localizationParentColumn) {
 			$where[] = $builder->expr()->or(
 				$builder->expr()->eq($this->localizationParentColumn, $uid),
 				$builder->expr()->eq('uid', $uid),
@@ -80,21 +99,45 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		} else {
 			$where[] = $builder->expr()->eq('uid', $uid);
 		}
-		return $this->findWhere($builder, $where, $asRecord)[0] ?? null;
+		return $this->findWhere($builder, $where, $excludeHidden, $excludeDeleted, $currentLanguage, $asRecord)[0] ?? null;
 	}
 
-	public function updateBy(string $column, mixed $value, array $data): void
+	public function countBy(
+		string $column,
+		mixed $value,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+	): int
 	{
 		$builder = $this->getQueryBuilder();
 		$where = [
 			$builder->expr()->eq($column, $builder->createNamedParameter($value))
 		];
-		$this->updateWhere($builder, $where, $data);
+		return $this->countWhere($builder, $where, $excludeHidden, $excludeDeleted, $currentLanguage);
 	}
 
-	public function updateByUid(int $uid, array $data): void
+	public function updateBy(
+		string $column,
+		mixed $value,
+		array $data,
+		bool $excludeDeleted = true,
+	): void
 	{
-		$this->updateBy('uid', $uid, $data);
+		$builder = $this->getQueryBuilder();
+		$where = [
+			$builder->expr()->eq($column, $builder->createNamedParameter($value))
+		];
+		$this->updateWhere($builder, $where, $data, $excludeDeleted);
+	}
+
+	public function updateByUid(
+		int $uid,
+		array $data,
+		bool $excludeDeleted = true,
+	): void
+	{
+		$this->updateBy('uid', $uid, $data, $excludeDeleted);
 	}
 
 	public function deleteBy(string $column, mixed $value): void
@@ -111,26 +154,16 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		$this->deleteBy('uid', $uid);
 	}
 
-	public function countBy(string $column, mixed $value): int
+	protected function findWhere(
+		QueryBuilder $builder,
+		array $where,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+		bool $asRecord = false,
+	): array
 	{
-		$builder = $this->getQueryBuilder();
-		$where = [
-			$builder->expr()->eq($column, $builder->createNamedParameter($value))
-		];
-		return $this->countWhere($builder, $where);
-	}
-
-	protected function findWhere(QueryBuilder $builder, array $where, bool $asRecord = false): array
-	{
-		if ($this->hiddenColumn) {
-			$where[] = $builder->expr()->eq($this->hiddenColumn, 0);
-		}
-		if ($this->deletedColumn) {
-			$where[] = $builder->expr()->eq($this->deletedColumn, 0);
-		}
-		if ($this->isLanguageAware()) {
-			$where[] = $builder->expr()->eq($this->languageColumn, $this->languageId);
-		}
+		$where = $this->addDefaultClauses($builder, $where, $excludeHidden, $excludeDeleted, $currentLanguage);
 		$rows = $builder
 			->select('*')
 			->from($this->getTableName())
@@ -142,8 +175,30 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		return $rows;
 	}
 
-	protected function updateWhere(QueryBuilder $builder, array $where, array $data): void
+	protected function countWhere(
+		QueryBuilder $builder,
+		array $where,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+	): int
 	{
+		$where = $this->addDefaultClauses($builder, $where, $excludeHidden, $excludeDeleted, $currentLanguage);
+		return (int)$builder
+			->count('uid')
+			->from($this->getTableName())
+			->where(...$where)
+			->executeQuery()->fetchOne();
+	}
+
+	protected function updateWhere(
+		QueryBuilder $builder,
+		array $where,
+		array $data,
+		bool $excludeDeleted = true,
+	): void
+	{
+		$where = $this->addDefaultClauses($builder, $where, false, $excludeDeleted, false);
 		$builder
 			->update($this->getTableName())
 			->where(...$where);
@@ -161,13 +216,24 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 			->executeStatement();
 	}
 
-	protected function countWhere(QueryBuilder $builder, array $where): int
+	protected function addDefaultClauses(
+		QueryBuilder $builder,
+		array $where,
+		bool $excludeHidden = true,
+		bool $excludeDeleted = true,
+		bool $currentLanguage = true,
+	): array
 	{
-		return (int)$builder
-			->count('uid')
-			->from($this->getTableName())
-			->where(...$where)
-			->executeQuery()->fetchOne();
+		if ($excludeHidden && $this->hiddenColumn) {
+			$where[] = $builder->expr()->eq($this->hiddenColumn, 0);
+		}
+		if ($excludeDeleted && $this->deletedColumn) {
+			$where[] = $builder->expr()->eq($this->deletedColumn, 0);
+		}
+		if ($currentLanguage && $this->isLanguageAware()) {
+			$where[] = $builder->expr()->eq($this->languageColumn, $this->languageId);
+		}
+		return $where;
 	}
 
 	protected function toRecords(?array $rows, bool $resolved = true): array

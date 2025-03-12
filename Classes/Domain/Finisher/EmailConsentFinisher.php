@@ -31,6 +31,14 @@ class EmailConsentFinisher extends AbstractFinisher
 			return;
 		}
 
+		$configurationManager = GeneralUtility::makeInstance(Extbase\Configuration\ConfigurationManagerInterface::class);
+		$configurationManager->setConfiguration(['extensionName' => 'Shape', 'pluginName' => 'Consent']);
+		$consentPluginSettings = $this->configurationManager->getConfiguration(
+			Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
+			'Shape',
+			'Consent'
+		);
+
 		$storagePage = (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid());
 		$formValues = $this->getFormValues();
 		$timestamp = time();
@@ -39,7 +47,7 @@ class EmailConsentFinisher extends AbstractFinisher
 			'crdate' => $timestamp,
 			'tstamp' => $timestamp,
 			'pid' => $storagePage,
-			'state' => 'pending',
+			'status' => 'pending',
 			'session' => $serializedSession,
 			'form' => $this->getForm()->getUid(),
 			'plugin' => $this->getPlugin()->getUid(),
@@ -100,6 +108,10 @@ class EmailConsentFinisher extends AbstractFinisher
 		}
 
 		GeneralUtility::makeInstance(Core\Mail\MailerInterface::class)->send($email);
+
+		//if ($pluginSettings['splitFinishers']) {
+			//$this->context->cancelled = true;
+		//}
 	}
 
 	protected function parseWithValues(string $string): string

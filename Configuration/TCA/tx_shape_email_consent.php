@@ -22,7 +22,7 @@ $ctrl = [
 ];
 $interface = [];
 $columns = [
-	'state' => [
+	'status' => [
 		'config' => [
 			'type' => 'input',
 			'readOnly' => true,
@@ -102,7 +102,7 @@ $palettes = [
 		'showitem' => '
 		tstamp, valid_until,
 		--linebreak--,
-		state, email,
+		status, email,
 		--linebreak--,
 		plugin, form,
 		--linebreak--,

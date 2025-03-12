@@ -10,9 +10,8 @@ plugin.tx_shape {
             0 = EXT:shape/Resources/Private/Layouts/
         }
     }
-}
-plugin.tx_shape_form {
     settings {
+        test = 0
         form = 0
         uploadFolder = 1:/user_upload/
         pluginUid = 0
@@ -29,15 +28,15 @@ plugin.tx_shape_form {
                 value = human
             }
         }
+        finisherDefaults {
+            UBOS\Shape\Domain\Finisher\EmailConsentFinisher {
+                consentPage = 0
+                pluginUid = 0
+                deleteAfterConfirmation = 1
+                splitFinishers = 1
+        }
     }
     ignoreFlexFormSettingsIfEmpty = uploadFolder, lazyLoadFragmentPage
-}
-plugin.tx_shape_consent {
-    settings {
-        consentPage = 0
-        deleteAfterConfirmation = 0
-    }
-    ignoreFlexFormSettingsIfEmpty = consentPage, deleteAfterConfirmation
 }
 
 lib.tx_shape.contentElementRendering = RECORDS

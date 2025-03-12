@@ -14,13 +14,13 @@ class GenericRepository extends AbstractRecordRepository
 	}
 
 	public function __construct(
-		protected string $tableName,
-		protected string $hiddenColumn = 'hidden',
-		protected string $deletedColumn = 'deleted',
-		protected string $languageColumn = 'sys_language_uid',
-		protected string $localizationParentColumn = 'l10n_parent',
+		protected string                        $tableName,
+		protected string|false                  $hiddenColumn = 'hidden',
+		protected string|false                  $deletedColumn = 'deleted',
+		protected string|false                  $languageColumn = 'sys_language_uid',
+		protected string|false                  $localizationParentColumn = 'l10n_parent',
 		protected ?Core\Database\ConnectionPool $connection = null,
-		protected ?Core\Domain\RecordFactory $recordFactory = null,
+		protected ?Core\Domain\RecordFactory    $recordFactory = null,
 	)
 	{
 		parent::__construct($connection, $recordFactory);

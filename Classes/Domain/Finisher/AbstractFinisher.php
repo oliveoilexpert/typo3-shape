@@ -15,7 +15,13 @@ abstract class AbstractFinisher
 		array                                		$settings = [],
 		public readonly ?Core\Domain\Record			$record = null,
 	) {
-		$this->settings = array_merge($this->settings, $settings);
+		$defaultSettings = $context->runtime->settings['finisherDefaults'][static::class] ?? [];
+		$this->settings = array_merge($defaultSettings, $this->settings);
+		foreach ($settings as $key => $value) {
+			if ($value !== '') {
+				$this->settings[$key] = $value;
+			}
+		}
 	}
 
 	abstract public function execute(): void;

@@ -35,7 +35,7 @@ class ConsentController extends ActionController
 		if ($hash !== $consent['validation_hash']) {
 			return $this->messageResponse([['key' => 'label.invalid_consent_hash', 'type' => 'error']]);
 		}
-		if ($consent['state'] !== 'pending') {
+		if ($consent['status'] !== 'pending') {
 			return $this->messageResponse([['key' => 'label.consent_not_pending', 'type' => 'info']]);
 		}
 		if (time() > $consent['valid_until']) {
@@ -45,11 +45,11 @@ class ConsentController extends ActionController
 		if ($this->settings['deleteAfterConfirmation']) {
 			$this->consentRepository->deleteByUid($uid);
 		} else {
-			$this->consentRepository->updateByUid($uid, ['state' => 'approved', 'valid_until' => null]);
+			$this->consentRepository->updateByUid($uid, ['status' => 'approved', 'valid_until' => null]);
 		}
 
 		$this->contentRepository->setLanguageId($this->request->getAttribute('language')->getLanguageId());
-		$plugin = $this->contentRepository->findByUid($consent['plugin'], true);
+		$plugin = $this->contentRepository->findByUid($consent['plugin'], asRecord: true);
 
 		// recreate request
 		$request = clone $this->request;
@@ -78,7 +78,6 @@ class ConsentController extends ActionController
 		$view->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
 		$view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
 
-
 		$form = Domain\FormRuntime\FormRuntimeBuilder::getFormRecord($plugin);
 
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
@@ -97,7 +96,7 @@ class ConsentController extends ActionController
 			false,
 		);
 
-		$finishResult = $runtime->finishForm(['consentApproved' => true]);
+		$finishResult = $runtime->finishForm(['consentStatus' => 'approved']);
 		return $finishResult->response ?? $this->redirect(
 			'finished',
 			controllerName: 'Form',

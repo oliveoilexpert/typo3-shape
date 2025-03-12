@@ -19,8 +19,8 @@ class FormRuntimeBuilder
 		]
 	): FormRuntime
 	{
-		$plugin = self::getPluginRecord($request, $settings);
-		$form = self::getFormRecord($plugin);
+		$plugin = static::getPluginRecord($request, $settings);
+		$form = static::getFormRecord($plugin);
 
 		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
@@ -110,7 +110,7 @@ class FormRuntimeBuilder
 			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
 		$contentRepository = new Domain\Repository\ContentRepository();
-		$record = $contentRepository->findByUid($uid, true);
+		$record = $contentRepository->findByUid($uid, asRecord: true);
 		if (!$record) {
 			throw new \InvalidArgumentException('Could not resolve plugin content element from arguments "request" and "settings".', 1741369824);
 		}

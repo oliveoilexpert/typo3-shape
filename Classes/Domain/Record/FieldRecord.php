@@ -41,11 +41,11 @@ class FieldRecord extends Record
 			$this->properties['default_value'] = null;
 		}
 		// Convert DateTimeInterface properties to string
-		foreach(self::DATETIME_PROPS as $key) {
+		foreach(static::DATETIME_PROPS as $key) {
 			if (!$this->has($key) || !($this->get($key) instanceof \DateTimeInterface)) {
 				continue;
 			}
-			$this->properties[$key] = $this->properties[$key]->format(self::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
+			$this->properties[$key] = $this->properties[$key]->format(static::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
 		}
 		if (!$this->has('field_options')) {
 			return;

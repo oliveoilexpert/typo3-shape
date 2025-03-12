@@ -5,6 +5,7 @@
                 <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.general</sheetTitle>
                 <type>array</type>
                 <el>
+
                     <settings.form>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.form</label>
                         <config>

@@ -17,6 +17,7 @@ class FinisherContext
 		protected EventDispatcherInterface $eventDispatcher,
 		public ?ResponseInterface          $response = null,
 		public array                       $finishedActionArguments = [],
+		public bool 					   $cancelled = false,
 	) {}
 
 	public function executeFinisher(
@@ -25,6 +26,9 @@ class FinisherContext
 		array $settings = [],
 	): void
 	{
+		if ($this->cancelled) {
+			return;
+		}
 		if ($record) {
 			$finisherClassName = $record->get('type');
 			$settings = Core\Utility\GeneralUtility::makeInstance(Core\Service\FlexFormService::class)
