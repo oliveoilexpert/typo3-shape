@@ -7,6 +7,7 @@ namespace UBOS\Shape\Domain\Condition\Functions;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use TYPO3\CMS\Core\Utility\DebugUtility;
+use UBOS\Shape\Enum;
 
 class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 {
@@ -16,7 +17,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
             $this->getFormValueFunction(),
 			$this->getFormValueFunction('value'),
 			$this->getIsConsentApprovedFunction(),
-			$this->getIsConsentDismissedFunction(),
+			$this->getIsConsentDeclinedFunction(),
 			$this->getIsBeforeConsentFunction(),
         ];
     }
@@ -38,18 +39,18 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isConsentApproved',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? '') === 'approved';
+				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Approved;
 			}
 		);
 	}
 
-	protected function getIsConsentDismissedFunction(): ExpressionFunction
+	protected function getIsConsentDeclinedFunction(): ExpressionFunction
 	{
 		return new ExpressionFunction(
-			'isConsentDismissed',
+			'isConsentDeclined',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? '') === 'dismissed';
+				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Declined;
 			}
 		);
 	}
@@ -60,7 +61,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isBeforeConsent',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? 'pending') === 'pending';
+				return ($arguments['consentStatus'] ??  Enum\ConsentStatus::Pending) === Enum\ConsentStatus::Pending;
 			}
 		);
 	}

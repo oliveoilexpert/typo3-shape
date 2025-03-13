@@ -12,6 +12,7 @@ use TYPO3\CMS\Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Domain;
 use UBOS\Shape\Domain\FormRuntime;
+use UBOS\Shape\Enum;
 
 class ConsentController extends ActionController
 {
@@ -49,7 +50,10 @@ class ConsentController extends ActionController
 		if ($consentSettings['deleteAfterConfirmation']) {
 			$this->consentRepository->deleteByUid($uid);
 		} else {
-			$this->consentRepository->updateByUid($uid, ['status' => 'approved', 'valid_until' => null]);
+			$this->consentRepository->updateByUid(
+				$uid,
+				['status' => Enum\ConsentStatus::Approved, 'valid_until' => null]
+			);
 		}
 
 		$runtime = $this->recreateFormRuntime($consent);
@@ -69,7 +73,7 @@ class ConsentController extends ActionController
 	): FormRuntime\FinisherContext
 	{
 		$context = new FormRuntime\FinisherContext($runtime);
-		$resolver = $runtime->createConditionResolver(['consentStatus' => 'approved']);
+		$resolver = $runtime->createConditionResolver(['consentStatus' => Enum\ConsentStatus::Approved]);
 		$skipFinisher = $consentSettings['splitFinisherExecution'];
 		foreach ($runtime->form->get('finishers') as $finisherRecord) {
 			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {
@@ -96,10 +100,10 @@ class ConsentController extends ActionController
 
 		// recreate request
 		$request = clone $this->request;
-		$contentObjectRenderer = Core\Utility\GeneralUtility::makeInstance(ContentObjectRenderer::class);
-		$contentObjectRenderer->setRequest($request);
-		$contentObjectRenderer->start($plugin->getRawRecord()->toArray(), 'tt_content');
-		$request = $request->withAttribute('currentContentObject', $contentObjectRenderer);
+		$contentObject = Core\Utility\GeneralUtility::makeInstance(ContentObjectRenderer::class);
+		$contentObject->setRequest($request);
+		$contentObject->start($plugin->getRawRecord()->toArray(), 'tt_content');
+		$request = $request->withAttribute('currentContentObject', $contentObject);
 
 		// recreate session
 		$session = FormRuntime\FormSession::validateAndUnserialize($consent['session']);
@@ -126,6 +130,7 @@ class ConsentController extends ActionController
 		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
 
+		// todo: BeforeFormRuntimeRecreationEvent to change request
 		return new FormRuntime\FormRuntime(
 			$request,
 			$settings,

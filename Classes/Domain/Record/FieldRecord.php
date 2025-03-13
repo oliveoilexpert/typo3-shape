@@ -47,11 +47,12 @@ class FieldRecord extends Record
 			}
 			$this->properties[$key] = $this->properties[$key]->format(static::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
 		}
+
+		// Set default value for fields with options
+		// Types that start with 'multi-' are multi-select fields and have an array as default value
 		if (!$this->has('field_options')) {
 			return;
 		}
-		// Set default value for fields with options
-		// Types that start with 'multi-' are multi-select fields and have an array as default value
 		if (str_starts_with($this->getType(),'multi-')) {
 			$value = [];
 			foreach ($this->get('field_options') as $option) {
@@ -92,6 +93,8 @@ class FieldRecord extends Record
 		$this->sessionValue = $value;
 		$this->optionState = null;
 	}
+
+	// Allow setting properties dynamically, so fields can be manipulated via events
 	public function set($key, $value): void
 	{
 		$this->properties[$key] = $value;
@@ -108,6 +111,8 @@ class FieldRecord extends Record
 	{
 		$this->properties['default_value'] = $value;
 	}
+
+	// todo: move to ViewHelper ContainsString?
 	public function getOptionState(): ?array
 	{
 		if (!$this->has('field_options')) {
@@ -128,6 +133,7 @@ class FieldRecord extends Record
 		return $optionState;
 	}
 
+	// todo: move to ViewHelper SelectOptions?
 	public function getGroupedOptions(): array
 	{
 		$groupedOptions = [];
@@ -144,11 +150,13 @@ class FieldRecord extends Record
 		return $groupedOptions;
 	}
 
+	// todo: move to ViewHelper TrimExplode?
 	public function getDatalistArray(): array
 	{
 		return array_map('trim', explode(PHP_EOL, $this->properties['datalist'] ?? ''));
 	}
 
+	// todo: move to ViewHelper CamelCase?
 	public function getCamelCaseType(): string
 	{
 		return ucFirst(str_replace('-', '', ucwords($this->getType(), '-')));

@@ -6,6 +6,7 @@ use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase;
 use UBOS\Shape\Domain;
+use UBOS\Shape\Enum;
 use UBOS\Shape\Utility\TemplateVariableParser;
 
 class EmailConsentFinisher extends AbstractFinisher
@@ -48,7 +49,7 @@ class EmailConsentFinisher extends AbstractFinisher
 			'crdate' => $timestamp,
 			'tstamp' => $timestamp,
 			'pid' => $storagePage,
-			'status' => 'pending',
+			'status' => Enum\ConsentStatus::Pending,
 			'email' => $recipientAddress,
 			'form' => $this->getForm()->getUid(),
 			'plugin' => $this->getPlugin()->getUid(),

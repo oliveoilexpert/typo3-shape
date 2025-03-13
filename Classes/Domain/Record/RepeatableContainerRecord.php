@@ -2,9 +2,6 @@
 
 namespace UBOS\Shape\Domain\Record;
 
-use TYPO3\CMS\Core\Domain\RawRecord;
-use TYPO3\CMS\Core\Domain\Record\SystemProperties;
-
 class RepeatableContainerRecord extends FieldRecord
 {
 	protected ?array $createdFieldsets = null;

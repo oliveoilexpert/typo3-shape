@@ -33,4 +33,5 @@ CREATE TABLE tx_shape_form_submission
 CREATE TABLE tx_shape_email_consent
 (
     session text,
+    status  int UNSIGNED DEFAULT '0' NOT NULL,
 );

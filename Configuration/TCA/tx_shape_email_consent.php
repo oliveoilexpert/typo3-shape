@@ -11,7 +11,7 @@ $ctrl = [
 	'crdate' => 'crdate',
 	'sortby' => 'sorting',
 	'delete' => 'deleted',
-	'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/actions/actions-check-circle.svg',
+	'iconfile' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/overlay/overlay-approved.svg',
 	'enablecolumns' => [
 		'disabled' => 'hidden',
 	],
@@ -24,8 +24,14 @@ $interface = [];
 $columns = [
 	'status' => [
 		'config' => [
-			'type' => 'input',
+			'type' => 'select',
+			'renderType' => 'selectSingle',
 			'readOnly' => true,
+			'items' => [
+				[Util::t('email_consent.status.item.pending'), 0],
+				[Util::t('email_consent.status.item.approved'), 1],
+				[Util::t('email_consent.status.item.declined'), 2],
+			]
 		]
 	],
 	'form' => [

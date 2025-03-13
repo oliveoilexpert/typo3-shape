@@ -33,6 +33,7 @@
 			<trans-unit id="label.remove_fieldset"><source>remove</source></trans-unit>
 
 			<trans-unit id="label.remove"><source>Remove</source></trans-unit>
+			<trans-unit id="label.remove_upload"><source>Remove upload</source></trans-unit>
 
 			<trans-unit id="label.confirm_input"><source>Confirm</source></trans-unit>
 			<trans-unit id="label.password_saved"><source>Password saved</source></trans-unit>
