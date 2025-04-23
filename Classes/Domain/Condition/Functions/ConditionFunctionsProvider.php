@@ -39,7 +39,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isConsentApproved',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Approved;
+				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Approved->value;
 			}
 		);
 	}
@@ -50,7 +50,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isConsentDeclined',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Declined;
+				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Declined->value;
 			}
 		);
 	}
@@ -61,7 +61,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 			'isBeforeConsent',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ??  Enum\ConsentStatus::Pending) === Enum\ConsentStatus::Pending;
+				return ($arguments['consentStatus'] ?? Enum\ConsentStatus::Pending->value) === Enum\ConsentStatus::Pending->value;
 			}
 		);
 	}

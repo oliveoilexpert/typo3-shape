@@ -5,10 +5,10 @@
 		action="{action}"
 		pageUid="{plugin.pid}"
 		arguments="{pluginUid:plugin.uid, pageIndex:forwardStepPageIndex}"
+		section="c{plugin.uid}"
 		data-yf-form="{namespace}"
 		autocomplete="on"
 		enctype="multipart/form-data">
-
 	<div>
 		<f:form.hidden name="__session" value="{serializedSession}"/>
 		<f:render partial="SpamProtection" arguments="{_all}"/>

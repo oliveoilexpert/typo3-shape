@@ -49,7 +49,7 @@ class EmailConsentFinisher extends AbstractFinisher
 			'crdate' => $timestamp,
 			'tstamp' => $timestamp,
 			'pid' => $storagePage,
-			'status' => Enum\ConsentStatus::Pending,
+			'status' => Enum\ConsentStatus::Pending->value,
 			'email' => $recipientAddress,
 			'form' => $this->getForm()->getUid(),
 			'plugin' => $this->getPlugin()->getUid(),

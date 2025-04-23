@@ -52,7 +52,7 @@ class ConsentController extends ActionController
 		} else {
 			$this->consentRepository->updateByUid(
 				$uid,
-				['status' => Enum\ConsentStatus::Approved, 'valid_until' => null]
+				['status' => Enum\ConsentStatus::Approved->value, 'valid_until' => null]
 			);
 		}
 
@@ -73,7 +73,7 @@ class ConsentController extends ActionController
 	): FormRuntime\FinisherContext
 	{
 		$context = new FormRuntime\FinisherContext($runtime);
-		$resolver = $runtime->createConditionResolver(['consentStatus' => Enum\ConsentStatus::Approved]);
+		$resolver = $runtime->createConditionResolver(['consentStatus' => Enum\ConsentStatus::Approved->value]);
 		$skipFinisher = $consentSettings['splitFinisherExecution'];
 		foreach ($runtime->form->get('finishers') as $finisherRecord) {
 			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {
