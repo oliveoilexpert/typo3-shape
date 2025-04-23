@@ -77,7 +77,7 @@ class FormController extends ActionController
 			return $this->formPage();
 		}
 		$arguments = $this->request->getArguments();
-		if ($arguments['template']) {
+		if ($arguments['template'] ?? false) {
 			$this->view->getRenderingContext()->setControllerAction($arguments['template']);
 		}
 		$variables = [
