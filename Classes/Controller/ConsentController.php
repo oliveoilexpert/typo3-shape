@@ -38,7 +38,7 @@ class ConsentController extends ActionController
 		if ($hash !== $consent['validation_hash']) {
 			return $this->messageResponse([['key' => 'label.invalid_consent_hash', 'type' => 'error']]);
 		}
-		if ($consent['status'] !== 'pending') {
+		if ($consent['status'] !== Enum\ConsentStatus::Pending->value) {
 			return $this->messageResponse([['key' => 'label.consent_not_pending', 'type' => 'info']]);
 		}
 		if (time() > $consent['valid_until']) {
