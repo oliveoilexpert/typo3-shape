@@ -5,6 +5,7 @@
                 formnovalidate
                 formaction="{f:uri.action(
                 action:'run',
+                section:'c{plugin.uid}',
                 arguments:{pluginUid:plugin.uid, pageIndex:backStepPageIndex})}">
             <f:if condition="{currentPage.prev_label}">
                 <f:then>{currentPage.prev_label}</f:then>

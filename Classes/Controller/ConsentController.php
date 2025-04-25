@@ -59,12 +59,28 @@ class ConsentController extends ActionController
 		$runtime = $this->recreateFormRuntime($consent);
 
 		$finishResult = $this->executeRuntimeFinishers($runtime, $consentSettings);
-		return $finishResult->response ?? $this->redirect(
+		if ($finishResult->response) {
+			return $finishResult->response;
+		}
+//		return $finishResult->response ?? $this->redirect(
+//			'finished',
+//			controllerName: 'Form',
+//			arguments: $finishResult->finishedActionArguments,
+//			pageUid: $runtime->plugin->getPid(),
+//		);
+		$this->uriBuilder
+			->reset()
+			->setCreateAbsoluteUri(true)
+			->setSection("c" . $runtime->plugin->getUid())
+			->setTargetPageUid($runtime->plugin->getPid());
+		$redirectUri = $this->uriBuilder->uriFor(
 			'finished',
-			controllerName: 'Form',
-			arguments: $finishResult->finishedActionArguments,
-			pageUid: $runtime->plugin->getPid(),
+			$finishResult->finishedActionArguments,
+			'Form',
+			'Shape',
+			'Form'
 		);
+		return $this->redirectToUri($redirectUri);
 	}
 
 	protected function executeRuntimeFinishers(
