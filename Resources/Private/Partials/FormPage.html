@@ -1,0 +1,39 @@
+<f:if condition="{currentPage.type} !== 'summary'">
+  <f:then>
+    <div class="{blockClass}__page">
+      <fieldset class="{blockClass}__fieldset">
+        <f:if condition="{currentPage.title}">
+          <legend class="{blockClass}__fieldset__legend {blockClass}__page__header">
+            {currentPage.title}
+          </legend>
+        </f:if>
+        <f:alias map="{fields: currentPage.fields}">
+          <f:render partial="FieldList" arguments="{_all}"/>
+        </f:alias>
+      </fieldset>
+    </div>
+  </f:then>
+  <f:else>
+    <div class="{blockClass}__page">
+      <f:if condition="{currentPage.title}">
+        <p class="{blockClass}__page__header">{currentPage.title}</p>
+      </f:if>
+      <f:variable name="arrivedAtCurrent" value="0"/>
+      <f:for each="{form.pages}" as="page">
+        <f:if condition="{page.uid} == {currentPage.uid}">
+          <f:variable name="arrivedAtCurrent" value="1"/>
+        </f:if>
+        <f:if condition="!{arrivedAtCurrent}">
+          <fieldset class="{blockClass}__fieldset -summary-step" disabled>
+            <f:if condition="{page.title}">
+              <legend class="{blockClass}__fieldset__legend">{page.title}</legend>
+            </f:if>
+            <f:alias map="{fields: page.fields}">
+              <f:render partial="FieldList" arguments="{_all}"/>
+            </f:alias>
+          </fieldset>
+        </f:if>
+      </f:for>
+    </div>
+  </f:else>
+</f:if>
