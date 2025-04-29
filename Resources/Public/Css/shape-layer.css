@@ -1,0 +1,249 @@
+@layer yform {
+	.yform__section {
+		--yf-field-width: 100%;
+		--yf-gap: 2.4rem;
+		--yf-spacing: .8rem;
+		--yf-info-dark: #004085;
+		--yf-info-light: #cce5ff;
+		--yf-success-dark: #155724;
+		--yf-success-light: #d4edda;
+		--yf-warning-dark: #856404;
+		--yf-warning-light: #fff3cd;
+		--yf-error-dark: #721c24;
+		--yf-error-light: #f8d7da;
+		* {
+			box-sizing: border-box;
+		}
+	}
+
+	.yform__page {
+		padding-bottom: var(--yf-gap);
+	}
+
+	.yform__page__header {
+		width: 100%;
+		margin: 0;
+		padding-bottom: var(--yf-gap);
+		font-size: 150%;
+	}
+
+	.yform__fieldset {
+		display: flex;
+		flex-wrap: wrap;
+		margin: calc(var(--yf-gap) / -2);
+		padding: 0;
+		border: none;
+		& + & {
+			margin-top: var(--yf-gap);
+		}
+	}
+
+	.yform__fieldset__legend {
+		width: 100%;
+		padding: calc(var(--yf-gap) / 2);
+	}
+
+	.yform__field {
+		box-sizing: border-box;
+		width: var(--yf-field-width);
+		padding: calc(var(--yf-gap) / 2);
+		margin-bottom: calc(var(--yf-spacing) * -1);
+		@media (max-width: 768px) {
+			min-width: 50%;
+		}
+		&.-summary-step {
+			pointer-events: none;
+			opacity: 0.8;
+		}
+
+		&.--hidden {
+			display: none;
+			visibility: hidden;
+		}
+		.yform__control,
+		.yform__label,
+		.yform__description,
+		.yform__message,
+		p {
+			margin-bottom: var(--yf-spacing);
+		}
+	}
+
+	.yform__label {
+		display: block;
+		padding-block: 0;
+		margin-block: 0;
+		&.-for-checkbox, &.-for-radio {
+			display: inline-block;
+		}
+	}
+
+	.yform__control {
+		width: 100%;
+		&[disabled] {
+			opacity: 0.6;
+		}
+	}
+
+	.yform__description {
+		padding-block: 0;
+		margin-block: 0;
+		font-size: smaller;
+	}
+
+	.yform__options-header {
+		padding-block: 0;
+		margin-block: 0;
+		opacity: 0.5;
+		label + & {
+			margin-top: var(--yf-spacing);
+		}
+	}
+
+	.yform__spacing {
+		margin-top: var(--yf-spacing);
+	}
+
+	.yform__navigation {
+		display: flex;
+		margin-top: var(--yf-gap);
+		gap: var(--yf-gap);
+	}
+
+	.yform__navigation__button.-next {
+		margin-left: auto;
+	}
+
+	.yform__button {
+	}
+
+	.yform__header-field {
+		margin-top: var(--yf-gap);
+	}
+
+	.yform__checkbox-control,
+	.yform__radio-control,
+	.yform__multi-checkbox-control,
+	.yform__file-control {
+		width: auto;
+	}
+
+	.yform__message-list {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		margin-top: var(--yf-spacing);
+		gap: .5em;
+		&.-row {
+			flex-direction: row;
+		}
+	}
+
+	.yform__message {
+		position: relative;
+		width: fit-content;
+		padding: .5em .75em;
+		margin-block: 0;
+		font-size: smaller;
+		line-height: 1.1;
+		border-radius: 5px;
+
+		&:has(.yform__message__icon) {
+			padding-right: 2em;
+		}
+
+		&.--hidden {
+			display: none;
+			visibility: hidden;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			color: var(--yf-info-light);
+			background: var(--yf-info-dark);
+			&.-success {
+				color: var(--yf-success-light);
+				background: var(--yf-success-dark);
+			}
+			&.-warning {
+				color: var(--yf-warning-light);
+				background: var(--yf-warning-dark);
+			}
+			&.-error {
+				color: var(--yf-error-light);
+				background: var(--yf-error-dark);
+			}
+		}
+		@media (prefers-color-scheme: light) {
+			color: var(--yf-info-dark);
+			background: var(--yf-info-light);
+			&.-success {
+				color: var(--yf-success-dark);
+				background: var(--yf-success-light);
+			}
+			&.-warning {
+				color: var(--yf-warning-dark);
+				background: var(--yf-warning-light);
+			}
+			&.-error {
+				color: var(--yf-error-dark);
+				background: var(--yf-error-light);
+			}
+		}
+	}
+
+	.yform__message__icon {
+		position: absolute;
+		padding-left: .5em;
+
+		svg {
+			width: 1em;
+			height: 1em;
+			fill: currentColor;
+		}
+	}
+
+	.yform__repeatable-container-field {
+		width: 100%;
+	}
+
+	.yform__repeatable__list {
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	@keyframes show-repeatable-item {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	.yform__repeatable__item {
+		width: 100%;
+		padding: calc(var(--yf-gap) / 2);
+		border: 1px solid color-mix(in srgb, currentColor 50%, transparent 50%);
+		border-radius: 5px;
+		animation: show-repeatable-item 0.4s;
+		margin-block: calc(var(--yf-gap) / 2);
+	}
+
+	.yform__repeatable__fieldset {
+		display: flex;
+		flex-wrap: wrap;
+		margin: calc(var(--yf-gap) / -2);
+	}
+
+	.yform__repeatable__add {
+		margin-top: calc(var(--yf-gap) / 2);
+	}
+
+	.yform__repeatable__remove {
+		display: block;
+		margin-top: var(--yf-gap);
+		margin-left: auto;
+	}
+}
