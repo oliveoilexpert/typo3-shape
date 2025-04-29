@@ -24,9 +24,14 @@ class ConsentController extends ActionController
 	)
 	{}
 
-	public function approveAction(int $uid = 0, string $hash = ''): ResponseInterface
+	public function consentAction(
+		Enum\ConsentStatus $status,
+		int $uid = 0,
+		string $hash = '',
+		bool $verify = false
+	): ResponseInterface
 	{
-		if (!$uid || !$hash) {
+		if (!$uid || !$hash || $status === Enum\ConsentStatus::Pending) {
 			return $this->messageResponse([['key' => 'label.invalid_consent_request', 'type' => 'warning']]);
 		}
 
@@ -45,6 +50,18 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.consent_expired', 'type' => 'info']]);
 		}
 
+		if ($verify) {
+			$this->view->getRenderingContext()->setControllerAction('Finisher/ConsentVerification');
+			$this->view->assign('plugin', $this->request->getAttribute('currentContentObject')->data);
+			$this->view->assign('status', $status);
+			$this->view->assign('verificationLink', $this->uriBuilder->uriFor('consent', [
+				'status' => $status,
+				'uid' => $uid,
+				'hash' => $hash,
+			]));
+			return $this->htmlResponse();
+		}
+
 		$consentSettings = json_decode($consent['finisher_settings'], true);
 
 		if ($consentSettings['deleteAfterConfirmation']) {
@@ -52,13 +69,13 @@ class ConsentController extends ActionController
 		} else {
 			$this->consentRepository->updateByUid(
 				$uid,
-				['status' => Enum\ConsentStatus::Approved->value, 'valid_until' => null]
+				['status' => $status->value, 'valid_until' => null]
 			);
 		}
 
 		$runtime = $this->recreateFormRuntime($consent);
 
-		$finishResult = $this->executeRuntimeFinishers($runtime, $consentSettings);
+		$finishResult = $this->executeRuntimeFinishers($runtime, $consentSettings, $status);
 		if ($finishResult->response) {
 			return $finishResult->response;
 		}
@@ -85,11 +102,12 @@ class ConsentController extends ActionController
 
 	protected function executeRuntimeFinishers(
 		FormRuntime\FormRuntime $runtime,
-		array $consentSettings
+		array $consentSettings,
+		Enum\ConsentStatus $consentStatus
 	): FormRuntime\FinisherContext
 	{
 		$context = new FormRuntime\FinisherContext($runtime);
-		$resolver = $runtime->createConditionResolver(['consentStatus' => Enum\ConsentStatus::Approved->value]);
+		$resolver = $runtime->createConditionResolver(['consentStatus' => $consentStatus->value]);
 		$skipFinisher = $consentSettings['splitFinisherExecution'];
 		foreach ($runtime->form->get('finishers') as $finisherRecord) {
 			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {

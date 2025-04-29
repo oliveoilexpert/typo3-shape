@@ -17,7 +17,7 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
             $this->getFormValueFunction(),
 			$this->getFormValueFunction('value'),
 			$this->getIsConsentApprovedFunction(),
-			$this->getIsConsentDeclinedFunction(),
+			$this->getIsConsentDismissedFunction(),
 			$this->getIsBeforeConsentFunction(),
         ];
     }
@@ -44,13 +44,13 @@ class ConditionFunctionsProvider implements ExpressionFunctionProviderInterface
 		);
 	}
 
-	protected function getIsConsentDeclinedFunction(): ExpressionFunction
+	protected function getIsConsentDismissedFunction(): ExpressionFunction
 	{
 		return new ExpressionFunction(
-			'isConsentDeclined',
+			'isConsentDismissed',
 			static fn() => null, // Not implemented, we only use the evaluator
 			static function ($arguments, $default = '') {
-				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Declined->value;
+				return ($arguments['consentStatus'] ?? '') === Enum\ConsentStatus::Dismissed->value;
 			}
 		);
 	}

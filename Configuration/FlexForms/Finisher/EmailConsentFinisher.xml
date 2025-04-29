@@ -56,11 +56,33 @@
                             <default>1</default>
                         </config>
                     </splitFinisherExecution>
+                    <showDismissLink>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.showDismissLink</label>
+                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.showDismissLink.description</description>
+                        <config>
+                            <type>check</type>
+                            <default>0</default>
+                        </config>
+                    </showDismissLink>
+                    <requireApproveVerification>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.requireApproveVerification</label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </requireApproveVerification>
+                    <requireDismissVerification>
+                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.requireDismissVerification</label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
+                    </requireDismissVerification>
                     <deleteAfterConfirmation>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.finisher.emailConsent.deleteAfterConfirmation</label>
                         <config>
                             <type>check</type>
-                            <default>0</default>
+                            <default>1</default>
                         </config>
                     </deleteAfterConfirmation>
                 </el>

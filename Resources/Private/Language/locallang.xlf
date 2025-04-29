@@ -46,9 +46,15 @@
 			<trans-unit id="label.invalid_consent_request"><source>No email consent requested.</source></trans-unit>
 			<trans-unit id="label.consent_not_found"><source>The requested email consent could not be found.</source></trans-unit>
 			<trans-unit id="label.invalid_consent_hash"><source>The requested email consent could not be verified.</source></trans-unit>
-			<trans-unit id="label.consent_not_pending"><source>The requested email consent was already approved.</source></trans-unit>
+			<trans-unit id="label.consent_not_pending"><source>The requested email consent was already confirmed.</source></trans-unit>
 			<trans-unit id="label.consent_expired"><source>The requested email consent has expired.</source></trans-unit>
+			<trans-unit id="label.consent_dismissed"><source>The requested email consent was successfully dismissed.</source></trans-unit>
 
+			<trans-unit id="label.approve_consent"><source>Approve email consent</source></trans-unit>
+			<trans-unit id="label.dismiss_consent"><source>Dismiss email consent</source></trans-unit>
+
+			<trans-unit id="label.confirm_consent_approved"><source>Confirm consent approval</source></trans-unit>
+			<trans-unit id="label.confirm_consent_dismissed"><source>Confirm consent dismissal</source></trans-unit>
 		</body>
 	</file>
 </xliff>

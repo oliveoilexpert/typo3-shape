@@ -80,17 +80,36 @@ class EmailConsentFinisher extends AbstractFinisher
 			->setRequest($this->getRequest())
 			->setCreateAbsoluteUri(true)
 			->uriFor(
-				'approve',
-				['uid' => $consentUid, 'hash' => $consentData['validation_hash']],
+				'consent',
+				[
+					'status' => Enum\ConsentStatus::Approved->value,
+					'verify' => (bool)$this->settings['requireApproveVerification'] ?? false,
+					'uid' => $consentUid,
+					'hash' => $consentData['validation_hash']
+				],
 				'Consent',
 				'shape',
 				'Consent'
 			);
+		$dismissLink = $this->uriBuilder
+			->uriFor(
+				'consent',
+				[
+					'status' => Enum\ConsentStatus::Dismissed->value,
+					'verify' => (bool)$this->settings['requireDismissVerification'] ?? false,
+					'uid' => $consentUid,
+					'hash' => $consentData['validation_hash']
+				],
+				'Consent',
+				'shape',
+				'Consent'
+		);
 		$variables = [
 			'formValues' => $formValues,
 			'settings' => $this->settings,
 			'runtime' => $this->getRuntime(),
 			'approveLink' => $approveLink,
+			'dismissLink' => $dismissLink,
 			'parsed' => [
 				'body' => $this->parseWithValues($this->settings['body'])
 			]

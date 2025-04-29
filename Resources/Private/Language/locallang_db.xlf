@@ -16,7 +16,7 @@
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form Record.</source></trans-unit>
 
-			<trans-unit id="plugin.consent"><source>Shape Email Consent Finisher</source></trans-unit>
+			<trans-unit id="plugin.consent"><source>Shape Email Consent Validation</source></trans-unit>
 			<trans-unit id="plugin.consent.description"><source>Plugin to process consent links.</source></trans-unit>
 
 			<trans-unit id="form.ctrl.title"><source>Form</source></trans-unit>
@@ -165,7 +165,7 @@
 			<trans-unit id="email_consent.status"><source>Status</source></trans-unit>
 			<trans-unit id="email_consent.status.item.pending"><source>Pending</source></trans-unit>
 			<trans-unit id="email_consent.status.item.approved"><source>Approved</source></trans-unit>
-			<trans-unit id="email_consent.status.item.declined"><source>Declined</source></trans-unit>
+			<trans-unit id="email_consent.status.item.dismissed"><source>Dismissed</source></trans-unit>
 
 			<trans-unit id="email_consent.email"><source>Email</source></trans-unit>
 			<trans-unit id="email_consent.form"><source>Form</source></trans-unit>
@@ -182,14 +182,14 @@
 
 			<trans-unit id="flexform.finisher.redirect.uri"><source>Redirect URL</source></trans-unit>
 
-			<trans-unit id="flexform.finisher.saveSubmission.storagePage"><source>Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveSubmission.storagePage"><source>Submission Storage Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveSubmission.excludedFields"><source>Exclude fields from saved data</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveSubmission.saveUserData"><source>Save User Agent and IP-Address</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveSubmission.connectToLanguageParentForm"><source>Connect to original language form</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveSubmission.connectToLanguageParentForm.description"><source>Submissions are connected to the form and plugin they were submitted from. When enabled, this will connect them to the original language version of form and plugin, if possible.</source></trans-unit>
 
 			<trans-unit id="flexform.finisher.saveToDatabase.table"><source>Table Name</source></trans-unit>
-			<trans-unit id="flexform.finisher.saveToDatabase.storagePage"><source>Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.saveToDatabase.storagePage"><source>Record Storage Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveToDatabase.whereColumn"><source>Update Row where Column ...</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveToDatabase.whereValue"><source>... equals Value</source></trans-unit>
 			<trans-unit id="flexform.finisher.saveToDatabase.columns"><source>Columns</source></trans-unit>
@@ -215,8 +215,8 @@
 			<trans-unit id="flexform.finisher.sendEmail.senderName"><source>Sender Name</source></trans-unit>
 			<trans-unit id="flexform.finisher.sendEmail.senderName.description"><source>Falls back to [MAIL][defaultMailFromName].</source></trans-unit>
 
-			<trans-unit id="flexform.finisher.emailConsent.storagePage"><source>Storage Page</source></trans-unit>
-			<trans-unit id="flexform.finisher.emailConsent.consentPage"><source>Consent Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.storagePage"><source>Consent Storage Page</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.consentPage"><source>Consent Validation Plugin Page</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.recipientAddress"><source>Recipient Email Address</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.replyToAddress"><source>Reply-to Email Address</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.expirationPeriod"><source>Expiration Time in Seconds</source></trans-unit>
@@ -224,7 +224,10 @@
 			<trans-unit id="flexform.finisher.emailConsent.splitFinisherExecution"><source>Split Finisher Execution</source></trans-unit>
 			<trans-unit id="flexform.finisher.emailConsent.splitFinisherExecution.description"><source>Finishers are re-run when Consent is confirmed. When enabled, Finishers before this are executed only on the initial Form Submission, Finishers after this are executed only on Consent Confirmation.
 			</source></trans-unit>
-
+			<trans-unit id="flexform.finisher.emailConsent.showDismissLink"><source>Show Consent Dismissal Link in Email</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.showDismissLink.description"><source>By default, all Finishers that are executed after Consent Approval are also executed after Dismissal. Use Finisher Conditions to differentiate between the two.</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.requireApproveVerification"><source>Require Verification for Consent Approval</source></trans-unit>
+			<trans-unit id="flexform.finisher.emailConsent.requireDismissVerification"><source>Require Verification for Consent Dismissal</source></trans-unit>
 		</body>
 	</file>
 </xliff>

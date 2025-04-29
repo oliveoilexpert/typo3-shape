@@ -30,7 +30,7 @@ $columns = [
 			'items' => [
 				[Util::t('email_consent.status.item.pending'), 0],
 				[Util::t('email_consent.status.item.approved'), 1],
-				[Util::t('email_consent.status.item.declined'), 2],
+				[Util::t('email_consent.status.item.dismissed'), 2],
 			]
 		]
 	],

@@ -105,7 +105,9 @@ $columns = [
 					['Field value is equal to', 'value("field-id") == "some-value"'],
 					['URL Parameter is equal to', 'traverse(request.getQueryParams(), "parameter/path") == "some-value"'],
 					['Consent was approved', 'isConsentApproved()'],
-					['Consent was declined', 'isConsentDeclined()'],
+					['Consent was dismissed', 'isConsentDismissed()'],
+					['Before Consent Confirmation', 'isBeforeConsent()'],
+
 				],
 			],
 		],

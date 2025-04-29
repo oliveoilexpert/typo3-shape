@@ -1,0 +1,10 @@
+<f:variable name="blockClass" value="yform"/>
+<f:variable name="buttonClass" value="yform__button"/>
+<f:asset.css identifier="tx-shape"
+             href="EXT:shape/Resources/Public/Css/shape.css" />
+
+<section id="c{plugin.uid}" class="{blockClass}__section">
+    <button onclick="window.open('{verificationLink}', '_top')" class="{buttonClass}">
+        {f:translate(key: 'label.confirm_consent_{status.name -> f:format.case(mode:\'lower\')}')}
+    </button>
+</section>
