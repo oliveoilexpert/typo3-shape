@@ -10,7 +10,7 @@
 			prependOptionValue=""
 			sortByOptionLabel="true"
 			optionLabelField="localizedName"
-			onlyCountries="{field.datalistArray}"
+			onlyCountries="{field.datalist -> shape:lineExplode()}"
 	/>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

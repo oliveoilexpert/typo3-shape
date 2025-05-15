@@ -1,10 +1,10 @@
-<f:for each="{field.groupedOptions}" key="groupLabel" as="options">
+<f:for each="{field -> shape:groupedFieldOptions()}" key="groupLabel" as="options">
     <f:if condition="{groupLabel}">
         <optgroup label="{groupLabel}">
     </f:if>
     <f:for each="{options}" as="option">
         <f:form.select.option
-                selected="{field.optionState.{option.value}}"
+                selected="{option.value -> shape:inArray(haystack:field.value)}"
                 value="{option.value}">{option.label}</f:form.select.option>
     </f:for>
     <f:if condition="{groupLabel}">

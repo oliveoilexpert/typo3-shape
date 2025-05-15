@@ -8,12 +8,12 @@ class IsStringViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
-		$this->registerArgument('variable', 'mixed', '', false, null);
+		$this->registerArgument('value', 'mixed', '', false, null);
 	}
 
 	public function render(): bool
 	{
-		$var = $this->arguments['variable'] ?: $this->renderChildren() ?: null;
+		$var = $this->arguments['value'] ?: $this->renderChildren() ?: null;
 		return is_string($var);
 	}
 

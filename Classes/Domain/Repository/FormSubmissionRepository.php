@@ -13,10 +13,7 @@ class FormSubmissionRepository extends AbstractRecordRepository
 		return 'tx_shape_form_submission';
 	}
 
-	public function isLanguageAware(): bool
-	{
-		return false;
-	}
+	protected string|false $languageColumn = false;
 
 	public function isUniqueValue(string $fieldName, mixed $value, int $pluginUid = 0, int $formUid = 0): bool
 	{

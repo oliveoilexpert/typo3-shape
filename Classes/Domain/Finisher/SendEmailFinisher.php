@@ -35,8 +35,12 @@ class SendEmailFinisher extends AbstractFinisher
 
 		$email = new Core\Mail\FluidEmail($this->getView()->getRenderingContext()->getTemplatePaths());
 		$senderAddress = new Address(
-			$this->settings['senderAddress'] ?: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress'],
-			$this->settings['senderName'] ?: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromName']
+			$this->settings['senderAddress']
+				? $this->parseWithValues($this->settings['senderAddress'])
+				: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress'],
+			$this->settings['senderName']
+				? $this->parseWithValues($this->settings['senderName'])
+				: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromName']
 		);
 		$subject = $this->parseWithValues($this->settings['subject']);
 		$template = $this->settings['template'] ?: 'Finisher/SendEmail/Default';

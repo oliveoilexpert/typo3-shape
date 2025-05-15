@@ -15,7 +15,7 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 	public function render(): array
 	{
 		$field = $this->arguments['field'] ?: $this->renderChildren() ?: null;
-		if (!$field) {
+		if (!$field instanceof \UBOS\Shape\Domain\Record\FieldRecord) {
 			return [];
 		}
 		$name = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]";

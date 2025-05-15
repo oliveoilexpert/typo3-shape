@@ -1,6 +1,7 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
-	<f:variable name="hasCustomValue" value="{f:if(condition:'!({field.optionState} && {field.optionState.{field.value}}) && {field.value}',then:true,else:false)}"/>
+	<f:variable name="hasCustomValue"
+				value="{f:if(condition:'!{option.value -> shape:inArray(haystack:field.value)} && {field.value}',then:true,else:false)}"/>
 
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{fieldAttributes.name}"

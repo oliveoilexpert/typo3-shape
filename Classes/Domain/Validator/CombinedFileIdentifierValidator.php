@@ -20,7 +20,6 @@ final class CombinedFileIdentifierValidator extends AbstractValidator
 
 	public function isValid(mixed $value): void
 	{
-		// todo: inject?
 		try {
 			$file = $this->resourceFactory->getFileObjectFromCombinedIdentifier($value);
 			if (!$file) {

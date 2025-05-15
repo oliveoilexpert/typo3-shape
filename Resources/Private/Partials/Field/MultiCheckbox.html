@@ -8,7 +8,7 @@
 			</p>
 		</f:if>
 		<f:form.checkbox name="{fieldAttributes.name}"
-						 checked="{field.optionState.{option.value}}"
+						 checked="{option.value -> shape:inArray(haystack:field.value)}"
 						 multiple="1"
 						 value="{option.value}"
 						 additionalAttributes="{fieldAttributes}"
