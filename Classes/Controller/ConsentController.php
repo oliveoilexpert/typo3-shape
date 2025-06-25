@@ -129,6 +129,7 @@ class ConsentController extends ActionController
 	protected function recreateFormRuntime(array $consent): FormRuntime\FormRuntime
 	{
 		// get plugin
+		$this->contentRepository->setLanguageId($this->request->getAttribute('language')->getLanguageId());
 		$plugin = $this->contentRepository->findByUid($consent['plugin'], asRecord: true);
 
 		// recreate request

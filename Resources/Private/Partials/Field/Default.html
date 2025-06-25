@@ -8,7 +8,7 @@
 					  class="{blockClass}__control {blockClass}__{field.type}-control"/>
 	<f:if condition="{field.datalist}">
 		<datalist id="{fieldAttributes.list}">
-			<f:for each="{field.datalist -> shape:lineExplode()}" as="item">
+			<f:for each="{field.datalistArray}" as="item">
 				<option value="{item}"/>
 			</f:for>
 		</datalist>
