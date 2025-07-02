@@ -122,7 +122,12 @@ class FormRuntimeBuilder
 		Core\Domain\Record $plugin
 	): Core\Domain\Record
 	{
-		$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
+		// typo3 13.4.x version dependant
+		if (property_exists($plugin->get('pi_flexform'), 'sheets')) {
+			$form = $plugin->get('pi_flexform')->get('general/settings')['form'][0] ?? null;
+		} else {
+			$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
+		}
 		if (!$form || $form->getMainType() !== 'tx_shape_form') {
 			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
 		}

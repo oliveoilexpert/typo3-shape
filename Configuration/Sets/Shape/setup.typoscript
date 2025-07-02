@@ -13,7 +13,6 @@ plugin.tx_shape {
         }
     }
     settings {
-        test = 0
         form = 0
         uploadFolder = 1:/user_upload/
         pluginUid = 0
