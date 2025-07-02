@@ -56,8 +56,6 @@ class EmailConsentFinisher extends AbstractFinisher
 			'session' => $serializedSession,
 			'finisher_settings' => json_encode($this->settings),
 			'valid_until' => $timestamp + $this->settings['expirationPeriod'],
-			'requireApproveVerification' => false,
-			'requireDismissVerification' => false,
 		];
 
 		$consentData['validation_hash'] = $this->hashService->hmac(
