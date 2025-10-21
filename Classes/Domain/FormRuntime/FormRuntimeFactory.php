@@ -9,18 +9,19 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use UBOS\Shape\Domain;
 
 
-class FormRuntimeFactory
+class FormRuntimeFactory implements FormRuntimeFactoryInterface
 {
 	public function __construct(
-		protected readonly ValueValidator $validator,
-		protected readonly ValueProcessor $processor,
-		protected readonly ValueSerializer $serializer,
-		protected readonly Core\EventDispatcher\EventDispatcher $eventDispatcher,
-		protected readonly Core\Service\FlexFormService $flexFormService,
-		protected readonly Core\Resource\StorageRepository $storageRepository,
+		protected readonly FieldValueValidator                                 $fieldValueValidator,
+		protected readonly FieldValueProcessor                                 $fieldValueProcessor,
+		protected readonly FieldValueSerializer                                $fieldValueSerializer,
+		protected readonly FieldConditionResolver							   $fieldConditionResolver,
+		protected readonly Core\EventDispatcher\EventDispatcher                $eventDispatcher,
+		protected readonly Core\Service\FlexFormService                        $flexFormService,
+		protected readonly Core\Resource\StorageRepository                     $storageRepository,
 		protected readonly Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
-		protected readonly Domain\Repository\ContentRepository $contentRepository,
-		protected readonly ContentObjectRenderer $contentObject
+		protected readonly Domain\Repository\ContentRepository                 $contentRepository,
+		protected readonly ContentObjectRenderer                               $contentObject
 	) {}
 
 	public function createFromRequest(
@@ -52,7 +53,9 @@ class FormRuntimeFactory
 			} else {
 				try {
 					$session = FormSession::validateAndUnserialize($serializedSessionWithHmac);
-				} catch (\Exception $e) {
+				} catch (Domain\Exception\InvalidSessionException $e) {
+					// todo: log invalid session
+					//$logger->warning('Invalid session detected', ['exception' => $e]);
 					$session = new FormSession();
 				}
 			}
@@ -112,9 +115,10 @@ class FormRuntimeFactory
 			false,
 			$this->eventDispatcher,
 			$this->flexFormService,
-			$this->validator,
-			$this->processor,
-			$this->serializer,
+			$this->fieldValueValidator,
+			$this->fieldValueProcessor,
+			$this->fieldValueSerializer,
+			$this->fieldConditionResolver,
 		);
 	}
 
@@ -136,7 +140,11 @@ class FormRuntimeFactory
 		$requestClone = $requestClone->withAttribute('currentContentObject', $this->contentObject);
 
 		// recreate session
-		$session = FormSession::validateAndUnserialize($consent['session']);
+		try {
+			$session = FormSession::validateAndUnserialize($consent['session']);
+		} catch (Domain\Exception\InvalidSessionException $e) {
+			throw new \InvalidArgumentException('Could not recreate FormRuntime: Invalid session in consent.', 1741369823, $e);
+		}
 
 		// get plugin configuration
 		$this->configurationManager->setRequest($requestClone);
@@ -177,9 +185,10 @@ class FormRuntimeFactory
 			false,
 			$this->eventDispatcher,
 			$this->flexFormService,
-			$this->validator,
-			$this->processor,
-			$this->serializer,
+			$this->fieldValueValidator,
+			$this->fieldValueProcessor,
+			$this->fieldValueSerializer,
+			$this->fieldConditionResolver,
 		);
 	}
 

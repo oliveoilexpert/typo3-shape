@@ -14,10 +14,10 @@ use UBOS\Shape\Domain\FormRuntime;
 final class RepeatableContainerHandler
 {
 	public function __construct(
-		protected EventDispatcher $eventDispatcher,
-		protected readonly FormRuntime\ValueValidator $validator,
-		protected readonly FormRuntime\ValueProcessor $processor,
-		protected readonly FormRuntime\ValueSerializer $serializer,
+		protected EventDispatcher                           $eventDispatcher,
+		protected readonly FormRuntime\FieldValueValidator  $validator,
+		protected readonly FormRuntime\FieldValueProcessor  $processor,
+		protected readonly FormRuntime\FieldValueSerializer $serializer,
 	) {}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreator')]

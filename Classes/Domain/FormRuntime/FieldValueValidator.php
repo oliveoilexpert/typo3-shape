@@ -8,7 +8,7 @@ use TYPO3\CMS\Core;
 use UBOS\Shape\Domain\Record\FieldRecord;
 use UBOS\Shape\Event\ValueValidationEvent;
 
-class ValueValidator
+class FieldValueValidator
 {
 	public function __construct(
 		protected EventDispatcherInterface $eventDispatcher

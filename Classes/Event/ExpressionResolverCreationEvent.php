@@ -6,7 +6,7 @@ namespace UBOS\Shape\Event;
 
 use UBOS\Shape\Domain;
 
-final class ConditionResolverCreationEvent
+final class ExpressionResolverCreationEvent
 {
 	public function __construct(
 		public readonly Domain\FormRuntime\FormRuntime $runtime,

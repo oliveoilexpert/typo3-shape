@@ -7,7 +7,7 @@ use UBOS\Shape\Domain\Record\FieldRecord;
 use UBOS\Shape\Event\ValueProcessingEvent;
 
 
-class ValueProcessor
+class FieldValueProcessor
 {
 	public function __construct(
 		protected EventDispatcherInterface $eventDispatcher,

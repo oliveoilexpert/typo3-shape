@@ -44,14 +44,41 @@ final class ValueSerializationHandler
 		}
 		$filePaths = [];
 		foreach ($files as $file) {
-			$newFile = $uploadStorage->addUploadedFile(
-				$file,
-				$uploadStorage->getFolder($folderPath),
-				$file->getClientFilename(),
-				Core\Resource\Enum\DuplicationBehavior::RENAME
-			);
-			$filePaths[] = $uploadStorage->getUid() . ':' . $folderPath . $newFile->getName();
+			if ($file->getError() !== UPLOAD_ERR_OK) {
+				// todo: log error
+				continue;
+			}
+
+			$filename = $this->sanitizeFilename($file->getClientFilename());
+			try {
+				$newFile = $uploadStorage->addUploadedFile(
+					$file,
+					$uploadStorage->getFolder($folderPath),
+					$filename,
+					Core\Resource\Enum\DuplicationBehavior::RENAME
+				);
+				$filePaths[] = $uploadStorage->getUid() . ':' . $folderPath . $newFile->getName();
+			} catch (\Exception $e) {
+				// todo: log exception
+				continue;
+			}
 		}
 		return $filePaths;
+	}
+
+	protected function sanitizeFilename(string $filename): string
+	{
+		$filename = basename($filename);
+
+		// Split into name and extension
+		$pathinfo = pathinfo($filename);
+		$name = $pathinfo['filename'] ?? 'file';
+		$extension = $pathinfo['extension'] ?? '';
+
+		// Sanitize the name part only
+		$name = preg_replace('/[^a-zA-Z0-9._-]/', '_', $name);
+
+		// Ensure we keep the extension
+		return $extension ? "{$name}.{$extension}" : $name;
 	}
 }

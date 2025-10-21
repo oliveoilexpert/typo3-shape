@@ -3,7 +3,6 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use UBOS\Shape\Domain;
@@ -27,16 +26,17 @@ class FormRuntime
 		protected bool                                         $hasErrors = false,
 		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
 		protected ?Core\Service\FlexFormService                $flexFormService = null,
-		protected ?ValueValidator                              $validator = null,
-		protected ?ValueProcessor                              $processor = null,
-		protected ?ValueSerializer                             $serializer = null,
+		protected ?FieldValueValidator                         $fieldValueValidator = null,
+		protected ?FieldValueProcessor                         $fieldValueProcessor = null,
+		protected ?FieldValueSerializer                        $fieldValueSerializer = null,
+		protected ?FieldConditionResolver                      $fieldConditionResolver = null,
 	)
 	{
 		$this->eventDispatcher = $this->eventDispatcher ?? GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
 		$this->flexFormService = $this->flexFormService ?? GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
-		$this->validator = $this->validator ?? GeneralUtility::makeInstance(ValueValidator::class);
-		$this->processor = $this->processor ?? GeneralUtility::makeInstance(ValueProcessor::class);
-		$this->serializer = $this->serializer ?? GeneralUtility::makeInstance(ValueSerializer::class);
+		$this->fieldValueValidator = $this->fieldValueValidator ?? GeneralUtility::makeInstance(FieldValueValidator::class);
+		$this->fieldValueProcessor = $this->fieldValueProcessor ?? GeneralUtility::makeInstance(FieldValueProcessor::class);
+		$this->fieldValueSerializer = $this->fieldValueSerializer ?? GeneralUtility::makeInstance(FieldValueSerializer::class);
 	}
 
 	public function initializeFieldValuesFromSession(): FormRuntime
@@ -85,10 +85,10 @@ class FormRuntime
 		$this->session->returnPageIndex = $pageIndex;
 
 		// Resolve display conditions with "stepType" of page to be rendered
-		$resolver = new FieldConditionResolver($this, $this->createConditionResolver(['stepType' => $currentPageRecord->get('type')]), $this->eventDispatcher);
+		$expressionResolver = $this->createExpressionResolver(['stepType' => $currentPageRecord->get('type')]);
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
-				$field->conditionResult = $resolver->evaluate($field);
+				$field->conditionResult = $this->fieldConditionResolver->evaluate($this, $field, $expressionResolver);
 			}
 		}
 
@@ -127,10 +127,10 @@ class FormRuntime
 		}
 
 		// Resolve display conditions with "stepType" of the page fields are on, necessary before validation for required fields
-		$fieldResolver = new FieldConditionResolver($this, $this->createConditionResolver(['stepType' => $page->get('type')]), $this->eventDispatcher);
+		$expressionResolver = $this->createExpressionResolver(['stepType' => $page->get('type')]);
 		foreach ($page->get('fields') as $field) {
-			$field->conditionResult = $fieldResolver->evaluate($field);
-			$field->validationResult = $this->validator->validate($this, $field, $this->getFieldValue($field));
+			$field->conditionResult = $this->fieldConditionResolver->evaluate($this, $field, $expressionResolver);
+			$field->validationResult = $this->fieldValueValidator->validate($this, $field, $this->getFieldValue($field));
 			if ($field->validationResult->hasErrors()) {
 				$this->hasErrors = true;
 			}
@@ -147,7 +147,7 @@ class FormRuntime
 			if (!$field->has('name')) {
 				continue;
 			}
-			$serializedValue = $this->serializer->serialize($this, $field, $this->getFieldValue($field));
+			$serializedValue = $this->fieldValueSerializer->serialize($this, $field, $this->getFieldValue($field));
 			$this->setFieldValue($field, $serializedValue);
 		}
 	}
@@ -184,7 +184,7 @@ class FormRuntime
 				if (!$field->has('name')) {
 					continue;
 				}
-				$processedValue = $this->processor->process($this, $field, $this->getFieldValue($field));
+				$processedValue = $this->fieldValueProcessor->process($this, $field, $this->getFieldValue($field));
 				$this->setFieldValue($field, $processedValue);
 			}
 		}
@@ -193,9 +193,9 @@ class FormRuntime
 	public function finishForm(array $conditionVariables = []): FinisherContext
 	{
 		$context = new FinisherContext($this);
-		$resolver = $this->createConditionResolver($conditionVariables);
+		$expressionResolver = $this->createExpressionResolver($conditionVariables);
 		foreach ($this->form->get('finishers') as $finisherRecord) {
-			if ($finisherRecord->get('condition') && !$resolver->evaluate($finisherRecord->get('condition'))) {
+			if ($finisherRecord->get('condition') && !$expressionResolver->evaluate($finisherRecord->get('condition'))) {
 				continue;
 			}
 			$this->executeFinisherRecord($finisherRecord, $context);
@@ -223,7 +223,7 @@ class FormRuntime
 		$event->finisher->execute($event->context, $event->settings);
 	}
 
-	public function createConditionResolver(array $variables): Core\ExpressionLanguage\Resolver
+	public function createExpressionResolver(array $variables): Core\ExpressionLanguage\Resolver
 	{
 		$variables = array_merge([
 			'formRuntime' => $this,
@@ -232,9 +232,8 @@ class FormRuntime
 			'site' => $this->request->getAttribute('site'),
 			'frontendUser' => $this->request->getAttribute('frontend.user'),
 		], $variables);
-		$event = new Event\ConditionResolverCreationEvent($this, $variables);
+		$event = new Event\ExpressionResolverCreationEvent($this, $variables);
 		$this->eventDispatcher->dispatch($event);
-
 		return GeneralUtility::makeInstance(
 			Core\ExpressionLanguage\Resolver::class,
 			'tx_shape', $event->getVariables()

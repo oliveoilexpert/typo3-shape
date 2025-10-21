@@ -110,7 +110,7 @@ class ConsentController extends ActionController
 	): FormRuntime\FinisherContext
 	{
 		$context = new FormRuntime\FinisherContext($runtime);
-		$resolver = $runtime->createConditionResolver(['consentStatus' => $consentStatus->value]);
+		$resolver = $runtime->createExpressionResolver(['consentStatus' => $consentStatus->value]);
 		$skipFinisher = $consentSettings['splitFinisherExecution'];
 		foreach ($runtime->form->get('finishers') as $finisherRecord) {
 			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {

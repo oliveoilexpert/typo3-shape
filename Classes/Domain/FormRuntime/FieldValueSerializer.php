@@ -6,7 +6,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use UBOS\Shape\Domain\Record\FieldRecord;
 use UBOS\Shape\Event\ValueSerializationEvent;
 
-class ValueSerializer
+class FieldValueSerializer
 {
 	public function __construct(
 		protected EventDispatcherInterface $eventDispatcher,

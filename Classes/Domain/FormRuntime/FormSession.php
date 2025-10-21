@@ -3,6 +3,7 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use TYPO3\CMS\Core;
+use UBOS\Shape\Domain\Exception\InvalidSessionException;
 
 class FormSession
 {
@@ -29,17 +30,25 @@ class FormSession
 			FormSession::SECRET
 		);
 	}
-	public static function validateAndUnserialize(string $serializedSessionWithHmac): bool|FormSession
+	public static function validateAndUnserialize(string $serializedSessionWithHmac): FormSession
 	{
 		$hashService = Core\Utility\GeneralUtility::makeInstance(Core\Crypto\HashService::class);
 		try {
 			$serializedSession = $hashService->validateAndStripHmac(
 				$serializedSessionWithHmac,
-				FormSession::SECRET
+				self::SECRET
 			);
+			$session = unserialize(base64_decode($serializedSession));
+			if (!$session instanceof self) {
+				throw new \InvalidArgumentException('Unserialized data is not a FormSession', 1741370001);
+			}
+			return $session;
 		} catch (\Exception $e) {
-			throw $e;
+			throw new InvalidSessionException(
+				'Session validation failed',
+				1741370002,
+				$e
+			);
 		}
-		return unserialize(base64_decode($serializedSession));
 	}
 }
