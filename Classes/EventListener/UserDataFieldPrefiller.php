@@ -20,7 +20,12 @@ final class UserDataFieldPrefiller
 		// todo: inject?
 		/** @var Domain\Repository\GenericRepository $genericRepository */
 		$genericRepository = Core\Utility\GeneralUtility::makeInstance(Domain\Repository\GenericRepository::class);
-		$genericRepository->forTable('fe_users');
+		$genericRepository->forTable(
+			'fe_users',
+			hiddenColumn: false,
+			languageColumn: false,
+			localizationParentColumn: false,
+		);
 
 		$user = $genericRepository->findByUid($feAuth->getUserId());
 		if (!$user) {

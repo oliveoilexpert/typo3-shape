@@ -10,10 +10,6 @@ use UBOS\Shape\Event\ValueProcessingEvent;
 
 final class ValueProcessingHandler
 {
-	public function __construct(
-		PasswordHashing\PasswordHashFactory $passwordHashFactory
-	) {}
-
 	#[AsEventListener]
 	public function __invoke(ValueProcessingEvent $event): void
 	{
@@ -23,7 +19,8 @@ final class ValueProcessingHandler
 		$value = $event->value;
 		$field = $event->field;
 		if ($field->getType() === 'password') {
-			$event->processedValue = $this->passwordHashFactory->getDefaultHashInstance('FE')->getHashedPassword($value);
+			$passwordHashFactory = Core\Utility\GeneralUtility::makeInstance(PasswordHashing\PasswordHashFactory::class);
+			$event->processedValue = $passwordHashFactory->getDefaultHashInstance('FE')->getHashedPassword($value);
 		}
 		if ($field->getType() === 'number' || $field->getType() === 'range') {
 			if (is_numeric($value)) {

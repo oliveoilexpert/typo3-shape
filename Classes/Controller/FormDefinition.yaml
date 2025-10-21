@@ -1,0 +1,48 @@
+name: signup
+title: Signup
+finishers:
+  - type: UBOS\Shape\Domain\Finisher\RedirectFinisher
+    settings:
+      uri: 'https://www.ubos.net/thank-you'
+  - type: UBOS\Shape\Domain\Finisher\EmailConsentFinisher
+    settings:
+      storagePage: 187
+      consentPage: 188
+      splitFinisherExecution: 1
+      deleteAfterConfirmation: 1
+      recipientAddress: '{{ email }}'
+      subject: 'Bitte bestätigen Sie die Registrierung als {{ email }} auf der Seite hermes-experts.com'
+      body: '%signup_consentfinisher_mailbody%'
+
+pages:
+  - type: page
+    title: ''
+    fields:
+      - type: radio
+        name: gender
+        label: 'Geschlecht'
+        required: 1
+        options:
+          - label: Herr
+            value: 1
+          - label: Frau
+            value: 2
+          - label: Divers
+            value: 3
+
+      - type: select
+        name: title
+        label: 'Titel'
+        options:
+          - label: 'Dr.'
+            value: dr
+          - label: 'Prof.'
+            value: prof
+          - label: 'Prof. Dr.'
+            value: profdr
+
+      - type: text
+        name: first-name
+        label: 'Vorname'
+        required: 1
+

@@ -14,7 +14,10 @@ use UBOS\Shape\Domain\FormRuntime;
 final class RepeatableContainerHandler
 {
 	public function __construct(
-		protected EventDispatcher $eventDispatcher
+		protected EventDispatcher $eventDispatcher,
+		protected readonly FormRuntime\ValueValidator $validator,
+		protected readonly FormRuntime\ValueProcessor $processor,
+		protected readonly FormRuntime\ValueSerializer $serializer,
 	) {}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreator')]
@@ -69,16 +72,12 @@ final class RepeatableContainerHandler
 			$event->result = $result;
 			return;
 		}
-		$validator = new FormRuntime\ValueValidator(
-			$event->runtime,
-			$this->eventDispatcher
-		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$result->forProperty($index);
 			foreach ($fields as $childField) {
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				$childField->validationResult = $validator->validate($childField, $value);
+				$childField->validationResult = $this->validator->validate($event->runtime, $childField, $value);
 				$result->forProperty($index)->forProperty($name)->merge($childField->validationResult);
 			}
 		}
@@ -97,16 +96,12 @@ final class RepeatableContainerHandler
 			$event->serializedValue = $serializedValue;
 			return;
 		}
-		$serializer = new FormRuntime\ValueSerializer(
-			$event->runtime,
-			$this->eventDispatcher
-		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$serializedValue[$index] = [];
 			foreach ($fields as $childField) {
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				$serializedChildValue = $serializer->serialize($childField, $value);
+				$serializedChildValue = $this->serializer->serialize($event->runtime, $childField, $value);
 				$childField->setSessionValue($serializedChildValue);
 				$serializedValue[$index][$name] = $serializedChildValue;
 				if (isset($event->value[$index][$name.'__CONFIRM'])) {
@@ -129,16 +124,12 @@ final class RepeatableContainerHandler
 			$event->processedValue = $processedValue;
 			return;
 		}
-		$processor = new FormRuntime\ValueProcessor(
-			$event->runtime,
-			$this->eventDispatcher
-		);
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			$processedValue[$index] = [];
 			foreach ($fields as $childField) {
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				$processedChildValue = $processor->process($childField, $value);
+				$processedChildValue = $this->processor->process($event->runtime, $childField, $value);
 				$childField->setSessionValue($processedChildValue);
 				$processedValue[$index][$name] = $processedChildValue;
 				if (isset($event->value[$index][$name.'__CONFIRM'])) {

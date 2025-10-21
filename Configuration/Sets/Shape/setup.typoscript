@@ -3,8 +3,6 @@ plugin.tx_shape {
         templateRootPaths {
             0 = EXT:shape/Resources/Private/Templates/
         }
-
-
         partialRootPaths {
             0 = EXT:shape/Resources/Private/Partials/
         }

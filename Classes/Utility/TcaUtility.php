@@ -103,43 +103,4 @@ class TcaUtility
 			$GLOBALS['TCA']['tx_shape_finisher']['columns']['settings']['config']['ds'][$value] = $flexForm;
 		}
 	}
-
-	public static function addPluginType(
-		string $name,
-		string $label,
-		string $icon,
-		string $group,
-		string $description = '',
-		string $flexForm = '',
-		array $typeDefinition = [],
-		string $extensionKey = 'shape'
-	): void
-	{
-		$key = ExtensionUtility::registerPlugin(
-			$extensionKey,
-			$name,
-			$label,
-			$icon,
-			$group,
-			$description,
-		);
-		ExtensionManagementUtility::addPlugin(
-			[
-				'label' => $label,
-				'description' => $description,
-				'group' => $group,
-				'value' => $key,
-				'icon' => $icon,
-			],
-			'CType',
-			$extensionKey,
-		);
-
-		if ($flexForm) {
-			$GLOBALS['TCA']['tt_content']['columns']['pi_flexform']['config']['ds']['*' . ',' . $key] = $flexForm;
-		}
-		if ($typeDefinition) {
-			$GLOBALS['TCA']['tt_content']['types'][$key] = $typeDefinition;
-		}
-	}
 }

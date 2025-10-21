@@ -3,6 +3,7 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use UBOS\Shape\Domain;
@@ -13,7 +14,7 @@ class FormRuntime
 	public function __construct(
 		readonly public RequestInterface                       $request,
 		readonly public array                                  $settings,
-		readonly public Core\View\ViewInterface 			   $view,
+		readonly public Core\View\ViewInterface                $view,
 		readonly public Core\Domain\Record                     $plugin,
 		readonly public Core\Domain\Record                     $form,
 		readonly public FormSession                            $session,
@@ -22,14 +23,20 @@ class FormRuntime
 		readonly public string                                 $parsedBodyKey,
 		readonly public bool                                   $isStepBack = false,
 		protected ?array                                       $spamReasons = null,
-		protected array 									   $messages = [],
+		protected array                                        $messages = [],
 		protected bool                                         $hasErrors = false,
 		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
-		protected ?Core\Service\FlexFormService 			   $flexFormService = null,
+		protected ?Core\Service\FlexFormService                $flexFormService = null,
+		protected ?ValueValidator                              $validator = null,
+		protected ?ValueProcessor                              $processor = null,
+		protected ?ValueSerializer                             $serializer = null,
 	)
 	{
 		$this->eventDispatcher = $this->eventDispatcher ?? GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
 		$this->flexFormService = $this->flexFormService ?? GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
+		$this->validator = $this->validator ?? GeneralUtility::makeInstance(ValueValidator::class);
+		$this->processor = $this->processor ?? GeneralUtility::makeInstance(ValueProcessor::class);
+		$this->serializer = $this->serializer ?? GeneralUtility::makeInstance(ValueSerializer::class);
 	}
 
 	public function initializeFieldValuesFromSession(): FormRuntime
@@ -121,10 +128,9 @@ class FormRuntime
 
 		// Resolve display conditions with "stepType" of the page fields are on, necessary before validation for required fields
 		$fieldResolver = new FieldConditionResolver($this, $this->createConditionResolver(['stepType' => $page->get('type')]), $this->eventDispatcher);
-		$validator = new ValueValidator($this, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			$field->conditionResult = $fieldResolver->evaluate($field);
-			$field->validationResult = $validator->validate($field, $this->getFieldValue($field));
+			$field->validationResult = $this->validator->validate($this, $field, $this->getFieldValue($field));
 			if ($field->validationResult->hasErrors()) {
 				$this->hasErrors = true;
 			}
@@ -137,12 +143,11 @@ class FormRuntime
 		if (!$page || !$page->has('fields')) {
 			return;
 		}
-		$serializer = new ValueSerializer($this, $this->eventDispatcher);
 		foreach ($page->get('fields') as $field) {
 			if (!$field->has('name')) {
 				continue;
 			}
-			$serializedValue = $serializer->serialize($field, $this->getFieldValue($field));
+			$serializedValue = $this->serializer->serialize($this, $field, $this->getFieldValue($field));
 			$this->setFieldValue($field, $serializedValue);
 		}
 	}
@@ -174,16 +179,12 @@ class FormRuntime
 
 	public function processForm(): void
 	{
-		$processor = new ValueProcessor(
-			$this,
-			$this->eventDispatcher
-		);
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
 				if (!$field->has('name')) {
 					continue;
 				}
-				$processedValue = $processor->process($field, $this->getFieldValue($field));
+				$processedValue = $this->processor->process($this, $field, $this->getFieldValue($field));
 				$this->setFieldValue($field, $processedValue);
 			}
 		}

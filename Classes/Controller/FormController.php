@@ -13,6 +13,11 @@ use UBOS\Shape\Domain\FormRuntime;
 use UBOS\Shape\Domain;
 
 
+// todo: FormReflection with things like fieldNames, finisher types, other field information
+// todo: FormBuilder to build virtual forms, createFromYaml method
+// todo: option to choose yaml instead of form record in plugin
+// todo: add validators field to field model, at least in yaml files
+// todo: FormPresets, presets to create predefined forms, fields, finishers etc, with configurable readonly fields (useful for tx_shape_field properties like 'name', or even to make everything but labels readonly)
 // todo: extract into extensions: repeatable containers, fe_user prefill, unique validation, rate limiter, google recaptcha
 // todo: delete/move uploads finisher?
 // todo: rate limiter finisher?
@@ -21,6 +26,10 @@ use UBOS\Shape\Domain;
 
 class FormController extends ActionController
 {
+	public function __construct(
+		protected readonly FormRuntime\FormRuntimeFactory $runtimeFactory
+	) {}
+
 	protected FormRuntime\FormRuntime $runtime;
 	protected string $fragmentPageTypeNum = '1741218626';
 
@@ -92,11 +101,9 @@ class FormController extends ActionController
 
 	protected function initializeRuntime(): void
 	{
-		$this->runtime = FormRuntime\FormRuntimeBuilder::buildFromRequest(
-			$this->request,
-			$this->view,
-			$this->settings,
-		)->initializeFieldValuesFromSession();
+		$this->runtime = $this->runtimeFactory
+			->createFromRequest($this->request, $this->view, $this->settings)
+			->initializeFieldValuesFromSession();
 	}
 	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{

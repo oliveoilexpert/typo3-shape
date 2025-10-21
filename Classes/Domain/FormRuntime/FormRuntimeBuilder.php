@@ -3,28 +3,15 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Extbase;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Extbase\Mvc\RequestInterface;
 use UBOS\Shape\Domain;
 
-
-class FormRuntimeFactory
+class FormRuntimeBuilder
 {
-	public function __construct(
-		protected readonly ValueValidator $validator,
-		protected readonly ValueProcessor $processor,
-		protected readonly ValueSerializer $serializer,
-		protected readonly Core\EventDispatcher\EventDispatcher $eventDispatcher,
-		protected readonly Core\Service\FlexFormService $flexFormService,
-		protected readonly Core\Resource\StorageRepository $storageRepository,
-		protected readonly Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
-		protected readonly Domain\Repository\ContentRepository $contentRepository,
-		protected readonly ContentObjectRenderer $contentObject
-	) {}
-
-	public function createFromRequest(
-		Extbase\Mvc\RequestInterface $request,
+	public static function buildFromRequest(
+		RequestInterface $request,
 		Core\View\ViewInterface $view,
 		array $settings = [
 			'pluginUid' => 0,
@@ -32,10 +19,10 @@ class FormRuntimeFactory
 		]
 	): FormRuntime
 	{
-		$plugin = $this->getPluginRecord($request, $settings);
-		$form = $this->getFormRecord($plugin);
+		$plugin = static::getPluginRecord($request, $settings);
+		$form = static::getFormRecord($plugin);
 
-		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
+		$uploadStorage = GeneralUtility::makeInstance(Core\Resource\StorageRepository::class)->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
 		$cleanedPostValues = [];
 
@@ -107,86 +94,11 @@ class FormRuntimeFactory
 			$uploadStorage,
 			$parsedBodyKey,
 			$isStepBack,
-			null,
-			[],
-			false,
-			$this->eventDispatcher,
-			$this->flexFormService,
-			$this->validator,
-			$this->processor,
-			$this->serializer,
 		);
 	}
 
-	public function recreateFromRequestAndConsent(
-		Extbase\Mvc\RequestInterface $request,
-		Core\View\ViewInterface $view,
-		array $consent
-	): FormRuntime
-	{
-		// get plugin
-		$this->contentRepository->setLanguageId($request->getAttribute('language')->getLanguageId());
-
-		$plugin = $this->contentRepository->findByUid($consent['plugin'], asRecord: true);
-
-		// recreate request
-		$requestClone = clone $request;
-		$this->contentObject->setRequest($requestClone);
-		$this->contentObject->start($plugin->getRawRecord()->toArray(), 'tt_content');
-		$requestClone = $requestClone->withAttribute('currentContentObject', $this->contentObject);
-
-		// recreate session
-		$session = FormSession::validateAndUnserialize($consent['session']);
-
-		// get plugin configuration
-		$this->configurationManager->setRequest($requestClone);
-		$this->configurationManager->setConfiguration(['extensionName' => 'Shape', 'pluginName' => 'Form']);
-		$formPluginConfiguration = $this->configurationManager->getConfiguration(
-			Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
-			'Shape',
-			'Form'
-		);
-		$settings = $formPluginConfiguration['settings'];
-
-		// recreate view
-		$viewClone = clone $view;
-		$viewClone->getRenderingContext()->setControllerName('Form');
-		$viewClone->getRenderingContext()->getTemplatePaths()->setTemplateRootPaths($formPluginConfiguration['view']['templateRootPaths']);
-		$viewClone->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
-		$viewClone->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
-
-		$form = $this->getFormRecord($plugin);
-
-		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
-		$parsedBodyKey = 'tx_shape_form';
-
-		// todo: BeforeFormRuntimeRecreationEvent to change request
-		return new FormRuntime(
-			$requestClone,
-			$settings,
-			$viewClone,
-			$plugin,
-			$form,
-			$session,
-			[],
-			$uploadStorage,
-			$parsedBodyKey,
-			false,
-			null,
-			[],
-			false,
-			$this->eventDispatcher,
-			$this->flexFormService,
-			$this->validator,
-			$this->processor,
-			$this->serializer,
-		);
-	}
-
-
-
-	protected function getPluginRecord(
-		Extbase\Mvc\RequestInterface $request,
+	public static function getPluginRecord(
+		RequestInterface $request,
 		array $settings
 	): Core\Domain\Record
 	{
@@ -206,7 +118,7 @@ class FormRuntimeFactory
 		return $record;
 	}
 
-	protected function getFormRecord(
+	public static function getFormRecord(
 		Core\Domain\Record $plugin
 	): Core\Domain\Record
 	{
@@ -221,5 +133,4 @@ class FormRuntimeFactory
 		}
 		return $form;
 	}
-
 }

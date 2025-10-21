@@ -1,8 +1,21 @@
 <?php
 
 use UBOS\Shape\Controller;
+use UBOS\Shape\Utility\PluginUtility;
 
 defined('TYPO3') or die();
+
+PluginUtility::configure(
+	'Form',
+	[Controller\FormController::class => 'render, run, finished'],
+	[Controller\FormController::class => 'run, finished'],
+);
+
+PluginUtility::configure(
+	'Consent',
+	[Controller\ConsentController::class => 'consent'],
+	[Controller\ConsentController::class => 'consent'],
+);
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['shape'] = ['UBOS\Shape\ViewHelpers'];
 $GLOBALS['TYPO3_CONF_VARS']['RTE']['Presets']['tx_shape_input_field'] = 'EXT:shape/Configuration/RTE/InputField.yaml';
@@ -25,19 +38,3 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('scheduler')) {
 		'expireField' => 'valid_until',
 	];
 }
-
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'Shape',
-	'Form',
-	[Controller\FormController::class => 'render, run, finished'],
-	[Controller\FormController::class => 'run, finished'],
-	'CType'
-);
-
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'Shape',
-	'Consent',
-	[Controller\ConsentController::class => 'consent'],
-	[Controller\ConsentController::class => 'consent'],
-	'CType'
-);

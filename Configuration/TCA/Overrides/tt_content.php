@@ -1,10 +1,12 @@
 <?php
 
 use UBOS\Shape\Utility\TcaUtility as Util;
+use UBOS\Shape\Utility\PluginUtility;
+
 
 defined('TYPO3') or die();
 
-Util::addPluginType(
+PluginUtility::register(
 	'Form',
 	label: Util::t('plugin.form'),
 	icon: 'content-form',
@@ -20,7 +22,7 @@ Util::addPluginType(
 	]
 );
 
-Util::addPluginType(
+PluginUtility::register(
 	'Consent',
 	label: Util::t('plugin.consent'),
 	icon: 'content-form',

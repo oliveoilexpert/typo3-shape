@@ -3,25 +3,27 @@
 namespace UBOS\Shape\Domain\FormRuntime;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use UBOS\Shape\Domain;
+use UBOS\Shape\Domain\Record\FieldRecord;
 use UBOS\Shape\Event\ValueSerializationEvent;
 
 class ValueSerializer
 {
 	public function __construct(
-		protected Domain\FormRuntime\FormRuntime $runtime,
-		protected EventDispatcherInterface       $eventDispatcher,
+		protected EventDispatcherInterface $eventDispatcher,
 	)
 	{
 	}
 
-	public function serialize(Domain\Record\FieldRecord $field, mixed $value): mixed
+	public function serialize(
+		FormRuntime $runtime,
+		FieldRecord $field,
+		mixed $value
+	): mixed
 	{
 		if (!$field->has('name')) {
 			return $value;
 		}
-		$event = new ValueSerializationEvent($this->runtime, $field, $value);
+		$event = new ValueSerializationEvent($runtime, $field, $value);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->isPropagationStopped()) {
 			return $event->serializedValue;

@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+// todo: workspaces?
 #[Autoconfigure(public: true)]
 abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 {
