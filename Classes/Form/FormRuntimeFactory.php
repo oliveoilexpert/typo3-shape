@@ -1,27 +1,25 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form;
 
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use UBOS\Shape\Form;
-
+use UBOS\Shape\Repository;
 
 class FormRuntimeFactory implements FormRuntimeFactoryInterface
 {
 	public function __construct(
-		protected readonly FieldValueValidator                                 $fieldValueValidator,
-		protected readonly FieldValueProcessor                                 $fieldValueProcessor,
-		protected readonly FieldValueSerializer                                $fieldValueSerializer,
-		protected readonly FieldConditionResolver							   $fieldConditionResolver,
 		protected readonly Core\EventDispatcher\EventDispatcher                $eventDispatcher,
-		protected readonly Core\Service\FlexFormService                        $flexFormService,
 		protected readonly Core\Resource\StorageRepository                     $storageRepository,
+		protected readonly Core\Service\FlexFormService                        $flexFormService,
 		protected readonly Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
-		protected readonly Repository\ContentRepository                 $contentRepository,
-		protected readonly ContentObjectRenderer                               $contentObject
+		protected readonly ContentObjectRenderer                               $contentObject,
+		protected readonly Condition\FieldConditionResolver                    $fieldConditionResolver,
+		protected readonly Processing\FieldValueProcessor                      $fieldValueProcessor,
+		protected readonly Serialization\FieldValueSerializer                  $fieldValueSerializer,
+		protected readonly Validation\FieldValueValidator                      $fieldValueValidator,
+		protected readonly Repository\ContentRepository                        $contentRepository,
 	) {}
 
 	public function createFromRequest(
@@ -53,7 +51,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 			} else {
 				try {
 					$session = FormSession::validateAndUnserialize($serializedSessionWithHmac);
-				} catch (Domain\Exception\InvalidSessionException $e) {
+				} catch (Exception\InvalidSessionException  $e) {
 					// todo: log invalid session
 					//$logger->warning('Invalid session detected', ['exception' => $e]);
 					$session = new FormSession();
@@ -100,6 +98,12 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		}
 
 		return new FormRuntime(
+			$this->eventDispatcher,
+			$this->flexFormService,
+			$this->fieldConditionResolver,
+			$this->fieldValueProcessor,
+			$this->fieldValueSerializer,
+			$this->fieldValueValidator,
 			$request,
 			$settings,
 			$view,
@@ -113,12 +117,6 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 			null,
 			[],
 			false,
-			$this->eventDispatcher,
-			$this->flexFormService,
-			$this->fieldValueValidator,
-			$this->fieldValueProcessor,
-			$this->fieldValueSerializer,
-			$this->fieldConditionResolver,
 		);
 	}
 
@@ -139,7 +137,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		// recreate session
 		try {
 			$session = FormSession::validateAndUnserialize($consent['session']);
-		} catch (Domain\Exception\InvalidSessionException $e) {
+		} catch (Exception\InvalidSessionException $e) {
 			throw new \InvalidArgumentException('Could not recreate FormRuntime: Invalid session in consent.', 1741369823, $e);
 		}
 
@@ -167,6 +165,12 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 
 		// todo: BeforeFormRuntimeRecreationEvent to change request
 		return new FormRuntime(
+			$this->eventDispatcher,
+			$this->flexFormService,
+			$this->fieldConditionResolver,
+			$this->fieldValueProcessor,
+			$this->fieldValueSerializer,
+			$this->fieldValueValidator,
 			$requestClone,
 			$settings,
 			$viewClone,
@@ -180,12 +184,6 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 			null,
 			[],
 			false,
-			$this->eventDispatcher,
-			$this->flexFormService,
-			$this->fieldValueValidator,
-			$this->fieldValueProcessor,
-			$this->fieldValueSerializer,
-			$this->fieldConditionResolver,
 		);
 	}
 
@@ -199,7 +197,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		$uid = $settings['pluginUid'];
 		if (!$uid) {
 			if ($request->getAttribute('currentContentObject')?->data['CType']) {
-				return GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $request->getAttribute('currentContentObject')?->data);
+				return Core\Utility\GeneralUtility::makeInstance(Core\Domain\RecordFactory::class)->createResolvedRecordFromDatabaseRow('tt_content', $request->getAttribute('currentContentObject')?->data);
 			}
 			$uid = $request->getArguments()['pluginUid'] ?? 0;
 		}
@@ -221,7 +219,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 			$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		}
 		if (!$form || $form->getMainType() !== 'tx_shape_form') {
-			throw new Domain\Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
+			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
 		}
 		return $form;
 	}

@@ -2,8 +2,6 @@
 
 namespace UBOS\Shape\Form\Finisher;
 
-use TYPO3\CMS\Core;
-
 class ShowContentElementsFinisher extends AbstractFinisher
 {
 	protected array $settings = [

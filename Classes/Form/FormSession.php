@@ -1,9 +1,8 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form;
 
 use TYPO3\CMS\Core;
-use UBOS\Shape\Form\Exception\InvalidSessionException;
 
 class FormSession
 {
@@ -44,7 +43,7 @@ class FormSession
 			}
 			return $session;
 		} catch (\Exception $e) {
-			throw new InvalidSessionException(
+			throw new Exception\InvalidSessionException(
 				'Session validation failed',
 				1741370002,
 				$e

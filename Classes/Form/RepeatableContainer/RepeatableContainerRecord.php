@@ -1,6 +1,8 @@
 <?php
 
-namespace UBOS\Shape\Form\Record;
+namespace UBOS\Shape\Form\RepeatableContainer;
+
+use UBOS\Shape\Form\Record\FieldRecord;
 
 class RepeatableContainerRecord extends FieldRecord
 {

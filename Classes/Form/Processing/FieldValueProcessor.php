@@ -1,11 +1,9 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form\Processing;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use UBOS\Shape\Form\Record\FieldRecord;
-use UBOS\Shape\Event\ValueProcessingEvent;
-
+use UBOS\Shape\Form;
 
 class FieldValueProcessor
 {
@@ -16,8 +14,8 @@ class FieldValueProcessor
 	}
 
 	public function process(
-		FormRuntime $runtime,
-		FieldRecord $field,
+		Form\FormRuntime $runtime,
+		Form\Record\FieldRecord $field,
 		mixed $value
 	): mixed
 	{

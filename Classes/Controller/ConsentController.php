@@ -8,6 +8,7 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Form;
 use UBOS\Shape\Enum;
+use UBOS\Shape\Repository;
 
 class ConsentController extends ActionController
 {

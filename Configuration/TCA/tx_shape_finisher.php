@@ -134,7 +134,7 @@ $columns = [
 				'UBOS\Shape\Form\Finisher\SendEmailFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/SendEmailFinisher.xml',
 				'UBOS\Shape\Form\Finisher\RedirectFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/RedirectFinisher.xml',
 				'UBOS\Shape\Form\Finisher\ShowContentElementsFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/ShowContentElementsFinisher.xml',
-				'UBOS\Shape\Domain\Finisher\EmailConsentFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/EmailConsentFinisher.xml',
+				'UBOS\Shape\Form\Finisher\EmailConsentFinisher' => 'FILE:EXT:shape/Configuration/FlexForms/Finisher/EmailConsentFinisher.xml',
 			],
 			'ds_pointerField' => 'type',
 		],
@@ -170,7 +170,7 @@ return [
 		'0' => [
 			'showitem' => $showItem,
 		],
-		'UBOS\Shape\Domain\Finisher\SaveSubmissionFinisher' => [
+		'UBOS\Shape\Form\Finisher\SaveSubmissionFinisher' => [
 			'showitem' => $showItem,
 			'columnsOverrides' => [
 				'settings' => [
@@ -182,7 +182,7 @@ return [
 				]
 			]
 		],
-		'UBOS\Shape\Domain\Finisher\SaveToDatabaseFinisher' => [
+		'UBOS\Shape\Form\Finisher\SaveToDatabaseFinisher' => [
 			'showitem' => $showItem,
 			'columnsOverrides' => [
 				'settings' => [

@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Form\Validator;
 
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+use TYPO3\CMS\Core;
 
-#[Autoconfigure(public: true, shared: false)]
 final class CombinedFileIdentifierValidator extends AbstractValidator
 {
 	protected $supportedOptions = [
 	];
 
 	public function __construct(
-		protected \TYPO3\CMS\Core\Resource\ResourceFactory $resourceFactory
+		protected Core\Resource\ResourceFactory $resourceFactory
 	) {}
 
 	public function isValid(mixed $value): void

@@ -1,45 +1,37 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form;
 
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use UBOS\Shape\Form;
-use UBOS\Shape\Event;
+use TYPO3\CMS\Extbase;
 
 class FormRuntime
 {
 	public function __construct(
-		readonly public RequestInterface                       $request,
-		readonly public array                                  $settings,
-		readonly public Core\View\ViewInterface                $view,
-		readonly public Core\Domain\Record                     $plugin,
-		readonly public Core\Domain\Record                     $form,
-		readonly public FormSession                            $session,
-		readonly public array                                  $postValues,
-		readonly public Core\Resource\ResourceStorageInterface $uploadStorage,
-		readonly public string                                 $parsedBodyKey,
-		readonly public bool                                   $isStepBack = false,
-		protected ?array                                       $spamReasons = null,
-		protected array                                        $messages = [],
-		protected bool                                         $hasErrors = false,
-		protected ?Core\EventDispatcher\EventDispatcher        $eventDispatcher = null,
-		protected ?Core\Service\FlexFormService                $flexFormService = null,
-		protected ?FieldValueValidator                         $fieldValueValidator = null,
-		protected ?FieldValueProcessor                         $fieldValueProcessor = null,
-		protected ?FieldValueSerializer                        $fieldValueSerializer = null,
-		protected ?FieldConditionResolver                      $fieldConditionResolver = null,
+		readonly protected Core\EventDispatcher\EventDispatcher $eventDispatcher,
+		readonly protected Core\Service\FlexFormService         $flexFormService,
+		readonly protected Condition\FieldConditionResolver     $fieldConditionResolver,
+		readonly protected Processing\FieldValueProcessor       $fieldValueProcessor,
+		readonly protected Serialization\FieldValueSerializer   $fieldValueSerializer,
+		readonly protected Validation\FieldValueValidator       $fieldValueValidator,
+		readonly public Extbase\Mvc\RequestInterface			$request,
+		readonly public array                                   $settings,
+		readonly public Core\View\ViewInterface                 $view,
+		readonly public Core\Domain\Record                      $plugin,
+		readonly public Core\Domain\Record                      $form,
+		readonly public FormSession                             $session,
+		readonly public array                                   $postValues,
+		readonly public Core\Resource\ResourceStorageInterface  $uploadStorage,
+		readonly public string                                  $parsedBodyKey,
+		readonly public bool                                    $isStepBack = false,
+		protected ?array                                        $spamReasons = null,
+		protected array                                         $messages = [],
+		protected bool                                          $hasErrors = false,
 	)
 	{
-		$this->eventDispatcher = $this->eventDispatcher ?? GeneralUtility::makeInstance(Core\EventDispatcher\EventDispatcher::class);
-		$this->flexFormService = $this->flexFormService ?? GeneralUtility::makeInstance(Core\Service\FlexFormService::class);
-		$this->fieldValueValidator = $this->fieldValueValidator ?? GeneralUtility::makeInstance(FieldValueValidator::class);
-		$this->fieldValueProcessor = $this->fieldValueProcessor ?? GeneralUtility::makeInstance(FieldValueProcessor::class);
-		$this->fieldValueSerializer = $this->fieldValueSerializer ?? GeneralUtility::makeInstance(FieldValueSerializer::class);
 	}
 
-	public function initializeFieldValuesFromSession(): FormRuntime
+	public function initializeFieldValuesFromSession(): self
 	{
 		foreach ($this->form->get('pages') as $page) {
 			foreach ($page->get('fields') as $field) {
@@ -53,7 +45,7 @@ class FormRuntime
 
 	public function findSpamReasons(): array
 	{
-		$event = new Event\SpamAnalysisEvent($this);
+		$event = new SpamProtection\SpamAnalysisEvent($this);
 		$this->eventDispatcher->dispatch($event);
 		$this->spamReasons = $event->spamReasons;
 		return $this->spamReasons;
@@ -96,7 +88,7 @@ class FormRuntime
 			'session' => $this->session,
 			'serializedSession' => FormSession::serialize($this->session),
 			'namespace' => $this->form->get('name'),
-			'action' =>  'run',
+			'action' => 'run',
 			'plugin' => $this->plugin,
 			'form' => $this->form,
 			'settings' => $this->settings,
@@ -110,7 +102,7 @@ class FormRuntime
 			'forwardStepPageIndex' => $lastPageIndex === $pageIndex ? null : $pageIndex + 1,
 		];
 
-		$event = new Event\BeforeFormRenderEvent($this, $viewVariables);
+		$event = new Rendering\BeforeFormRenderEvent($this, $viewVariables);
 		$this->eventDispatcher->dispatch($event);
 		$viewVariables = $event->getVariables();
 
@@ -190,9 +182,9 @@ class FormRuntime
 		}
 	}
 
-	public function finishForm(array $conditionVariables = []): FinisherContext
+	public function finishForm(array $conditionVariables = []): Finisher\FinisherContext
 	{
-		$context = new FinisherContext($this);
+		$context = new Finisher\FinisherContext($this);
 		$expressionResolver = $this->createExpressionResolver($conditionVariables);
 		foreach ($this->form->get('finishers') as $finisherRecord) {
 			if ($finisherRecord->get('condition') && !$expressionResolver->evaluate($finisherRecord->get('condition'))) {
@@ -204,18 +196,18 @@ class FormRuntime
 		return $context;
 	}
 
-	public function executeFinisherRecord(Core\Domain\Record $record, FinisherContext $context): void
+	public function executeFinisherRecord(Core\Domain\Record $record, Finisher\FinisherContext $context): void
 	{
 		$finisherClassName = $record->get('type');
 		$finisher = Core\Utility\GeneralUtility::makeInstance($finisherClassName);
-		if (!($finisher instanceof Domain\Finisher\AbstractFinisher)) {
+		if (!($finisher instanceof Finisher\AbstractFinisher)) {
 			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Form\Finisher\AbstractFinisher.', 1741369249);
 		}
 
 		// todo: maybe add "finisherDefaults". Problem is there's no good way to merge. ArrayUtility::mergeRecursiveWithOverrule either overwrites everything or discards empty values ('' and '0'), but we want to keep '0', otherwise checkboxes can't overwrite with false. Extbase has "ignoreFlexFormSettingsIfEmpty" but that doesn't really solve the problem either. To have booleans with default values, we'd need to render them as selects with values '', '0', '1' and then only ignore ''.
 		//$defaultSettings = $this->settings['finisherDefaults'][$finisherClassName] ?? [];
 		$settings = $this->flexFormService->convertFlexFormContentToArray($record->getRawRecord()->get('settings'));
-		$event = new Event\BeforeFinisherExecutionEvent($context, $finisher, $settings);
+		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher, $settings);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->cancelled) {
 			return;
@@ -232,31 +224,34 @@ class FormRuntime
 			'site' => $this->request->getAttribute('site'),
 			'frontendUser' => $this->request->getAttribute('frontend.user'),
 		], $variables);
-		$event = new Event\ExpressionResolverCreationEvent($this, $variables);
+		$event = new Condition\ExpressionResolverCreationEvent($this, $variables);
 		$this->eventDispatcher->dispatch($event);
-		return GeneralUtility::makeInstance(
+		return Core\Utility\GeneralUtility::makeInstance(
 			Core\ExpressionLanguage\Resolver::class,
 			'tx_shape', $event->getVariables()
 		);
 	}
 
-	public function getFieldValue(Domain\Record\FieldRecord $field): mixed
+	public function getFieldValue(Record\FieldRecord $field): mixed
 	{
 		return $this->session->values[$field->getName()] ?? null;
 	}
-	public function setFieldValue(Domain\Record\FieldRecord $field, mixed $value): void
+
+	public function setFieldValue(Record\FieldRecord $field, mixed $value): void
 	{
 		$field->setSessionValue($value);
 		$name = $field->getName();
 		$this->session->values[$name] = $value;
-		if (isset($this->session->values[$name.'__CONFIRM'])) {
-			$this->session->values[$name.'__CONFIRM'] = $value;
+		if (isset($this->session->values[$name . '__CONFIRM'])) {
+			$this->session->values[$name . '__CONFIRM'] = $value;
 		}
 	}
+
 	public function getHasErrors(): bool
 	{
 		return $this->hasErrors;
 	}
+
 	public function getSessionUploadFolder(): string
 	{
 		return explode(':', $this->settings['uploadFolder'])[1] . $this->session->getId() . '/';

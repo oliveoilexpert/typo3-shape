@@ -2,27 +2,30 @@
 
 declare(strict_types=1);
 
-namespace UBOS\Shape\Event;
+namespace UBOS\Shape\Form\Validation;
 
 use TYPO3\CMS\Extbase\Error\Result;
-use TYPO3\CMS\Extbase\Validation\Validator;
-use TYPO3\CMS\Core;
+use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Form;
 
 final class ValueValidationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $runtime,
-		public readonly Domain\Record\FieldRecord      $field,
-		public readonly Validator\ConjunctionValidator $validator,
-		public                                         $value,
-		public ?Result                                 $result = null,
-	) {}
+		public readonly Form\FormRuntime                      $runtime,
+		public readonly Form\Record\FieldRecord               $field,
+		public readonly ExtbaseValidator\ConjunctionValidator $validator,
+		public                                                $value,
+		public ?Result                                        $result = null,
+	)
+	{
+	}
+
 	public function isPropagationStopped(): bool
 	{
 		return $this->result !== null;
 	}
-	public function addValidator(Validator\ValidatorInterface $validator): void
+
+	public function addValidator(ExtbaseValidator\ValidatorInterface $validator): void
 	{
 		$this->validator->addValidator($validator);
 	}

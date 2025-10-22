@@ -1,10 +1,10 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Record;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
-use UBOS\Shape\Form\Record;
+use UBOS\Shape\Form;
 
 final class RecordCreator
 {
@@ -15,7 +15,7 @@ final class RecordCreator
 			return;
 		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field') {
-			$this->setRecord($event, Record\FieldRecord::class);
+			$this->setRecord($event, Form\Record\FieldRecord::class);
 		}
 	}
 

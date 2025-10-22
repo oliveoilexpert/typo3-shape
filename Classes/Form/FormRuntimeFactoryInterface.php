@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form;
 
 use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
@@ -12,5 +12,4 @@ interface FormRuntimeFactoryInterface
 		ViewInterface $view,
 		array $settings
 	): FormRuntime;
-
 }

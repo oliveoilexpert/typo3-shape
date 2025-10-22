@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace UBOS\Shape\Event;
+namespace UBOS\Shape\Form\Rendering;
 
 use UBOS\Shape\Form;
 
 final class BeforeFormRenderEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $runtime,
-		protected array                                $variables = [],
+		public readonly Form\FormRuntime $runtime,
+		protected array                  $variables = [],
 	) {}
 	public function getVariables(): array
 	{

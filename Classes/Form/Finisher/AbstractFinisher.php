@@ -7,8 +7,8 @@ use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
-use UBOS\Shape\Form\Runtime;
-use UBOS\Shape\Utility\TemplateVariableParser;
+use UBOS\Shape\Form;
+use UBOS\Shape\Utility;
 
 #[Autoconfigure(public: true, shared: false)]
 abstract class AbstractFinisher implements LoggerAwareInterface
@@ -30,7 +30,7 @@ abstract class AbstractFinisher implements LoggerAwareInterface
 
 	abstract public function executeInternal(): void;
 
-	protected function getRuntime(): Runtime\FormRuntime
+	protected function getRuntime(): Form\FormRuntime
 	{
 		return $this->context->runtime;
 	}
@@ -67,7 +67,7 @@ abstract class AbstractFinisher implements LoggerAwareInterface
 
 	protected function parseWithValues(string $string): string
 	{
-		return TemplateVariableParser::parse($string, $this->getFormValues());
+		return Utility\TemplateVariableParser::parse($string, $this->getFormValues());
 	}
 
 	/**

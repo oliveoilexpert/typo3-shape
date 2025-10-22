@@ -1,13 +1,12 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Validation;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
 use TYPO3\CMS\Extbase\Validation\Validator as ExtbaseValidator;
 use UBOS\Shape\Form;
 use UBOS\Shape\Form\Validator;
-use UBOS\Shape\Event\ValueValidationEvent;
 
 final class ValueValidationConfigurator
 {
@@ -145,7 +144,7 @@ final class ValueValidationConfigurator
 				[
 					'minimum' => $field->get('min') ?? '',
 					'maximum' => $field->get('max') ?? '',
-					'format' => Domain\Record\FieldRecord::DATETIME_FORMATS[$type]
+					'format' => Form\Record\FieldRecord::DATETIME_FORMATS[$type]
 				]
 			));
 		}

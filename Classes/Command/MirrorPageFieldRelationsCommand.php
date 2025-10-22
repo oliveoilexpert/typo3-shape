@@ -4,8 +4,7 @@ namespace UBOS\Shape\Command;
 
 use Symfony\Component\Console;
 use Symfony\Component\Console\Command\Command;
-use UBOS\Shape\Utility\TcaRelationService;
-
+use UBOS\Shape\Utility;
 
 #[Console\Attribute\AsCommand(
 	name: 'shape:mirror-page-field-relations',
@@ -14,7 +13,7 @@ use UBOS\Shape\Utility\TcaRelationService;
 class MirrorPageFieldRelationsCommand extends Command
 {
 	public function __construct(
-		private readonly TcaRelationService $databaseService
+		private readonly Utility\TcaRelationService $databaseService
 	) {
 		parent::__construct();
 	}

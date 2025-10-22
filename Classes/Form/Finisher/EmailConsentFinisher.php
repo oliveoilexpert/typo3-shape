@@ -55,7 +55,7 @@ class EmailConsentFinisher extends AbstractFinisher
 		$storagePage = (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid());
 		$formValues = $this->getFormValues();
 		$timestamp = time();
-		$serializedSession = Form\Runtime\FormSession::serialize($this->getRuntime()->session);
+		$serializedSession = Form\FormSession::serialize($this->getRuntime()->session);
 		$consentData = [
 			'crdate' => $timestamp,
 			'tstamp' => $timestamp,

@@ -1,11 +1,9 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Serialization;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
-use UBOS\Shape\Form;
-use UBOS\Shape\Event\ValueSerializationEvent;
 
 final class ValueSerializationHandler
 {

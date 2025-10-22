@@ -1,6 +1,6 @@
 <?php
 
-namespace UBOS\Shape\Service;
+namespace UBOS\Shape\Utility;
 
 use TYPO3\CMS\Core;
 

@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form\Finisher;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core;
 use UBOS\Shape\Form;
+
 class FinisherContext
 {
 	public function __construct(
-		public readonly FormRuntime        $runtime,
-		public ?ResponseInterface          $response = null,
-		public array                       $finishedActionArguments = [],
-		public bool 					   $cancelled = false,
+		public readonly Form\FormRuntime $runtime,
+		public ?ResponseInterface        $response = null,
+		public array                     $finishedActionArguments = [],
+		public bool                      $cancelled = false,
 	) {}
 }

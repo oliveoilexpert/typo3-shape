@@ -2,8 +2,8 @@
 
 namespace UBOS\Shape\Form\Finisher;
 
-use TYPO3\CMS\Core;
 use UBOS\Shape\Form;
+use UBOS\Shape\Repository;
 
 class SaveToDatabaseFinisher extends AbstractFinisher
 {

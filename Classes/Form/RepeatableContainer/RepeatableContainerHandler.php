@@ -1,24 +1,20 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\RepeatableContainer;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Domain\Event\RecordCreationEvent;
 use TYPO3\CMS\Core\EventDispatcher\EventDispatcher;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Extbase\Error\Result;
-use UBOS\Shape\Form\Record\RepeatableContainerRecord;
-use UBOS\Shape\Event;
-use UBOS\Shape\Form\Runtime;
+use UBOS\Shape\Form;
 
 final class RepeatableContainerHandler
 {
 	public function __construct(
-		protected EventDispatcher                             $eventDispatcher,
-		protected readonly FormRuntime\FieldValueValidator    $fieldValueValidator,
-		protected readonly FormRuntime\FieldValueProcessor    $fieldValueProcessor,
-		protected readonly FormRuntime\FieldValueSerializer   $fieldValueSerializer,
-		protected readonly FormRuntime\FieldConditionResolver $fieldConditionResolver,
+		protected EventDispatcher                                  $eventDispatcher,
+		protected readonly Form\Validation\FieldValueValidator     $fieldValueValidator,
+		protected readonly Form\Processing\FieldValueProcessor     $fieldValueProcessor,
+		protected readonly Form\Serialization\FieldValueSerializer $fieldValueSerializer,
+		protected readonly Form\Condition\FieldConditionResolver   $fieldConditionResolver,
 	) {}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreator')]
@@ -35,7 +31,7 @@ final class RepeatableContainerHandler
 	}
 
 	#[AsEventListener]
-	public function resolveFieldCondition(Event\FieldConditionResolutionEvent $event): void
+	public function resolveFieldCondition(Form\Condition\FieldConditionResolutionEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -57,7 +53,7 @@ final class RepeatableContainerHandler
 	}
 
 	#[AsEventListener(after: 'UBOS\Shape\EventListener\ValueValidationConfigurator')]
-	public function validateValue(Event\ValueValidationEvent $event): void
+	public function validateValue(Form\Validation\ValueValidationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -81,7 +77,7 @@ final class RepeatableContainerHandler
 	}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueSerializationHandler')]
-	public function serializeValue(Event\ValueSerializationEvent $event): void
+	public function serializeValue(Form\Serialization\ValueSerializationEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {
@@ -109,7 +105,7 @@ final class RepeatableContainerHandler
 	}
 
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\ValueProcessingHandler')]
-	public function processValue(Event\ValueProcessingEvent $event): void
+	public function processValue(Form\Processing\ValueProcessingEvent $event): void
 	{
 		$field = $event->field;
 		if (!($field instanceof RepeatableContainerRecord)) {

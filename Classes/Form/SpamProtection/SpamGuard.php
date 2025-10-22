@@ -1,12 +1,8 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\SpamProtection;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
-use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use UBOS\Shape\Form;
-use UBOS\Shape\Event\SpamAnalysisEvent;
 
 final class SpamGuard
 {

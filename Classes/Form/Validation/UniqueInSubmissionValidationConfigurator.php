@@ -1,10 +1,10 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Validation;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
-use UBOS\Shape\Event\ValueValidationEvent;
+use UBOS\Shape\Form;
 
 final class UniqueInSubmissionValidationConfigurator
 {
@@ -15,7 +15,7 @@ final class UniqueInSubmissionValidationConfigurator
 		if (! $field->has('unique_in_submission') || ! $field->get('unique_in_submission')) {
 			return;
 		}
-		$validator = Core\Utility\GeneralUtility::makeInstance(\UBOS\Shape\Form\Validator\UniqueInSubmissionsValidator::class);
+		$validator = Core\Utility\GeneralUtility::makeInstance(Form\Validator\UniqueInSubmissionsValidator::class);
 		$validator->setOptions([
 			'fieldName' => $field->getName(),
 			'pluginUid' => $event->runtime->plugin->getUid(),

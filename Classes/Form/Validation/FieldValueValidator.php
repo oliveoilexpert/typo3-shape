@@ -1,12 +1,11 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form\Validation;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use TYPO3\CMS\Extbase;
 use TYPO3\CMS\Core;
-use UBOS\Shape\Form\Record\FieldRecord;
-use UBOS\Shape\Event\ValueValidationEvent;
+use TYPO3\CMS\Extbase;
+use UBOS\Shape\Form;
 
 class FieldValueValidator
 {
@@ -17,8 +16,8 @@ class FieldValueValidator
 	}
 
 	public function validate(
-		FormRuntime $runtime,
-		FieldRecord $field,
+		Form\FormRuntime $runtime,
+		Form\Record\FieldRecord $field,
 		mixed $value
 	): Extbase\Error\Result
 	{

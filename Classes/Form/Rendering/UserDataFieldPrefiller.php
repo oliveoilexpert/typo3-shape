@@ -1,11 +1,9 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Rendering;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
-use TYPO3\CMS\Core;
-use UBOS\Shape\Event\BeforeFormRenderEvent;
-use UBOS\Shape\Form;
+use UBOS\Shape\Repository;
 
 final class UserDataFieldPrefiller
 {

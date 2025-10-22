@@ -1,10 +1,9 @@
 <?php
 
-namespace UBOS\Shape\Form\Runtime;
+namespace UBOS\Shape\Form\Serialization;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use UBOS\Shape\Form\Record\FieldRecord;
-use UBOS\Shape\Event\ValueSerializationEvent;
+use UBOS\Shape\Form;
 
 class FieldValueSerializer
 {
@@ -15,8 +14,8 @@ class FieldValueSerializer
 	}
 
 	public function serialize(
-		FormRuntime $runtime,
-		FieldRecord $field,
+		Form\FormRuntime $runtime,
+		Form\Record\FieldRecord $field,
 		mixed $value
 	): mixed
 	{

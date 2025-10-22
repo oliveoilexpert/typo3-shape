@@ -3,7 +3,7 @@
 namespace UBOS\Shape\Form\Condition;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use TYPO3\CMS\Core;
+use TYPO3\CMS\Core\ExpressionLanguage\Resolver;
 use UBOS\Shape\Form;
 
 class FieldConditionResolver
@@ -15,9 +15,9 @@ class FieldConditionResolver
 	}
 
 	public function evaluate(
-		Form\Runtime\FormRuntime $runtime,
+		Form\FormRuntime $runtime,
 		Form\Record\FieldRecord $field,
-		Core\ExpressionLanguage\Resolver $resolver,
+		Resolver $resolver,
 	): mixed
 	{
 		if (!$field->has('display_condition') || !$field->get('display_condition')) {

@@ -2,7 +2,6 @@
 
 namespace UBOS\Shape\Form\Record;
 
-use TYPO3\CMS\Core;
 use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Domain\Record\SystemProperties;

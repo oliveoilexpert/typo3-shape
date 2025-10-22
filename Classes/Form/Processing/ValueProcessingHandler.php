@@ -1,12 +1,9 @@
 <?php
 
-namespace UBOS\Shape\EventListener;
+namespace UBOS\Shape\Form\Processing;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core;
-use TYPO3\CMS\Core\Crypto\PasswordHashing;
-use UBOS\Shape\Form;
-use UBOS\Shape\Event\ValueProcessingEvent;
 
 final class ValueProcessingHandler
 {
@@ -19,7 +16,7 @@ final class ValueProcessingHandler
 		$value = $event->value;
 		$field = $event->field;
 		if ($field->getType() === 'password') {
-			$passwordHashFactory = Core\Utility\GeneralUtility::makeInstance(PasswordHashing\PasswordHashFactory::class);
+			$passwordHashFactory = Core\Utility\GeneralUtility::makeInstance(Core\Crypto\PasswordHashing\PasswordHashFactory::class);
 			$event->processedValue = $passwordHashFactory->getDefaultHashInstance('FE')->getHashedPassword($value);
 		}
 		if ($field->getType() === 'number' || $field->getType() === 'range') {

@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace UBOS\Shape\Event;
+namespace UBOS\Shape\Form\Serialization;
 
-use TYPO3\CMS\Core;
 use UBOS\Shape\Form;
 
 final class ValueSerializationEvent
 {
 	public function __construct(
-		public readonly Domain\FormRuntime\FormRuntime $runtime,
-		public readonly Domain\Record\FieldRecord      $field,
-		public readonly mixed                          $value,
-		public mixed                                   $serializedValue = null,
-	) {}
+		public readonly Form\FormRuntime        $runtime,
+		public readonly Form\Record\FieldRecord $field,
+		public readonly mixed                   $value,
+		public mixed                            $serializedValue = null,
+	)
+	{
+	}
+
 	public function isPropagationStopped(): bool
 	{
 		return $this->serializedValue !== null;
