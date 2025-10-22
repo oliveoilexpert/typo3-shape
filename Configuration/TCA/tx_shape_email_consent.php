@@ -21,6 +21,8 @@ $ctrl = [
 	],
 ];
 $interface = [];
+
+// todo: add validation link? would enable manual approval from admins if user for some reason cannot click the link
 $columns = [
 	'status' => [
 		'config' => [

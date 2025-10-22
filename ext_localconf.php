@@ -38,3 +38,23 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('scheduler')) {
 		'expireField' => 'valid_until',
 	];
 }
+
+// Configure logging for ALL environments
+$GLOBALS['TYPO3_CONF_VARS']['LOG']['UBOS']['Shape']['writerConfiguration'] = [
+	// Log everything from DEBUG level up
+	\TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
+		// Write to database for Log module
+		\TYPO3\CMS\Core\Log\Writer\DatabaseWriter::class => [],
+		// Write to file for backup/debugging
+		\TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+			'logFileInfix' => 'shape',
+		],
+	],
+];
+
+// Ensure the threshold doesn't filter out our logs
+$GLOBALS['TYPO3_CONF_VARS']['LOG']['UBOS']['Shape']['processorConfiguration'] = [
+	\TYPO3\CMS\Core\Log\LogLevel::DEBUG => [
+		\TYPO3\CMS\Core\Log\Processor\IntrospectionProcessor::class => [],
+	],
+];

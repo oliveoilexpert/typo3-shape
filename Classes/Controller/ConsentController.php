@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace UBOS\Shape\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core;
-use TYPO3\CMS\Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use UBOS\Shape\Domain;
-use UBOS\Shape\Domain\FormRuntime;
+use UBOS\Shape\Form;
 use UBOS\Shape\Enum;
 
 class ConsentController extends ActionController
 {
 	public function __construct(
-		protected Extbase\Configuration\ConfigurationManagerInterface $configurationManager,
-		protected Core\Resource\StorageRepository $storageRepository,
-		protected Domain\Repository\ContentRepository $contentRepository,
-		protected Domain\Repository\EmailConsentRepository $consentRepository,
-		protected FormRuntime\FormRuntimeFactory $formRuntimeFactory,
+		protected Repository\EmailConsentRepository $consentRepository,
+		protected Form\FormRuntimeFactory $formRuntimeFactory,
 	)
 	{}
 
@@ -64,9 +58,9 @@ class ConsentController extends ActionController
 		$consentSettings = json_decode($consent['finisher_settings'], true);
 
 		if ($consentSettings['deleteAfterConfirmation']) {
-			$this->consentRepository->deleteByUid($uid);
+			$this->consentRepository->delete($uid);
 		} else {
-			$this->consentRepository->updateByUid(
+			$this->consentRepository->update(
 				$uid,
 				['status' => $status->value, 'valid_until' => null]
 			);
@@ -104,16 +98,16 @@ class ConsentController extends ActionController
 	}
 
 	protected function executeRuntimeFinishers(
-		FormRuntime\FormRuntime $runtime,
+		Form\FormRuntime $runtime,
 		array $consentSettings,
 		Enum\ConsentStatus $consentStatus
-	): FormRuntime\FinisherContext
+	): Form\Finisher\FinisherContext
 	{
-		$context = new FormRuntime\FinisherContext($runtime);
+		$context = new Form\Finisher\FinisherContext($runtime);
 		$resolver = $runtime->createExpressionResolver(['consentStatus' => $consentStatus->value]);
 		$skipFinisher = $consentSettings['splitFinisherExecution'];
 		foreach ($runtime->form->get('finishers') as $finisherRecord) {
-			if ($finisherRecord->get('type') == Domain\Finisher\EmailConsentFinisher::class) {
+			if ($finisherRecord->get('type') == Form\Finisher\EmailConsentFinisher::class) {
 				$skipFinisher = false;
 				continue;
 			}

@@ -4,7 +4,7 @@ namespace UBOS\Shape\Command;
 
 use Symfony\Component\Console;
 use Symfony\Component\Console\Command\Command;
-use UBOS\Shape\Service\TcaRelationService;
+use UBOS\Shape\Utility\TcaRelationService;
 
 
 #[Console\Attribute\AsCommand(
