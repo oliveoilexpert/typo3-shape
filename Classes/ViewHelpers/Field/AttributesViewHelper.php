@@ -1,23 +1,27 @@
 <?php
 
-namespace UBOS\Shape\ViewHelpers;
+namespace UBOS\Shape\ViewHelpers\Field;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use UBOS\Shape\Form\Model\FieldInterface;
 
-class FieldAttributesViewHelper extends AbstractViewHelper
+class AttributesViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
-		$this->registerArgument('field', 'UBOS\Shape\Form\Model\FieldInterface', '', false, false);
+		$this->registerArgument('field', FieldInterface::class, '', true);
 		$this->registerArgument('attributes', 'array', '', false, []);
+	}
+
+	public function getContentArgumentName(): string
+	{
+		return 'field';
 	}
 
 	public function render(): array
 	{
-		$field = $this->arguments['field'] ?: $this->renderChildren() ?: null;
-		if (!$field) {
-			return [];
-		}
+		$field = $this->renderChildren();
+
 		$name = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]";
 		$id = "{$this->templateVariableContainer->get('idPrefix')}{$name}";
 		$attributes = [
@@ -59,5 +63,4 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 
 		return array_merge($attributes, $this->arguments['attributes']);
 	}
-
 }

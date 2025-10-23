@@ -1,11 +1,9 @@
-<f:for each="{field.groupedOptions}" key="groupLabel" as="options">
+<f:for each="{field.optionGroups}" key="groupLabel" as="options">
     <f:if condition="{groupLabel}">
         <optgroup label="{groupLabel}">
     </f:if>
     <f:for each="{options}" as="option">
-        <f:form.select.option
-                selected="{field.optionState.{option.value}}"
-                value="{option.value}">{option.label}</f:form.select.option>
+        <f:form.select.option value="{option.value}">{option.label}</f:form.select.option>
     </f:for>
     <f:if condition="{groupLabel}">
         </optgroup>

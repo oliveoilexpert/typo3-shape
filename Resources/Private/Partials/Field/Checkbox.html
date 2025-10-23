@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
 	<f:form.checkbox name="{fieldAttributes.name}"
 					 checked="{field.value}"
 					 value="1"

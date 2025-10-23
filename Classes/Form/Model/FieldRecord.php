@@ -9,23 +9,12 @@ use TYPO3\CMS\Extbase\Error\Result;
 
 class FieldRecord extends Record implements FieldInterface
 {
-	const DATETIME_FORMATS = [
-		'date' => 'Y-m-d',
-		'time' => 'H:i',
-		'datetime' => 'Y-m-d H:i',
-		'datetime-local' => 'Y-m-d\TH:i',
-		'week' => 'Y-\WW',
-		'month' => 'Y-m',
-	];
-
-	const DATETIME_PROPS = ['default_value', 'min', 'max'];
-
 	protected mixed $sessionValue = null;
 	protected bool $conditionResult = true;
 	protected ?Result $validationResult = null;
 
 	protected array $runtimeOverrides = [];
-	protected ?array $optionState = null;
+	protected ?array $optionSelection = null;
 
 	public function __construct(
 		protected readonly RawRecord         $rawRecord,
@@ -34,9 +23,8 @@ class FieldRecord extends Record implements FieldInterface
 	)
 	{
 		$this->initializeDefaultValue();
-		$this->initialize();
+		$this->normalizeHtmlAttributeProperties();
 	}
-
 
 	protected function initializeDefaultValue(): void
 	{
@@ -71,14 +59,28 @@ class FieldRecord extends Record implements FieldInterface
 		}
 	}
 
-	protected function initialize(): void
+	const array DATETIME_FORMATS = [
+		'date' => 'Y-m-d',
+		'time' => 'H:i',
+		'datetime' => 'Y-m-d H:i',
+		'datetime-local' => 'Y-m-d\TH:i',
+		'week' => 'Y-\WW',
+		'month' => 'Y-m',
+	];
+
+	/**
+	 * Normalize specific properties to strings for HTML attributes
+	 *
+	 * TCA uses datetime type for editor convenience, but these properties
+	 * represent HTML input attributes (min, max, value) which are strings.
+	 */
+	protected function normalizeHtmlAttributeProperties(): void
 	{
-		// Convert DateTimeInterface properties to string
-		foreach(static::DATETIME_PROPS as $key) {
-			if (!$this->has($key) || !($this->get($key) instanceof \DateTimeInterface)) {
-				continue;
+		foreach (['default_value', 'min', 'max'] as $key) {
+			if ($this->has($key) && $this->properties[$key] instanceof \DateTimeInterface) {
+				$format = $datetimeFormats[$this->getType()] ?? 'Y-m-d H:i:s';
+				$this->properties[$key] = $this->properties[$key]->format($format);
 			}
-			$this->properties[$key] = $this->properties[$key]->format(static::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
 		}
 	}
 
@@ -105,7 +107,7 @@ class FieldRecord extends Record implements FieldInterface
 	public function setSessionValue(mixed $value): void
 	{
 		$this->sessionValue = $value;
-		$this->optionState = null;
+		$this->optionSelection = null;
 	}
 	public function getConditionResult(): bool
 	{
@@ -132,29 +134,24 @@ class FieldRecord extends Record implements FieldInterface
 		$this->runtimeOverrides[$key] = $value;
 	}
 
-	// todo: move to ViewHelper ContainsString?
-	public function getOptionState(): ?array
+	public function getOptionSelection(): ?array
 	{
 		if (!$this->has('field_options')) {
 			return null;
 		}
-		if ($this->optionState !== null) {
-			return $this->optionState;
+		if ($this->optionSelection !== null) {
+			return $this->optionSelection;
 		}
-		$optionState = [];
-		$value = $this->getValue();
+		$selection = [];
+		$fieldValue = $this->getValue();
 		foreach ($this->get('field_options') as $option) {
-			if (is_array($value)) {
-				$optionState[$option->get('value')] = in_array($option->get('value'), $value);
-			} else {
-				$optionState[$option->get('value')] = $option->get('value') == $value;
-			}
+			$optionValue = $option->get('value');
+			$selection[$optionValue] = is_array($fieldValue) ? in_array($optionValue, $fieldValue) : $optionValue == $fieldValue;
 		}
-		return $optionState;
+		return $selection;
 	}
 
-	// todo: move to ViewHelper SelectOptions?
-	public function getGroupedOptions(): array
+	public function getOptionGroups(): array
 	{
 		$groupedOptions = [];
 		$groupLabel = '';
@@ -168,17 +165,5 @@ class FieldRecord extends Record implements FieldInterface
 			$groupedOptions[$groupLabel][] = $option;
 		}
 		return $groupedOptions;
-	}
-
-	// todo: move to ViewHelper TrimExplode?
-	public function getDatalistArray(): array
-	{
-		return array_map('trim', explode(PHP_EOL, $this->properties['datalist'] ?? ''));
-	}
-
-	// todo: move to ViewHelper CamelCase?
-	public function getCamelCaseType(): string
-	{
-		return ucFirst(str_replace('-', '', ucwords($this->getType(), '-')));
 	}
 }

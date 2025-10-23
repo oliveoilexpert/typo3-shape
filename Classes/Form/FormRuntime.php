@@ -200,7 +200,7 @@ class FormRuntime
 
 		// todo: maybe add "finisherDefaults". Problem is there's no good way to merge. ArrayUtility::mergeRecursiveWithOverrule either overwrites everything or discards empty values ('' and '0'), but we want to keep '0', otherwise checkboxes can't overwrite with false. Extbase has "ignoreFlexFormSettingsIfEmpty" but that doesn't really solve the problem either. To have booleans with default values, we'd need to render them as selects with values '', '0', '1' and then only ignore ''.
 		//$defaultSettings = $this->settings['finisherDefaults'][$finisherClassName] ?? [];
-		$settings = $this->flexFormService->convertFlexFormContentToArray($configuration->getSettings());
+		$settings = $configuration->getSettings();
 		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher, $settings);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->cancelled) {

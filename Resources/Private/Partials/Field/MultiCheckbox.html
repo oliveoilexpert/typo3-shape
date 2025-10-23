@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
 	<f:render partial="Control/HeaderLabel" arguments="{_all}"/>
 	<f:for each="{field.field_options}" as="option" iteration="i">
 		<f:if condition="{option.group_label}">
@@ -8,7 +8,7 @@
 			</p>
 		</f:if>
 		<f:form.checkbox name="{fieldAttributes.name}"
-						 checked="{field.optionState.{option.value}}"
+						 checked="{field.optionSelection.{option.value}}"
 						 multiple="1"
 						 value="{option.value}"
 						 additionalAttributes="{fieldAttributes}"

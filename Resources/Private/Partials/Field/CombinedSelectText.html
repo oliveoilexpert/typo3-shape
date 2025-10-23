@@ -1,9 +1,10 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
-	<f:variable name="hasCustomValue" value="{f:if(condition:'!({field.optionState} && {field.optionState.{field.value}}) && {field.value}',then:true,else:false)}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
+	<f:variable name="hasCustomValue" value="{f:if(condition:'!({field.optionSelection} && {field.optionSelection.{field.value}}) && {field.value}',then:true,else:false)}"/>
 
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{fieldAttributes.name}"
+				   selectedValue="{field.value}"
 				   data-yf-control="{field.name}"
 				   id="{fieldAttributes.id}"
 				   disabled="{hasCustomValue}"

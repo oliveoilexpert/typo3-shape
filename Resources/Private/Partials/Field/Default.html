@@ -1,5 +1,5 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
-	<f:variable name="fieldAttributes" value="{field -> shape:fieldAttributes()}"/>
+	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.textfield name="{fieldAttributes.name}"
 					  type="{field.type}"
@@ -8,7 +8,7 @@
 					  class="{blockClass}__control {blockClass}__{field.type}-control"/>
 	<f:if condition="{field.datalist}">
 		<datalist id="{fieldAttributes.list}">
-			<f:for each="{field.datalistArray}" as="item">
+			<f:for each="{field.datalist -> shape:trimExplode()}" as="item">
 				<option value="{item}"/>
 			</f:for>
 		</datalist>
