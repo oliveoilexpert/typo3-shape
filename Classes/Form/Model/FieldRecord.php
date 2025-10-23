@@ -7,7 +7,6 @@ use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Domain\Record\SystemProperties;
 use TYPO3\CMS\Extbase\Error\Result;
 
-// todo: leave as is (extended Record) or create "Field" class that contains a Record?
 class FieldRecord extends Record implements FieldInterface
 {
 	const DATETIME_FORMATS = [
@@ -34,21 +33,18 @@ class FieldRecord extends Record implements FieldInterface
 		protected readonly ?SystemProperties $systemProperties = null,
 	)
 	{
+		$this->initializeDefaultValue();
 		$this->initialize();
 	}
 
-	protected function initialize(): void
+
+	protected function initializeDefaultValue(): void
 	{
-		if (!$this->has('default_value')) {
-			$this->properties['default_value'] = null;
+		// guarantee default_value exists
+		if ($this->has('default_value')) {
+			return;
 		}
-		// Convert DateTimeInterface properties to string
-		foreach(static::DATETIME_PROPS as $key) {
-			if (!$this->has($key) || !($this->get($key) instanceof \DateTimeInterface)) {
-				continue;
-			}
-			$this->properties[$key] = $this->properties[$key]->format(static::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
-		}
+		$this->properties['default_value'] = null;
 
 		// Set default value for fields with options
 		// Types that start with 'multi-' are multi-select fields and have an array as default value
@@ -74,6 +70,18 @@ class FieldRecord extends Record implements FieldInterface
 			}
 		}
 	}
+
+	protected function initialize(): void
+	{
+		// Convert DateTimeInterface properties to string
+		foreach(static::DATETIME_PROPS as $key) {
+			if (!$this->has($key) || !($this->get($key) instanceof \DateTimeInterface)) {
+				continue;
+			}
+			$this->properties[$key] = $this->properties[$key]->format(static::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s');
+		}
+	}
+
 	public function isFormControl(): bool
 	{
 		return $this->has('name');

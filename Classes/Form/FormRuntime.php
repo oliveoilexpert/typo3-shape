@@ -35,7 +35,7 @@ class FormRuntime
 	{
 		foreach ($this->form->getPages() as $page) {
 			foreach ($page->getFields() as $field) {
-				if ($field->isFormConrol()) {
+				if ($field->isFormControl()) {
 					$field->setSessionValue($this->session->values[$field->getName()] ?? null);
 				}
 			}

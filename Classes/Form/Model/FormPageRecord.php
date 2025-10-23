@@ -2,6 +2,7 @@
 
 namespace UBOS\Shape\Form\Model;
 
+use TYPO3\CMS\Core\Collection\LazyRecordCollection;
 use TYPO3\CMS\Core\Domain\Record;
 
 class FormPageRecord extends Record implements FormPageInterface
@@ -11,8 +12,10 @@ class FormPageRecord extends Record implements FormPageInterface
 		return $this->properties['type'] ?? '';
 	}
 
-	/** @return FieldInterface[] */
-	public function getFields(): array
+	/**
+	 * @return LazyRecordCollection<FieldInterface>|array<FieldInterface>
+	 */
+	public function getFields(): LazyRecordCollection|array
 	{
 		return $this->get('fields');
 	}

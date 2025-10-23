@@ -2,6 +2,7 @@
 
 namespace UBOS\Shape\Form\Model;
 
+use TYPO3\CMS\Core\Collection\LazyRecordCollection;
 use TYPO3\CMS\Core\Domain\Record;
 
 class FormRecord extends Record implements FormInterface
@@ -11,14 +12,18 @@ class FormRecord extends Record implements FormInterface
 		return $this->properties['name'] ?? '';
 	}
 
-	/** @return FormPageInterface[] */
-	public function getPages(): Iterable
+	/**
+	 * @return LazyRecordCollection<FormPageInterface>|array<FormPageInterface>
+	 */
+	public function getPages(): LazyRecordCollection|array
 	{
 		return $this->get('pages');
 	}
 
-	/** @return FinisherConfigurationInterface[] */
-	public function getFinisherConfigurations(): array
+	/**
+	 * @return LazyRecordCollection<FinisherConfigurationInterface>|array<FinisherConfigurationInterface>
+	 */
+	public function getFinisherConfigurations(): LazyRecordCollection|array
 	{
 		return $this->get('finishers');
 	}

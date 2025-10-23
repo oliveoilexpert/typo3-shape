@@ -8,7 +8,7 @@ class FieldAttributesViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
-		$this->registerArgument('field', 'object', '', false, false);
+		$this->registerArgument('field', 'UBOS\Shape\Form\Model\FieldInterface', '', false, false);
 		$this->registerArgument('attributes', 'array', '', false, []);
 	}
 
