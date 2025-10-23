@@ -21,7 +21,11 @@ final class UserDataFieldPrefiller
 			return;
 		}
 
-		$repository = $this->genericRepositoryFactory->forTable('fe_users');
+		$repository = $this->genericRepositoryFactory
+			->forTable('fe_users')
+			->reset()
+			->setReturnRawQueryResult(true);
+
 		$user = $repository->findByUid($feAuth->getUserId());
 		if (!$user) {
 			return;

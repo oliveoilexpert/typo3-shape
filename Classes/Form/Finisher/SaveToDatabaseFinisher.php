@@ -2,7 +2,6 @@
 
 namespace UBOS\Shape\Form\Finisher;
 
-use UBOS\Shape\Form;
 use UBOS\Shape\Repository;
 
 class SaveToDatabaseFinisher extends AbstractFinisher
@@ -27,7 +26,9 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			return;
 		}
 
-		$repository = $this->genericRepositoryFactory->forTable($this->settings['table']);
+		$repository = $this->genericRepositoryFactory
+			->forTable($this->settings['table'])
+			->reset();
 
 		$values = [
 			'pid' => (int)($this->settings['storagePage'] ?: $this->getPlugin()->getPid() ?? $this->getForm()->getPid()),
@@ -56,7 +57,7 @@ class SaveToDatabaseFinisher extends AbstractFinisher
 			}
 
 			try {
-				$repository->updateBy($whereColumn, $whereValue, $values);
+				$repository->updateBy([$whereColumn => $whereValue], $values);
 				$this->logger->info('Record updated', $this->getLogContext([
 					'table' => $this->settings['table'],
 				]));

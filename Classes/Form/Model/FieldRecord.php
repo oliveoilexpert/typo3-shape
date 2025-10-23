@@ -84,6 +84,10 @@ class FieldRecord extends Record implements FieldInterface
 		}
 	}
 
+	public function get($key): mixed
+	{
+		return $this->runtimeOverrides[$key] ?? parent::get($key);
+	}
 	public function isFormControl(): bool
 	{
 		return $this->has('name');
@@ -124,10 +128,6 @@ class FieldRecord extends Record implements FieldInterface
 	public function setValidationResult(?Result $result): void
 	{
 		$this->validationResult = $result;
-	}
-	public function get($key): mixed
-	{
-		return $this->runtimeOverrides[$key] ?? parent::get($key);
 	}
 	public function runtimeOverride(string $key, mixed $value): void
 	{

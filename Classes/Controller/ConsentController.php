@@ -28,8 +28,9 @@ class ConsentController extends ActionController
 		if (!$uid || !$hash || $status === Enum\ConsentStatus::Pending) {
 			return $this->messageResponse([['key' => 'label.invalid_consent_request', 'type' => 'warning']]);
 		}
-
-		$consent = $this->consentRepository->findByUid($uid);
+		$consent = $this->consentRepository
+			->setReturnRawQueryResult(true)
+			->findByUid($uid);
 
 		if (!$consent) {
 			return $this->messageResponse([['key' => 'label.consent_not_found', 'type' => 'error']]);

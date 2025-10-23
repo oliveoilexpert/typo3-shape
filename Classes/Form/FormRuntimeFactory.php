@@ -127,7 +127,9 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		array $consent
 	): FormRuntime
 	{
-		$plugin = $this->contentRepository->findByUid($consent['plugin']);
+		$plugin = $this->contentRepository
+			->reset()
+			->findByUid($consent['plugin']);
 
 		// recreate request
 		$requestClone = clone $request;
@@ -217,7 +219,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		} else {
 			$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		}
-		if (!$form || !$form instanceof Model\FormInterface) {
+		if (!$form instanceof Model\FormInterface) {
 			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid FormInterface.', 1741369825);
 		}
 		return $form;

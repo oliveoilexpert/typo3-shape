@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 /**
  * Abstract base repository for Record-based domain objects.
  *
- * Provides a clean API similar to Extbase repositories but optimized for the Record system.
+ * Provides an API similar to Extbase repositories but optimized for the Record system.
  * Uses TYPO3's Restriction system and respects TCA configuration automatically.
  *
  * IMPORTANT - Table Name Immutability:
@@ -150,16 +150,28 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 		$this->enableRuntimeCache = $enableRuntimeCache;
 		return $this;
 	}
-
-	public function clearRuntimeCache(): void
+	public function reset(): self
+	{
+		$this->respectStoragePage = false;
+		$this->storagePid = 0;
+		$this->respectSysLanguage = true;
+		$this->ignoreEnableFields = false;
+		$this->includeDeleted = false;
+		$this->returnRawQueryResult = false;
+		$this->enableRuntimeCache = true;
+		return $this;
+	}
+	public function clearRuntimeCache(): self
 	{
 		$this->recordCache = [];
 		$this->allowedUidsCache = [];
+		return $this;
 	}
 
-	public function clearAllowedUidsCache(): void
+	public function clearAllowedUidsCache(): self
 	{
 		$this->allowedUidsCache = [];
+		return $this;
 	}
 
 	// ========== CRUD Methods ==========
