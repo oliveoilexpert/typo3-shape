@@ -16,11 +16,7 @@ final class ExpressionResolverCreationEvent
 	{
 		return $this->variables;
 	}
-	public function setVariable(string $key, $value): void
-	{
-		$this->variables[$key] = $value;
-	}
-	public function setVariables(array $variables): void
+	public function addVariables(array $variables): void
 	{
 		$this->variables = array_merge($this->variables, $variables);
 	}
