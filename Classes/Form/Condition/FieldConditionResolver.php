@@ -16,7 +16,7 @@ class FieldConditionResolver
 
 	public function evaluate(
 		Form\FormRuntime $runtime,
-		Form\Record\FieldRecord $field,
+		Form\Model\FieldInterface $field,
 		Resolver $resolver,
 	): mixed
 	{

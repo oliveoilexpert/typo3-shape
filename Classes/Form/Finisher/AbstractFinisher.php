@@ -45,7 +45,7 @@ abstract class AbstractFinisher implements LoggerAwareInterface
 		return $this->context->runtime->plugin;
 	}
 
-	protected function getForm(): Core\Domain\Record
+	protected function getForm(): Form\Model\FormInterface
 	{
 		return $this->context->runtime->form;
 	}

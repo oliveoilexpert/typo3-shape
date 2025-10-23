@@ -82,7 +82,7 @@ class SendEmailFinisher extends AbstractFinisher
 
 		if ($this->settings['attachUploads']) {
 			foreach ($this->getForm()->get('pages') as $page) {
-				foreach ($page->get('fields') as $field) {
+				foreach ($page->getFields() as $field) {
 					if ($field->get('type') === 'file' && isset($formValues[$field->get('name')])) {
 						foreach ($formValues[$field->get('name')] as $fileIdentifier) {
 							try {

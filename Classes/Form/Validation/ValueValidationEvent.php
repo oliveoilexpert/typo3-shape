@@ -12,7 +12,7 @@ final class ValueValidationEvent
 {
 	public function __construct(
 		public readonly Form\FormRuntime                      $runtime,
-		public readonly Form\Record\FieldRecord               $field,
+		public readonly Form\Model\FieldInterface             $field,
 		public readonly ExtbaseValidator\ConjunctionValidator $validator,
 		public                                                $value,
 		public ?Result                                        $result = null,

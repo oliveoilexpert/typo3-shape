@@ -17,11 +17,11 @@ class FieldValueValidator
 
 	public function validate(
 		Form\FormRuntime $runtime,
-		Form\Record\FieldRecord $field,
+		Form\Model\FieldInterface $field,
 		mixed $value
 	): Extbase\Error\Result
 	{
-		if (!$field->has('name')) {
+		if (!$field->isFormControl()) {
 			return new Extbase\Error\Result();
 		}
 		$event = new ValueValidationEvent(

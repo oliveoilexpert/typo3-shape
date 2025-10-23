@@ -10,10 +10,10 @@ use UBOS\Shape\Form;
 final class FieldConditionResolutionEvent
 {
 	public function __construct(
-		public readonly Form\FormRuntime        $runtime,
-		public readonly Form\Record\FieldRecord $field,
-		public readonly Resolver                $resolver,
-		public ?bool                            $result = null,
+		public readonly Form\FormRuntime          $runtime,
+		public readonly Form\Model\FieldInterface $field,
+		public readonly Resolver                  $resolver,
+		public ?bool                              $result = null,
 	) {}
 	public function isPropagationStopped(): bool
 	{

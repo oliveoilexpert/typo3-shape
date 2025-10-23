@@ -18,7 +18,7 @@ class FormRuntime
 		readonly public array                                   $settings,
 		readonly public Core\View\ViewInterface                 $view,
 		readonly public Core\Domain\Record                      $plugin,
-		readonly public Core\Domain\Record                      $form,
+		readonly public Model\FormInterface                     $form,
 		readonly public FormSession                             $session,
 		readonly public array                                   $postValues,
 		readonly public Core\Resource\ResourceStorageInterface  $uploadStorage,
@@ -33,9 +33,9 @@ class FormRuntime
 
 	public function initializeFieldValuesFromSession(): self
 	{
-		foreach ($this->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if ($field->has('name')) {
+		foreach ($this->form->getPages() as $page) {
+			foreach ($page->getFields() as $field) {
+				if ($field->isFormConrol()) {
 					$field->setSessionValue($this->session->values[$field->getName()] ?? null);
 				}
 			}
@@ -72,22 +72,23 @@ class FormRuntime
 
 	public function renderPage(int $pageIndex = 1): string
 	{
-		$lastPageIndex = count($this->form->get('pages'));
-		$currentPageRecord = $this->form->get('pages')[$pageIndex - 1];
+		$pages = $this->form->getPages();
+		$lastPageIndex = count($pages);
+		$currentPageRecord = $pages[$pageIndex - 1];
 		$this->session->returnPageIndex = $pageIndex;
 
 		// Resolve display conditions with "stepType" of page to be rendered
 		$expressionResolver = $this->createExpressionResolver(['stepType' => $currentPageRecord->get('type')]);
-		foreach ($this->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				$field->conditionResult = $this->fieldConditionResolver->evaluate($this, $field, $expressionResolver);
+		foreach ($pages as $page) {
+			foreach ($page->getFields() as $field) {
+				$field->setConditionResult($this->fieldConditionResolver->evaluate($this, $field, $expressionResolver));
 			}
 		}
 
 		$viewVariables = [
 			'session' => $this->session,
 			'serializedSession' => FormSession::serialize($this->session),
-			'namespace' => $this->form->get('name'),
+			'namespace' => $this->form->getName(),
 			'action' => 'run',
 			'plugin' => $this->plugin,
 			'form' => $this->form,
@@ -107,23 +108,22 @@ class FormRuntime
 		$viewVariables = $event->getVariables();
 
 		$this->view->assignMultiple($viewVariables);
-		$this->view->getRenderingContext()->setControllerAction('Form');
-		return $this->view->render();
+		return $this->view->render('Form');
 	}
 
 	public function validatePage(int $pageIndex): void
 	{
-		$page = $this->form->get('pages')[$pageIndex - 1] ?? null;
+		$page = $this->form->getPages()[$pageIndex - 1] ?? null;
 		if (!$page || !$page->has('fields')) {
 			return;
 		}
 
 		// Resolve display conditions with "stepType" of the page fields are on, necessary before validation for required fields
 		$expressionResolver = $this->createExpressionResolver(['stepType' => $page->get('type')]);
-		foreach ($page->get('fields') as $field) {
-			$field->conditionResult = $this->fieldConditionResolver->evaluate($this, $field, $expressionResolver);
-			$field->validationResult = $this->fieldValueValidator->validate($this, $field, $this->getFieldValue($field));
-			if ($field->validationResult->hasErrors()) {
+		foreach ($page->getFields() as $field) {
+			$field->setConditionResult($this->fieldConditionResolver->evaluate($this, $field, $expressionResolver));
+			$field->setValidationResult($this->fieldValueValidator->validate($this, $field, $this->getFieldValue($field)));
+			if ($field->getValidationResult()->hasErrors()) {
 				$this->hasErrors = true;
 			}
 		}
@@ -131,12 +131,12 @@ class FormRuntime
 
 	public function serializePage(int $pageIndex): void
 	{
-		$page = $this->form->get('pages')[$pageIndex - 1] ?? null;
+		$page = $this->form->getPages()[$pageIndex - 1] ?? null;
 		if (!$page || !$page->has('fields')) {
 			return;
 		}
-		foreach ($page->get('fields') as $field) {
-			if (!$field->has('name')) {
+		foreach ($page->getFields() as $field) {
+			if (!$field->isFormControl()) {
 				continue;
 			}
 			$serializedValue = $this->fieldValueSerializer->serialize($this, $field, $this->getFieldValue($field));
@@ -146,10 +146,7 @@ class FormRuntime
 
 	public function validateForm(): void
 	{
-		if (!$this->form->has('pages')) {
-			return;
-		}
-		foreach ($this->form->get('pages') as $index => $page) {
+		foreach ($this->form->getPages() as $index => $page) {
 			$pageIndex = $index + 1;
 			$this->validatePage($pageIndex);
 			if ($this->hasErrors) {
@@ -161,19 +158,16 @@ class FormRuntime
 
 	public function serializeForm(): void
 	{
-		if (!$this->form->has('pages')) {
-			return;
-		}
-		foreach ($this->form->get('pages') as $index => $page) {
+		foreach ($this->form->getPages() as $index => $page) {
 			$this->serializePage($index + 1);
 		}
 	}
 
 	public function processForm(): void
 	{
-		foreach ($this->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
-				if (!$field->has('name')) {
+		foreach ($this->form->getPages() as $page) {
+			foreach ($page->getFields() as $field) {
+				if (!$field->isFormControl()) {
 					continue;
 				}
 				$processedValue = $this->fieldValueProcessor->process($this, $field, $this->getFieldValue($field));
@@ -186,19 +180,19 @@ class FormRuntime
 	{
 		$context = new Finisher\FinisherContext($this);
 		$expressionResolver = $this->createExpressionResolver($conditionVariables);
-		foreach ($this->form->get('finishers') as $finisherRecord) {
-			if ($finisherRecord->get('condition') && !$expressionResolver->evaluate($finisherRecord->get('condition'))) {
+		foreach ($this->form->getFinisherConfigurations() as $finisherConfiguration) {
+			if ($finisherConfiguration->get('condition') && !$expressionResolver->evaluate($finisherConfiguration->getCondition())) {
 				continue;
 			}
-			$this->executeFinisherRecord($finisherRecord, $context);
+			$this->executeFinisherRecord($finisherConfiguration, $context);
 		}
 		$context->finishedActionArguments['pluginUid'] = $this->plugin->getUid();
 		return $context;
 	}
 
-	public function executeFinisherRecord(Core\Domain\Record $record, Finisher\FinisherContext $context): void
+	public function executeFinisherRecord(Model\FinisherConfigurationInterface $configuration, Finisher\FinisherContext $context): void
 	{
-		$finisherClassName = $record->get('type');
+		$finisherClassName = $configuration->getFinisherClassName();
 		$finisher = Core\Utility\GeneralUtility::makeInstance($finisherClassName);
 		if (!($finisher instanceof Finisher\AbstractFinisher)) {
 			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Form\Finisher\AbstractFinisher.', 1741369249);
@@ -206,7 +200,7 @@ class FormRuntime
 
 		// todo: maybe add "finisherDefaults". Problem is there's no good way to merge. ArrayUtility::mergeRecursiveWithOverrule either overwrites everything or discards empty values ('' and '0'), but we want to keep '0', otherwise checkboxes can't overwrite with false. Extbase has "ignoreFlexFormSettingsIfEmpty" but that doesn't really solve the problem either. To have booleans with default values, we'd need to render them as selects with values '', '0', '1' and then only ignore ''.
 		//$defaultSettings = $this->settings['finisherDefaults'][$finisherClassName] ?? [];
-		$settings = $this->flexFormService->convertFlexFormContentToArray($record->getRawRecord()->get('settings'));
+		$settings = $this->flexFormService->convertFlexFormContentToArray($configuration->getSettings());
 		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher, $settings);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->cancelled) {
@@ -232,12 +226,12 @@ class FormRuntime
 		);
 	}
 
-	public function getFieldValue(Record\FieldRecord $field): mixed
+	public function getFieldValue(Model\FieldInterface $field): mixed
 	{
 		return $this->session->values[$field->getName()] ?? null;
 	}
 
-	public function setFieldValue(Record\FieldRecord $field, mixed $value): void
+	public function setFieldValue(Model\FieldInterface $field, mixed $value): void
 	{
 		$field->setSessionValue($value);
 		$name = $field->getName();

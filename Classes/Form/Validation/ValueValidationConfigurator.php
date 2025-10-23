@@ -33,7 +33,7 @@ final class ValueValidationConfigurator
 	protected function addRequiredValidator(ValueValidationEvent $event): void
 	{
 		$field = $event->field;
-		if ($field->has('required') && $field->get('required') && $field->conditionResult) {
+		if ($field->has('required') && $field->get('required') && $field->getConditionResult()) {
 			$event->addValidator($this->makeValidator(
 				ExtbaseValidator\NotEmptyValidator::class
 			));
@@ -144,7 +144,7 @@ final class ValueValidationConfigurator
 				[
 					'minimum' => $field->get('min') ?? '',
 					'maximum' => $field->get('max') ?? '',
-					'format' => Form\Record\FieldRecord::DATETIME_FORMATS[$type]
+					'format' => Form\Model\FieldRecord::DATETIME_FORMATS[$type]
 				]
 			));
 		}

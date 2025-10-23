@@ -1,13 +1,14 @@
 <?php
 
-namespace UBOS\Shape\Form\Record;
+namespace UBOS\Shape\Form\Model;
 
 use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Domain\Record\SystemProperties;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class FieldRecord extends Record
+// todo: leave as is (extended Record) or create "Field" class that contains a Record?
+class FieldRecord extends Record implements FieldInterface
 {
 	const DATETIME_FORMATS = [
 		'date' => 'Y-m-d',
@@ -21,8 +22,10 @@ class FieldRecord extends Record
 	const DATETIME_PROPS = ['default_value', 'min', 'max'];
 
 	protected mixed $sessionValue = null;
-	public bool $conditionResult = true;
-	public ?Result $validationResult = null;
+	protected bool $conditionResult = true;
+	protected ?Result $validationResult = null;
+
+	protected array $runtimeOverrides = [];
 	protected ?array $optionState = null;
 
 	public function __construct(
@@ -71,6 +74,10 @@ class FieldRecord extends Record
 			}
 		}
 	}
+	public function isFormControl(): bool
+	{
+		return $this->has('name');
+	}
 	public function getName(): string
 	{
 		return $this->properties['name'] ?? '';
@@ -92,23 +99,29 @@ class FieldRecord extends Record
 		$this->sessionValue = $value;
 		$this->optionState = null;
 	}
-
-	// Allow setting properties dynamically, so fields can be manipulated via events
-	public function set($key, $value): void
+	public function getConditionResult(): bool
 	{
-		$this->properties[$key] = $value;
+		return $this->conditionResult;
+	}
+	public function setConditionResult(bool $result): void
+	{
+		$this->conditionResult = $result;
+	}
+	public function getValidationResult(): ?Result
+	{
+		return $this->validationResult;
+	}
+	public function setValidationResult(?Result $result): void
+	{
+		$this->validationResult = $result;
 	}
 	public function get($key): mixed
 	{
-		try {
-			return parent::get($key);
-		} catch (\Exception $e) {
-			return null;
-		}
+		return $this->runtimeOverrides[$key] ?? parent::get($key);
 	}
-	public function prefill(?string $value): void
+	public function runtimeOverride(string $key, mixed $value): void
 	{
-		$this->properties['default_value'] = $value;
+		$this->runtimeOverrides[$key] = $value;
 	}
 
 	// todo: move to ViewHelper ContainsString?

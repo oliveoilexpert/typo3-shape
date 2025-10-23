@@ -9,10 +9,10 @@ use UBOS\Shape\Form;
 final class ValueProcessingEvent
 {
 	public function __construct(
-		public readonly Form\FormRuntime        $runtime,
-		public readonly Form\Record\FieldRecord $field,
-		public readonly mixed                   $value,
-		public mixed                            $processedValue = null,
+		public readonly Form\FormRuntime          $runtime,
+		public readonly Form\Model\FieldInterface $field,
+		public readonly mixed                     $value,
+		public mixed                              $processedValue = null,
 	)
 	{
 	}

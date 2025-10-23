@@ -2,7 +2,7 @@
 
 namespace UBOS\Shape\Form\RepeatableContainer;
 
-use UBOS\Shape\Form\Record\FieldRecord;
+use UBOS\Shape\Form\Model\FieldRecord;
 
 class RepeatableContainerRecord extends FieldRecord
 {
@@ -22,6 +22,7 @@ class RepeatableContainerRecord extends FieldRecord
 		$this->createdFieldsets = null;
 	}
 
+	/** @return FieldRecord[][] */
 	public function getCreatedFieldsets(): array
 	{
 		if ($this->createdFieldsets !== null) {

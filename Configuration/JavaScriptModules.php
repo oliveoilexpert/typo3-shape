@@ -3,6 +3,5 @@
 
 return [
 	'dependencies' => ['backend'],
-	'imports' => [
-	]
+	'imports' => []
 ];

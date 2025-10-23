@@ -15,11 +15,11 @@ class FieldValueProcessor
 
 	public function process(
 		Form\FormRuntime $runtime,
-		Form\Record\FieldRecord $field,
+		Form\Model\FieldInterface $field,
 		mixed $value
 	): mixed
 	{
-		if (!$field->has('name')) {
+		if (!$field->isFormControl()) {
 			return $value;
 		}
 		$event = new ValueProcessingEvent($runtime, $field, $value);

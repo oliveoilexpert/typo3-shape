@@ -27,14 +27,14 @@ final class UserDataFieldPrefiller
 			return;
 		}
 
-		foreach ($event->runtime->form->get('pages') as $page) {
-			foreach ($page->get('fields') as $field) {
+		foreach ($event->runtime->form->getPages() as $page) {
+			foreach ($page->getFields() as $field) {
 				if (!$field->has('user_prefill_column')) {
 					continue;
 				}
 				$prefillColumn = $field->get('user_prefill_column');
 				if ($prefillColumn && isset($user[$prefillColumn])) {
-					$field->prefill($user[$prefillColumn]);
+					$field->runtimeOverride('default_value', $user[$prefillColumn]);
 				}
 			}
 		}

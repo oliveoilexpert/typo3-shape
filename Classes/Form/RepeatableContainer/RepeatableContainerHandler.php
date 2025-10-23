@@ -47,7 +47,7 @@ final class RepeatableContainerHandler
 		foreach ($field->getCreatedFieldsets() as $index => $fields) {
 			foreach ($fields as $childField) {
 				$childField->set('display_condition', str_replace('__INDEX', $index, $childField->get('display_condition')));
-				$childField->conditionResult = $this->fieldConditionResolver->evaluate($event->runtime, $childField, $event->resolver);
+				$childField->setConditionResult($this->fieldConditionResolver->evaluate($event->runtime, $childField, $event->resolver));
 			}
 		}
 	}
@@ -69,8 +69,8 @@ final class RepeatableContainerHandler
 			foreach ($fields as $childField) {
 				$name = $childField->getName();
 				$value = $event->value[$index][$name] ?? $event->value[$index][$name . '__PROXY'] ?? null;
-				$childField->validationResult = $this->fieldValueValidator->validate($event->runtime, $childField, $value);
-				$result->forProperty($index)->forProperty($name)->merge($childField->validationResult);
+				$childField->setValidationResult($this->fieldValueValidator->validate($event->runtime, $childField, $value));
+				$result->forProperty($index)->forProperty($name)->merge($childField->getValidationResult());
 			}
 		}
 		$event->result = $result;

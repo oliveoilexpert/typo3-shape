@@ -15,11 +15,11 @@ class FieldValueSerializer
 
 	public function serialize(
 		Form\FormRuntime $runtime,
-		Form\Record\FieldRecord $field,
+		Form\Model\FieldInterface $field,
 		mixed $value
 	): mixed
 	{
-		if (!$field->has('name')) {
+		if (!$field->isFormControl()) {
 			return $value;
 		}
 		$event = new ValueSerializationEvent($runtime, $field, $value);

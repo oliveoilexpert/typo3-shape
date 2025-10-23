@@ -22,6 +22,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		protected readonly Repository\ContentRepository                        $contentRepository,
 	) {}
 
+	// todo: make it work with any type of request (not only Extbase)?
 	public function createFromRequest(
 		Extbase\Mvc\RequestInterface $request,
 		Core\View\ViewInterface $view,
@@ -32,7 +33,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 	): FormRuntime
 	{
 		$plugin = $this->getPluginRecord($request, $settings);
-		$form = $this->getFormRecord($plugin);
+		$form = $this->getForm($plugin);
 
 		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
@@ -68,9 +69,9 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 
 			// only keep post values that can be mapped to fields
 			// substitute missing values with proxy values, if possible (e.g. for file fields)
-			foreach ($form->get('pages') as $page) {
-				foreach ($page->get('fields') as $field) {
-					if (!$field->has('name')) {
+			foreach ($form->getPages() as $page) {
+				foreach ($page->getFields() as $field) {
+					if (!$field->isFormControl()) {
 						continue;
 					}
 					$name = $field->getName();
@@ -158,7 +159,7 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		$viewClone->getRenderingContext()->getTemplatePaths()->setPartialRootPaths($formPluginConfiguration['view']['partialRootPaths']);
 		$viewClone->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths($formPluginConfiguration['view']['layoutRootPaths']);
 
-		$form = $this->getFormRecord($plugin);
+		$form = $this->getForm($plugin);
 
 		$uploadStorage = $this->storageRepository->findByCombinedIdentifier($settings['uploadFolder']);
 		$parsedBodyKey = 'tx_shape_form';
@@ -187,8 +188,6 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		);
 	}
 
-
-
 	protected function getPluginRecord(
 		Extbase\Mvc\RequestInterface $request,
 		array $settings
@@ -208,9 +207,9 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		return $record;
 	}
 
-	protected function getFormRecord(
+	protected function getForm(
 		Core\Domain\Record $plugin
-	): Core\Domain\Record
+	): Model\FormInterface
 	{
 		// typo3 13.4.x version dependant
 		if (property_exists($plugin->get('pi_flexform'), 'sheets')) {
@@ -218,8 +217,8 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		} else {
 			$form = $plugin->get('pi_flexform')->get('settings')['form'][0] ?? null;
 		}
-		if (!$form || $form->getMainType() !== 'tx_shape_form') {
-			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid "tx_shape_form" record.', 1741369825);
+		if (!$form || !$form instanceof Model\FormInterface) {
+			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid FormInterface.', 1741369825);
 		}
 		return $form;
 	}
