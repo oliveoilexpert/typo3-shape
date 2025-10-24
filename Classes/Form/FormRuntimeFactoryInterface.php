@@ -12,4 +12,10 @@ interface FormRuntimeFactoryInterface
 		ViewInterface $view,
 		array $settings
 	): FormRuntime;
+
+	public function recreateFromRequestAndConsent(
+		RequestInterface $request,
+		ViewInterface $view,
+		array $consent
+	): FormRuntime;
 }

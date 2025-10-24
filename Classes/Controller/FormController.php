@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use UBOS\Shape\Form;
 
-
 // todo: FormReflection with things like fieldNames, finisher types, other field information
 // todo: FormBuilder to build virtual forms, createFromYaml method
 // todo: option to choose yaml instead of form record in plugin
@@ -24,17 +23,20 @@ class FormController extends ActionController
 {
 	public function __construct(
 		protected readonly Form\FormRuntimeFactory $runtimeFactory
-	) {}
+	)
+	{
+	}
 
 	protected Form\FormRuntime $runtime;
-	protected string $fragmentPageTypeNum = '1741218626';
+	protected int $fragmentPageTypeNum = 1761312405;
 
 	public function renderAction(): ResponseInterface
 	{
-		$pageType = $this->request->getQueryParams()['type'] ?? '';
-		if ($pageType !== $this->fragmentPageTypeNum && $this->settings['lazyLoad'] && $this->settings['lazyLoadFragmentPage']) {
+		$pageType = (int)($this->request->getQueryParams()['type'] ?? 0);
+		if ($this->settings['lazyLoad'] && $pageType !== $this->fragmentPageTypeNum) {
 			return $this->lazyLoader();
 		}
+
 		$this->initializeRuntime();
 		return $this->formPage();
 	}
@@ -82,9 +84,6 @@ class FormController extends ActionController
 			return $this->formPage();
 		}
 		$arguments = $this->request->getArguments();
-		if ($arguments['template'] ?? false) {
-			$this->view->getRenderingContext()->setControllerAction($arguments['template']);
-		}
 		$variables = [
 			'plugin' => $this->runtime->plugin,
 			'form' => $this->runtime->form,
@@ -92,7 +91,9 @@ class FormController extends ActionController
 			'arguments' => $arguments,
 		];
 		$this->view->assignMultiple($variables);
-		return $this->htmlResponse();
+		return $this->htmlResponse(
+			$this->view->render($arguments['template'] ?? '')
+		);
 	}
 
 	protected function initializeRuntime(): void
@@ -115,11 +116,13 @@ class FormController extends ActionController
 			->reset()
 			->setNoCache(true)
 			->setCreateAbsoluteUri(true)
-			->setTargetPageType((int)$this->fragmentPageTypeNum)
-			->setTargetPageUid((int)$this->settings['lazyLoadFragmentPage'])
-			->uriFor('render', ['pluginUid' => $contentData['uid']]);
-		$this->view->setTemplate('lazyLoadForm');
+			->setTargetPageType($this->fragmentPageTypeNum)
+			->setTargetPageUid($this->request->getAttribute('routing')->getPageId())
+			->setArguments(['ceUid' => $contentData['uid']])
+			->uriFor('render');
 		$this->view->assign('fetchUri', $uri);
-		return $this->htmlResponse();
+		return $this->htmlResponse(
+			$this->view->render('FormLazyLoader')
+		);
 	}
 }

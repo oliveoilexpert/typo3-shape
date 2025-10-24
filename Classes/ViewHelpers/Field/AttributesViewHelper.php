@@ -25,12 +25,12 @@ class AttributesViewHelper extends AbstractViewHelper
 		$name = "{$this->templateVariableContainer->get('namespace')}[{$field->get('name')}]";
 		$id = "{$this->templateVariableContainer->get('idPrefix')}{$name}";
 		$attributes = [
-			'data-yf-control' => $field->get('name'),
+			'data-shape-control' => $field->get('name'),
 			'id' => $id,
 			'name' => $name
 		];
 		if ($field->has('validation_message') && $field->get('validation_message')) {
-			$attributes['data-yf-validation-message'] = $field->get('validation_message');
+			$attributes['data-shape-validation-message'] = $field->get('validation_message');
 		}
 		if ($field->has('datalist') && $field->get('datalist') && $field->get('type') !== 'country-select') {
 			$attributes['list'] = "{$id}-datalist";

@@ -1,5 +1,5 @@
 <f:if condition="{field.name}">
-    <p class="{blockClass}__message -error{f:if(condition:'!{field.validationResult.errors}', then:' --hidden')}" data-yf-error>
+    <p class="{blockClass}__message -error{f:if(condition:'!{field.validationResult.errors}', then:' --hidden')}" data-shape-error>
         <f:if condition="{field.validation_message}">
             <f:then>
                 <span>{field.validation_message}</span>

@@ -1,33 +1,46 @@
 import jstin from './lib/subscript-9.0.0/justin.min.js'
+
 {
 	const evaluateConditions = form => {
-		const fields = form.querySelectorAll(`[data-yf-condition]`)
+		const fields = form.querySelectorAll('[data-shape-condition]')
 		if (!fields.length) return
-		let data = Object.fromEntries(new FormData(form))
-		let dataName = form.dataset.yfForm
+
+		const data = Object.fromEntries(new FormData(form))
+		const dataName = form.dataset.yfForm
+
 		fields.forEach(field => {
 			const cond = field.dataset.yfCondition
 			if (!cond) return
-			const inputs = field.querySelectorAll('[data-yf-control]')
-			if (jstin(cond)({
+
+			const inputs = field.querySelectorAll('[data-shape-control]')
+			const isVisible = jstin(cond)({
 				value: fId => data[`tx_shape_form[${dataName}][${fId}]`] ?? null,
 				formData: str => data[`tx_shape_form[${dataName}]${str}`] ?? null
-			})) {
-				field.classList.remove('--hidden')
-				inputs.forEach(inp => inp.disabled = false)
-			} else {
-				field.classList.add('--hidden')
-				inputs.forEach(inp => inp.disabled = true)
-			}
+			})
+
+			field.classList.toggle('--hidden', !isVisible)
+			inputs.forEach(inp => inp.disabled = !isVisible)
 		})
 	}
-	const processNode = el => {
-		const form = el.closest('[data-yf-form]') ?? el.querySelector('[data-yf-form]')
-		el.querySelectorAll('[data-yf-control]').forEach(field => {
-			field.addEventListener('change', () => evaluateConditions(form))
-		})
-		window.requestAnimationFrame(() => evaluateConditions(form))
+
+	const connectElement = el => {
+		const form = el.closest('[data-shape-form]') ?? el.querySelector('[data-shape-form]')
+		if (!form) return
+
+		if (!form.__shapeConditionalDelegation) {
+			form.__shapeConditionalDelegation = true
+			form.addEventListener('change', e => {
+				if (e.target.matches('[data-shape-control]')) {
+					evaluateConditions(form)
+				}
+			})
+		}
+
+		if (el.querySelector('[data-shape-condition]')) {
+			requestAnimationFrame(() => evaluateConditions(form))
+		}
 	}
-	window.__t3_tx_shape.processors.conditionalFields = processNode
-	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
+
+	document.addEventListener('shape:connect', e => connectElement(e.detail.element))
+	document.querySelectorAll('[data-shape-form]').forEach(form => connectElement(form))
 }

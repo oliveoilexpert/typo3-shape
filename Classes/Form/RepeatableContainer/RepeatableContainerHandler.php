@@ -20,6 +20,9 @@ final class RepeatableContainerHandler
 	#[AsEventListener(before: 'UBOS\Shape\EventListener\RecordCreator')]
 	public function createRecord(RecordCreationEvent $event): void
 	{
+		if ($event->isPropagationStopped()) {
+			return;
+		}
 		if ($event->getRawRecord()->getMainType() === 'tx_shape_field'
 			&& $event->getRawRecord()->get('type') === 'repeatable-container') {
 			$event->setRecord(new RepeatableContainerRecord(

@@ -28,7 +28,7 @@ class Tca
 			$required = '*';
 		}
 		$type = BackendUtility::getProcessedValue('tx_shape_field', 'type', $type);
-		$params['title'] = "{$label}{$required}  <small style='opacity:.65;'>({$type})</small>";
+		$params['title'] = "{$label}{$required}  <small style='opacity:.7;'> {$type}</small>";
 	}
 
 	/**

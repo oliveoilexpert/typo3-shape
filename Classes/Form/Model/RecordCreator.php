@@ -13,10 +13,7 @@ final class RecordCreator
 		if ($event->isPropagationStopped()) {
 			return;
 		}
-//		if ($event->getRawRecord()->getMainType() === 'tx_shape_field') {
-//			$this->setRecord($event, FieldRecord::class);
-//		}
-		switch ($event->getRawRecord()->getMainType() ) {
+		switch ($event->getRawRecord()->getMainType()) {
 			case 'tx_shape_field':
 				$this->setRecord($event, FieldRecord::class);
 				break;

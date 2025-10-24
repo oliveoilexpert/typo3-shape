@@ -13,8 +13,8 @@ PluginUtility::configure(
 
 PluginUtility::configure(
 	'Consent',
-	[Controller\ConsentController::class => 'consent'],
-	[Controller\ConsentController::class => 'consent'],
+	[Controller\ConsentController::class => 'consentVerification'],
+	[Controller\ConsentController::class => 'consentVerification'],
 );
 
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['fluid']['namespaces']['shape'] = ['UBOS\Shape\ViewHelpers'];

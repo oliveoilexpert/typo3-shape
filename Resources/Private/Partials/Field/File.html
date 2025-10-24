@@ -5,11 +5,11 @@
 			name="{fieldAttributes.name}[]"
 		    type="file"
 		    additionalAttributes="{fieldAttributes}"
-			onchange="this.parentElement.querySelector('[data-yf-upload-list]')?.remove()"
+			onchange="this.parentElement.querySelector('[data-shape-upload-list]')?.remove()"
 			class="{blockClass}__control {blockClass}__{field.type}-control"/>
 
 	<f:if condition="{field.value}">
-		<div class="{blockClass}__message-list -row" data-yf-upload-list>
+		<div class="{blockClass}__message-list -row" data-shape-upload-list>
 			<f:for each="{field.value}" as="uploadedFilePath">
 				<f:if condition="{uploadedFilePath -> shape:isString()}">
 					<p class="{blockClass}__message">

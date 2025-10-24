@@ -5,7 +5,7 @@
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{fieldAttributes.name}"
 				   selectedValue="{field.value}"
-				   data-yf-control="{field.name}"
+				   data-shape-control="{field.name}"
 				   id="{fieldAttributes.id}"
 				   disabled="{hasCustomValue}"
 				   required="{fieldAttributes.required}"
@@ -18,13 +18,13 @@
 					 value="1"
 					 autocomplete="off"
 					 checked="{hasCustomValue}"
-					 onchange="this.parentElement.querySelectorAll('[data-yf-control]').forEach(el => el.toggleAttribute('disabled'))"/>
+					 onchange="this.parentElement.querySelectorAll('[data-shape-control]').forEach(el => el.toggleAttribute('disabled'))"/>
 	<label class="{blockClass}__label -for-checkbox"
 		   for="{fieldAttributes.id}--toggle">
 		{f:translate(key:'label.enter_custom_value')}
 	</label>
 	<f:form.textfield name="{fieldAttributes.name}"
-					  data-yf-control="{field.name}--custom"
+					  data-shape-control="{field.name}--custom"
 					  id="{fieldAttributes.id}--custom"
 					  disabled="{f:if(condition:hasCustomValue,then:false,else:true)}"
 					  value="{f:if(condition:'{hasCustomValue}',then:field.value,else:'')}"

@@ -78,7 +78,7 @@ class FieldRecord extends Record implements FieldInterface
 	{
 		foreach (['default_value', 'min', 'max'] as $key) {
 			if ($this->has($key) && $this->properties[$key] instanceof \DateTimeInterface) {
-				$format = $datetimeFormats[$this->getType()] ?? 'Y-m-d H:i:s';
+				$format = self::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s';
 				$this->properties[$key] = $this->properties[$key]->format($format);
 			}
 		}

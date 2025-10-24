@@ -1,55 +1,82 @@
 {
 	const addButtonHandler = e => {
 		const btn = e.currentTarget
+
 		if (!btn.disabled) {
-			btn.setAttribute('disabled', '')
-			setTimeout(() => btn.removeAttribute('disabled'), 500)
+			btn.disabled = true
+			setTimeout(() => btn.disabled = false, 500)
 		}
+
 		const container = document.getElementById(btn.dataset.yfRepeatableAdd)
 		if (!container) return
+
 		const tmpl = container.querySelector('template')
 		if (!tmpl) return
+
 		const i = tmpl.dataset.iteration
-		let clone = tmpl.content.cloneNode(true)
-		clone.querySelectorAll('[data-yf-condition]').forEach(wrap => {
+		const clone = tmpl.content.cloneNode(true)
+
+		clone.querySelectorAll('[data-shape-condition]').forEach(wrap => {
 			const cond = wrap.dataset.yfCondition
-			if (!cond) return
-			wrap.setAttribute('data-yf-condition', cond.replaceAll(`[__INDEX]`, `[${i}]`))
+			if (cond) {
+				wrap.setAttribute('data-shape-condition', cond.replaceAll('[__INDEX]', `[${i}]`))
+			}
 		})
+
 		clone.querySelectorAll('input, textarea, select').forEach(input => {
-			input.name = input.name.replaceAll(`[__INDEX]`, `[${i}]`)
-			const newId = input.id.replaceAll(`[__INDEX]`, `[${i}]`)
-			//const newId = input.id + '-' + i
+			input.name = input.name.replaceAll('[__INDEX]', `[${i}]`)
+			const newId = input.id.replaceAll('[__INDEX]', `[${i}]`)
 			clone.querySelector(`label[for="${input.id}"]`)?.setAttribute('for', newId)
 			input.id = newId
-		});
-		const repeatableItem = clone.querySelector('[data-yf-repeatable-item]')
+		})
+
+		const repeatableItem = clone.querySelector('[data-shape-repeatable-item]')
 		if (repeatableItem) {
 			repeatableItem.dataset.yfRepeatableItem = i
 		}
-		let nodes = [...clone.childNodes]
+
+		const nodes = [...clone.childNodes]
 		container.appendChild(clone)
+
 		nodes.forEach(node => {
-			if (node.nodeType == Node.ELEMENT_NODE) window.__t3_tx_shape.process(node)
+			if (node.nodeType === Node.ELEMENT_NODE) {
+				document.dispatchEvent(new CustomEvent('shape:connect', {
+					detail: {element: node}
+				}))
+			}
 		})
+
 		tmpl.dataset.iteration = (parseInt(i) + 1).toString()
 	}
+
 	const removeButtonHandler = e => {
-		e.currentTarget.closest('[data-yf-repeatable-item]')?.remove()
+		e.currentTarget.closest('[data-shape-repeatable-item]')?.remove()
 	}
-	const processNode = el => {
-		el.querySelectorAll('[data-yf-repeatable-item]').forEach(repeatableItem => {
-			repeatableItem.querySelectorAll('[data-yf-condition*="[__INDEX]"]').forEach(field => {
-				field.setAttribute('data-yf-condition', field.dataset.yfCondition.replaceAll(`[__INDEX]`, `[${repeatableItem.dataset.yfRepeatableItem}]`))
+
+	const connectElement = el => {
+		el.querySelectorAll('[data-shape-repeatable-item]').forEach(item => {
+			item.querySelectorAll('[data-shape-condition*="[__INDEX]"]').forEach(field => {
+				field.setAttribute(
+					'data-shape-condition',
+					field.dataset.yfCondition.replaceAll('[__INDEX]', `[${item.dataset.yfRepeatableItem}]`)
+				)
 			})
 		})
-		el.querySelectorAll('[data-yf-repeatable-add]').forEach(btn => {
-			btn.addEventListener('click', addButtonHandler)
-		})
-		el.querySelectorAll('[data-yf-repeatable-remove]').forEach(btn => {
-			btn.addEventListener('click', removeButtonHandler)
-		})
+
+		if (!document.__shapeRepeatableDelegation) {
+			document.__shapeRepeatableDelegation = true
+
+			document.addEventListener('click', e => {
+				if (e.target.matches('[data-shape-repeatable-add]')) {
+					addButtonHandler(e)
+				}
+				if (e.target.matches('[data-shape-repeatable-remove]')) {
+					removeButtonHandler(e)
+				}
+			})
+		}
 	}
-	window.__t3_tx_shape.processors.repeatableContainer = processNode
-	document.querySelectorAll('[data-yf-form]').forEach(form => processNode(form))
+
+	document.addEventListener('shape:connect', e => connectElement(e.detail.element))
+	document.querySelectorAll('[data-shape-form]').forEach(form => connectElement(form))
 }

@@ -46,19 +46,15 @@ lib.tx_shape.contentElementRendering {
     dontCheckPid = 1
 }
 
-tx_shape_form_fragment = PAGE
-tx_shape_form_fragment {
-    typeNum = 11510497112101
-    20 = USER_INT
-    20 {
-        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-        vendorName = UBOS
-        extensionName = Shape
-        pluginName = Form
-    }
-    meta {
-        robots = noindex, nofollow
-        robots.replace = 1
+
+tx_shape_contentFragmentPage = PAGE
+tx_shape_contentFragmentPage {
+    typeNum = 1761312405
+    10 = RECORDS
+    10 {
+        tables = tt_content
+        source.data = GP:ceUid
+        dontCheckPid = 1
     }
     config {
         disableAllHeaderCode = 1
@@ -66,5 +62,9 @@ tx_shape_form_fragment {
         admPanel = 0
         index_enable = 0
         no_cache = 1
+    }
+    meta {
+        robots = noindex, nofollow
+        robots.replace = 1
     }
 }

@@ -9,7 +9,8 @@
                     <settings.form>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.form</label>
                         <config>
-                            <type>group</type>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
                             <allowed>tx_shape_form</allowed>
                             <size>1</size>
                             <minitems>0</minitems>
@@ -18,7 +19,6 @@
                             <foreign_table>tx_shape_form</foreign_table>
                             <foreign_table_where>AND {#tx_shape_form}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###</foreign_table_where>
                         </config>
-
                     </settings.form>
                     <settings.uploadFolder>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.uploadFolder</label>
@@ -30,37 +30,15 @@
                         </config>
 
                     </settings.uploadFolder>
-                </el>
-            </ROOT>
-        </general>
-        <lazyLoad>
-            <ROOT>
-                <sheetTitle>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.lazyLoad</sheetTitle>
-                <type>array</type>
-                <el>
                     <settings.lazyLoad>
                         <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.lazyLoad</label>
-                        <onChange>reload</onChange>
                         <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.lazyLoad.description</description>
                         <config>
                             <type>check</type>
                         </config>
                     </settings.lazyLoad>
-                    <settings.lazyLoadFragmentPage>
-                        <label>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.lazyLoadFragmentPage</label>
-                        <displayCond>FIELD:settings.lazyLoad:=:1</displayCond>
-                        <description>LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:flexform.form.lazyLoadFragmentPage.description</description>
-                        <config>
-                            <type>select</type>
-                            <renderType>selectSingle</renderType>
-                            <allowed>pages</allowed>
-                            <foreign_table>pages</foreign_table>
-                            <size>1</size>
-                        </config>
-                    </settings.lazyLoadFragmentPage>
                 </el>
             </ROOT>
-        </lazyLoad>
-
+        </general>
     </sheets>
 </T3DataStructure>

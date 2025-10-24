@@ -16,9 +16,10 @@ class ConsentController extends ActionController
 		protected Repository\EmailConsentRepository $consentRepository,
 		protected Form\FormRuntimeFactory $formRuntimeFactory,
 	)
-	{}
+	{
+	}
 
-	public function consentAction(
+	public function consentVerificationAction(
 		Enum\ConsentStatus $status,
 		int $uid = 0,
 		string $hash = '',
@@ -46,7 +47,6 @@ class ConsentController extends ActionController
 		}
 
 		if ($verify) {
-			$this->view->getRenderingContext()->setControllerAction('Finisher/ConsentVerification');
 			$this->view->assign('plugin', $this->request->getAttribute('currentContentObject')->data);
 			$this->view->assign('status', $status);
 			$this->view->assign('verificationLink', $this->uriBuilder->uriFor('consent', [
@@ -78,23 +78,17 @@ class ConsentController extends ActionController
 		if ($finishResult->response) {
 			return $finishResult->response;
 		}
-//		return $finishResult->response ?? $this->redirect(
-//			'finished',
-//			controllerName: 'Form',
-//			arguments: $finishResult->finishedActionArguments,
-//			pageUid: $runtime->plugin->getPid(),
-//		);
-		$this->uriBuilder
+		$redirectUri = $this->uriBuilder
 			->reset()
 			->setCreateAbsoluteUri(true)
 			->setSection("c" . $runtime->plugin->getUid())
-			->setTargetPageUid($runtime->plugin->getPid());
-		$redirectUri = $this->uriBuilder->uriFor(
-			'finished',
-			$finishResult->finishedActionArguments,
-			'Form',
-			'Shape',
-			'Form'
+			->setTargetPageUid($runtime->plugin->getPid())
+			->uriFor(
+				'finished',
+				$finishResult->finishedActionArguments,
+				'Form',
+				'Shape',
+				'Form'
 		);
 		return $this->redirectToUri($redirectUri);
 	}
@@ -129,7 +123,6 @@ class ConsentController extends ActionController
 	{
 		$this->view->assign('messages', $messages);
 		$this->view->assign('plugin', $this->request->getAttribute('currentContentObject')->data);
-		$this->view->getRenderingContext()->setControllerAction('Messages');
 		return $this->htmlResponse();
 	}
 }
