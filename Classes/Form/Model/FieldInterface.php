@@ -31,5 +31,4 @@ interface FieldInterface
 	public function setValidationResult(?Result $result): void;
 
 	public function runtimeOverride(string $key, mixed $value): void;
-
 }

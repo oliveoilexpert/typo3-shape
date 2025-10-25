@@ -144,7 +144,7 @@ final class ValueValidationConfigurator
 				[
 					'minimum' => $field->get('min') ?? '',
 					'maximum' => $field->get('max') ?? '',
-					'format' => Form\Model\FieldRecord::DATETIME_FORMATS[$type]
+					'format' => Form\Model\FieldRecord::TYPE_DATETIME_FORMATS[$type]
 				]
 			));
 		}

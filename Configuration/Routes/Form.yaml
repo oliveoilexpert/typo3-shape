@@ -16,7 +16,7 @@ routeEnhancers:
     aspects:
       pluginLabel:
         type: LocaleModifier
-        default: 'yform'
+        default: 'shape'
         localeMap: []
       finishedLabel:
         type: LocaleModifier

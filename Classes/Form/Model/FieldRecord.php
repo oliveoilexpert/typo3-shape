@@ -12,7 +12,6 @@ class FieldRecord extends Record implements FieldInterface
 	protected mixed $sessionValue = null;
 	protected bool $conditionResult = true;
 	protected ?Result $validationResult = null;
-
 	protected array $runtimeOverrides = [];
 	protected ?array $optionSelection = null;
 
@@ -59,7 +58,7 @@ class FieldRecord extends Record implements FieldInterface
 		}
 	}
 
-	const array DATETIME_FORMATS = [
+	const array TYPE_DATETIME_FORMATS = [
 		'date' => 'Y-m-d',
 		'time' => 'H:i',
 		'datetime' => 'Y-m-d H:i',
@@ -78,7 +77,7 @@ class FieldRecord extends Record implements FieldInterface
 	{
 		foreach (['default_value', 'min', 'max'] as $key) {
 			if ($this->has($key) && $this->properties[$key] instanceof \DateTimeInterface) {
-				$format = self::DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s';
+				$format = self::TYPE_DATETIME_FORMATS[$this->getType()] ?? 'Y-m-d H:i:s';
 				$this->properties[$key] = $this->properties[$key]->format($format);
 			}
 		}

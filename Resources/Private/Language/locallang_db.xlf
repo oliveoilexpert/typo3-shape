@@ -172,6 +172,7 @@
 			<trans-unit id="email_consent.plugin"><source>Plugin</source></trans-unit>
 			<trans-unit id="email_consent.session"><source>Session</source></trans-unit>
 			<trans-unit id="email_consent.validation_hash"><source>Validation Hash</source></trans-unit>
+			<trans-unit id="email_consent.approve_link"><source>Approve Link</source></trans-unit>
 
 			<trans-unit id="flexform.form.form"><source>Form</source></trans-unit>
 			<trans-unit id="flexform.form.uploadFolder"><source>Upload Folder</source></trans-unit>

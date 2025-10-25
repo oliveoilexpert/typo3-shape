@@ -107,6 +107,13 @@ $columns = [
 			'readOnly' => true,
 		],
 	],
+	'approve_link' => [
+		'config' => [
+			'type' => 'text',
+			'size' => 2,
+			'readOnly' => true,
+		],
+	],
 ];
 foreach ($columns as $key => $column) {
 	$columns[$key]['label'] = Util::t('email_consent.' . $key);
@@ -122,7 +129,7 @@ $palettes = [
 		--linebreak--,
 		validation_hash, session,
 		--linebreak--,
-		finisher_settings',
+		finisher_settings, approve_link',
 	],
 ];
 $showItem = '

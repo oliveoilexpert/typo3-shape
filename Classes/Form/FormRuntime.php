@@ -183,14 +183,13 @@ class FormRuntime
 
 		$executableFinishers = [];
 		foreach ($this->form->getFinisherConfigurations() as $configuration) {
+
 			$conditionEvent = new Condition\FinisherConditionResolutionEvent(
 				$this,
 				$configuration,
 				$expressionResolver
 			);
 			$this->eventDispatcher->dispatch($conditionEvent);
-
-//			Core\Utility\DebugUtility::debug($conditionEvent);
 			if ($conditionEvent->isPropagationStopped()) {
 				if ($conditionEvent->result === false) {
 					continue;
@@ -220,8 +219,6 @@ class FormRuntime
 			}
 			$executableFinishers[] = $finisher;
 		}
-
-//		Core\Utility\DebugUtility::debug($executableFinishers, 'Executable finishers');
 
 		foreach ($executableFinishers as $finisher) {
 			$this->executeFinisher($finisher, $context);

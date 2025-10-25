@@ -1,0 +1,10 @@
+routeEnhancers:
+  ShapeConsent:
+    limitToPages: [240]
+    type: Extbase
+    extension: Shape
+    plugin: Consent
+    routes:
+      - routePath: '/{hash}_status_{status}_id_{uid}_verify_{verify}'
+        _controller: 'Consent::consentVerification'
+    aspects:

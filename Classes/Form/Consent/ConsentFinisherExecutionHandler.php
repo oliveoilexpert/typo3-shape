@@ -3,7 +3,6 @@
 namespace UBOS\Shape\Form\Consent;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use UBOS\Shape\Form;
 
 final class ConsentFinisherExecutionHandler

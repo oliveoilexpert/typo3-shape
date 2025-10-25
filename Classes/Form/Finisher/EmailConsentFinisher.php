@@ -56,6 +56,7 @@ class EmailConsentFinisher extends AbstractFinisher
 		$formValues = $this->getFormValues();
 		$timestamp = time();
 		$serializedSession = Form\FormSession::serialize($this->getRuntime()->session);
+
 		$consentData = [
 			'crdate' => $timestamp,
 			'tstamp' => $timestamp,
@@ -115,6 +116,10 @@ class EmailConsentFinisher extends AbstractFinisher
 				'shape',
 				'Consent'
 			);
+
+		$this->consentRepository->update($consentUid, [
+			'approve_link' => $approveLink,
+		]);
 
 		$variables = [
 			'formValues' => $formValues,

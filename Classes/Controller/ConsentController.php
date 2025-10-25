@@ -62,7 +62,10 @@ class ConsentController extends ActionController
 		// Otherwise, re-finish the form
 		$consentSettings = json_decode($consent['finisher_settings'], true);
 
-		$request = $this->request->withArgument('splitFinisherExecution', $consentSettings['splitFinisherExecution']);
+		$request = $this->request->withArgument(
+			'splitFinisherExecution',
+			$consentSettings['splitFinisherExecution']
+		);
 
 		$runtime = $this->formRuntimeFactory->recreateFromRequestAndConsent(
 			$request,
