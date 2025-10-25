@@ -4,6 +4,7 @@ use UBOS\Shape\Utility\TcaUtility as Util;
 
 $ctrl = [
 	'label' => 'title',
+	'label_alt' => 'name',
 	'title' => Util::t('form.ctrl.title'),
 	'tstamp' => 'tstamp',
 	'crdate' => 'crdate',

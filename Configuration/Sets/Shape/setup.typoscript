@@ -15,7 +15,6 @@ plugin.tx_shape {
         uploadFolder = 1:/user_upload/
         pluginUid = 0
         lazyLoad = 0
-        lazyLoadFragmentPage = 0
         spamProtection {
             honeypot {
                 enabled = 1
@@ -34,7 +33,7 @@ plugin.tx_shape {
                 deleteAfterConfirmation = 1
         }
     }
-    ignoreFlexFormSettingsIfEmpty = uploadFolder, lazyLoadFragmentPage
+    ignoreFlexFormSettingsIfEmpty = uploadFolder
     }
 }
 

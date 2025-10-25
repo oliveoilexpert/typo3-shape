@@ -54,7 +54,7 @@ $columns = [
 			'foreign_table' => 'tx_shape_form',
 			'size' => 1,
 			'localizeReferences' => true,
-			'foreign_table_where' => 'AND {#tx_shape_form}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
+			//'foreign_table_where' => 'AND {#tx_shape_form}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
 			'fieldWizard' => [
 				'tableList' => [
 					'disabled' => true,
