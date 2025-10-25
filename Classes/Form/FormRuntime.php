@@ -176,37 +176,94 @@ class FormRuntime
 		}
 	}
 
-	public function finishForm(array $conditionVariables = []): Finisher\FinisherContext
+	public function finishForm(array $conditionVariables = []): Finisher\FinisherExecutionContext
 	{
-		$context = new Finisher\FinisherContext($this);
+		$context = new Finisher\FinisherExecutionContext($this);
 		$expressionResolver = $this->createExpressionResolver($conditionVariables);
-		foreach ($this->form->getFinisherConfigurations() as $finisherConfiguration) {
-			if ($finisherConfiguration->get('condition') && !$expressionResolver->evaluate($finisherConfiguration->getCondition())) {
+
+		$executableFinishers = [];
+		foreach ($this->form->getFinisherConfigurations() as $configuration) {
+			$conditionEvent = new Condition\FinisherConditionResolutionEvent(
+				$this,
+				$configuration,
+				$expressionResolver
+			);
+			$this->eventDispatcher->dispatch($conditionEvent);
+
+//			Core\Utility\DebugUtility::debug($conditionEvent);
+			if ($conditionEvent->isPropagationStopped()) {
+				if ($conditionEvent->result === false) {
+					continue;
+				}
+			} else if ($configuration->getCondition() && !$expressionResolver->evaluate($configuration->getCondition())) {
 				continue;
 			}
-			$this->executeFinisherRecord($finisherConfiguration, $context);
+
+			$finisher = $this->createFinisherInstance($configuration);
+
+			// todo: add finisher validation event?
+			$validationResult = $finisher->validate();
+
+			if ($validationResult->hasErrors()) {
+				$this->hasErrors = true;
+
+				// todo: rework messages to use message objects instead of arrays
+				$this->addMessages(
+					array_map(
+						function (Extbase\Validation\Error $error) {
+							return ['message' => $error->getMessage(), 'type' => 'error'];
+						},
+						$validationResult->getErrors()
+					)
+				);
+				return $context;
+			}
+			$executableFinishers[] = $finisher;
 		}
+
+//		Core\Utility\DebugUtility::debug($executableFinishers, 'Executable finishers');
+
+		foreach ($executableFinishers as $finisher) {
+			$this->executeFinisher($finisher, $context);
+			if ($context->cancelled) {
+				break;
+			}
+		}
+
 		$context->finishedActionArguments['pluginUid'] = $this->plugin->getUid();
 		return $context;
 	}
 
-	public function executeFinisherRecord(Model\FinisherConfigurationInterface $configuration, Finisher\FinisherContext $context): void
+	public function createFinisherInstance(Model\FinisherConfigurationInterface $configuration): Finisher\FinisherInterface
 	{
-		$finisherClassName = $configuration->getFinisherClassName();
-		$finisher = Core\Utility\GeneralUtility::makeInstance($finisherClassName);
-		if (!($finisher instanceof Finisher\AbstractFinisher)) {
-			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that extends UBOS\Shape\Form\Finisher\AbstractFinisher.', 1741369249);
-		}
-
 		// todo: maybe add "finisherDefaults". Problem is there's no good way to merge. ArrayUtility::mergeRecursiveWithOverrule either overwrites everything or discards empty values ('' and '0'), but we want to keep '0', otherwise checkboxes can't overwrite with false. Extbase has "ignoreFlexFormSettingsIfEmpty" but that doesn't really solve the problem either. To have booleans with default values, we'd need to render them as selects with values '', '0', '1' and then only ignore ''.
-		//$defaultSettings = $this->settings['finisherDefaults'][$finisherClassName] ?? [];
-		$settings = $configuration->getSettings();
-		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher, $settings);
+		$event = new Finisher\BeforeFinisherCreationEvent(
+			$this,
+			$configuration,
+			$configuration->getFinisherClassName(),
+			$configuration->getSettings()
+		);
+		$this->eventDispatcher->dispatch($event);
+		$finisher = Core\Utility\GeneralUtility::makeInstance($event->finisherClassName);
+		if (!($finisher instanceof Finisher\FinisherInterface)) {
+			throw new \InvalidArgumentException('Argument "finisherClassName" must the name of a class that implements UBOS\Shape\Form\Finisher\FinisherInterface.', 1741369249);
+		}
+		$finisher->setSettings($event->settings);
+		return $finisher;
+	}
+
+	public function executeFinisher(
+		Finisher\FinisherInterface $finisher,
+		Finisher\FinisherExecutionContext $context
+	): void
+	{
+		// todo: remove event? finishers can already be cancelled by listening to FinisherConditionResolutionEvent, and finisher creation can be modified by BeforeFinisherCreationEvent
+		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher);
 		$this->eventDispatcher->dispatch($event);
 		if ($event->cancelled) {
 			return;
 		}
-		$event->finisher->execute($event->context, $event->settings);
+		$event->finisher->execute($event->context);
 	}
 
 	public function createExpressionResolver(array $variables): Core\ExpressionLanguage\Resolver

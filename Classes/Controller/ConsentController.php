@@ -30,6 +30,7 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.invalid_consent_request', 'type' => 'warning']]);
 		}
 		$consent = $this->consentRepository
+			->reset()
 			->setReturnRawQueryResult(true)
 			->findByUid($uid);
 
@@ -46,6 +47,7 @@ class ConsentController extends ActionController
 			return $this->messageResponse([['key' => 'label.consent_expired', 'type' => 'info']]);
 		}
 
+		// If verify is set, just show the verification page
 		if ($verify) {
 			$this->view->assign('plugin', $this->request->getAttribute('currentContentObject')->data);
 			$this->view->assign('status', $status);
@@ -57,10 +59,20 @@ class ConsentController extends ActionController
 			return $this->htmlResponse();
 		}
 
+		// Otherwise, re-finish the form
 		$consentSettings = json_decode($consent['finisher_settings'], true);
 
+		$request = $this->request->withArgument('splitFinisherExecution', $consentSettings['splitFinisherExecution']);
+
+		$runtime = $this->formRuntimeFactory->recreateFromRequestAndConsent(
+			$request,
+			$this->view,
+			$consent
+		);
+		$finishResult = $runtime->finishForm(['consentStatus' => $status->value]);
+
 		if ($consentSettings['deleteAfterConfirmation']) {
-			$this->consentRepository->delete($uid);
+			$this->consentRepository->remove($uid, false);
 		} else {
 			$this->consentRepository->update(
 				$uid,
@@ -68,13 +80,6 @@ class ConsentController extends ActionController
 			);
 		}
 
-		$runtime = $this->formRuntimeFactory->recreateFromRequestAndConsent(
-			$this->request,
-			$this->view,
-			$consent
-		);
-
-		$finishResult = $this->executeRuntimeFinishers($runtime, $consentSettings, $status);
 		if ($finishResult->response) {
 			return $finishResult->response;
 		}
@@ -91,32 +96,6 @@ class ConsentController extends ActionController
 				'Form'
 		);
 		return $this->redirectToUri($redirectUri);
-	}
-
-	protected function executeRuntimeFinishers(
-		Form\FormRuntime $runtime,
-		array $consentSettings,
-		Enum\ConsentStatus $consentStatus
-	): Form\Finisher\FinisherContext
-	{
-		$context = new Form\Finisher\FinisherContext($runtime);
-		$resolver = $runtime->createExpressionResolver(['consentStatus' => $consentStatus->value]);
-		$skipFinisher = $consentSettings['splitFinisherExecution'];
-		foreach ($runtime->form->get('finishers') as $finisherRecord) {
-			if ($finisherRecord->get('type') == Form\Finisher\EmailConsentFinisher::class) {
-				$skipFinisher = false;
-				continue;
-			}
-			if ($skipFinisher) {
-				continue;
-			}
-			if ($finisherRecord->get('condition') && !$resolver->evaluate($finisherRecord->get('condition'))) {
-				continue;
-			}
-			$runtime->executeFinisherRecord($finisherRecord, $context);
-		}
-		$context->finishedActionArguments['pluginUid'] = $runtime->plugin->getUid();
-		return $context;
 	}
 
 	protected function messageResponse(array $messages): ResponseInterface

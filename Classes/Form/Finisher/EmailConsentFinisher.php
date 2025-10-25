@@ -91,7 +91,7 @@ class EmailConsentFinisher extends AbstractFinisher
 			->setRequest($this->getRequest())
 			->setCreateAbsoluteUri(true)
 			->uriFor(
-				'consent',
+				'consentVerification',
 				[
 					'status' => Enum\ConsentStatus::Approved->value,
 					'verify' => (bool)($this->settings['requireApproveVerification'] ?? false),
@@ -104,7 +104,7 @@ class EmailConsentFinisher extends AbstractFinisher
 			);
 		$dismissLink = $this->uriBuilder
 			->uriFor(
-				'consent',
+				'consentVerification',
 				[
 					'status' => Enum\ConsentStatus::Dismissed->value,
 					'verify' => (bool)($this->settings['requireDismissVerification'] ?? false),

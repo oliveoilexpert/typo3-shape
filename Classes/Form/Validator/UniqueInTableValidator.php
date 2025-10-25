@@ -24,7 +24,8 @@ final class UniqueInTableValidator extends AbstractValidator
 	{
 		$repository = $this->genericRepositoryFactory
 			->forTable($this->options['table'])
-			->reset();
+			->reset()
+			->setIgnoreEnableFields(true);
 		$count = $repository->countBy([$this->options['column'] => $value]);
 		if ($count) {
 			$this->addError(

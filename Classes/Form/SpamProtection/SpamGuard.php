@@ -3,7 +3,6 @@
 namespace UBOS\Shape\Form\SpamProtection;
 
 use TYPO3\CMS\Core\Attribute\AsEventListener;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 
 final class SpamGuard
 {
@@ -28,8 +27,5 @@ final class SpamGuard
 				'message' => 'Focus Pass field that fills via JavaScript on focusin event was not filled correctly.',
 			];
 		}
-		DebugUtility::debug($event, 'SpamAnalysis');
-		DebugUtility::debug($parameters, 'SpamAnalysis Parameters');
-
 	}
 }

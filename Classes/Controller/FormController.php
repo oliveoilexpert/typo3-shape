@@ -74,6 +74,10 @@ class FormController extends ActionController
 		}
 		$this->runtime->processForm();
 		$finishResult = $this->runtime->finishForm();
+		if ($this->runtime->getHasErrors()) {
+			$firstPageWithErrors = $this->runtime->session->returnPageIndex;
+			return $this->formPage($firstPageWithErrors);
+		}
 		return $finishResult->response ?? $this->redirect('finished', arguments: $finishResult->finishedActionArguments);
 	}
 

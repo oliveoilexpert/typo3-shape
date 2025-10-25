@@ -458,11 +458,11 @@ abstract class AbstractRecordRepository implements Log\LoggerAwareInterface
 			}
 		}
 
-		if (!$this->ignoreEnableFields) {
-			if (!$this->includeDeleted && $this->hasDeletedField()) {
-				$restrictions->add(new DeletedRestriction());
-			}
+		if (!$this->includeDeleted && $this->hasDeletedField()) {
+			$restrictions->add(new DeletedRestriction());
+		}
 
+		if (!$this->ignoreEnableFields) {
 			if ($this->hasHiddenField()) {
 				$includeHidden = $this->context
 					? $this->context->getPropertyFromAspect('visibility', 'includeHiddenContent', false)

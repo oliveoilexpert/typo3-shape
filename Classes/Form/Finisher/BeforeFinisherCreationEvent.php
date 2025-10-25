@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace UBOS\Shape\Form\Finisher;
 
-final class BeforeFinisherExecutionEvent
+use UBOS\Shape\Form;
+
+final class BeforeFinisherCreationEvent
 {
 	public function __construct(
-		public readonly FinisherContext $context,
-		public AbstractFinisher $finisher,
-		public array $settings = [],
-		public bool $cancelled = false,
-	) {}
+		public readonly Form\FormRuntime $runtime,
+		public readonly Form\Model\FinisherConfigurationInterface $finisherConfiguration,
+		public string $finisherClassName,
+		public array $settings,
+	)
+	{
+	}
 }

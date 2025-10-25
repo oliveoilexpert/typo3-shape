@@ -6,25 +6,37 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Core;
+use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Mvc\RequestInterface;
+use TYPO3\CMS\Extbase\Validation\Error;
 use UBOS\Shape\Form;
 use UBOS\Shape\Utility;
 
 #[Autoconfigure(public: true, shared: false)]
-abstract class AbstractFinisher implements LoggerAwareInterface
+abstract class AbstractFinisher implements FinisherInterface, LoggerAwareInterface
 {
 	use LoggerAwareTrait;
 
-	protected array $settings = [];
-	protected FinisherContext $context;
+	protected FinisherExecutionContext $context;
 
-	final public function execute(FinisherContext $context, array $settings): void
+	protected array $settings = [];
+
+	public function setSettings(array $settings): void
+	{
+		Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($this->settings, $settings);
+	}
+
+	public function validate(): Result
+	{
+		return new Result();
+	}
+
+	final public function execute(FinisherExecutionContext $context): void
 	{
 		if ($context->cancelled) {
 			return;
 		}
 		$this->context = $context;
-		Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($this->settings, $settings);
 		$this->executeInternal();
 	}
 
@@ -65,6 +77,24 @@ abstract class AbstractFinisher implements LoggerAwareInterface
 		return $this->context->runtime->view;
 	}
 
+	protected function addValidationError(
+		string $message,
+		int $code,
+		string $propertyPath = ''
+	): Result {
+		$result = new Result();
+
+		if ($propertyPath) {
+			$result->forProperty($propertyPath)->addError(
+				new Error($message, $code)
+			);
+		} else {
+			$result->addError(new Error($message, $code));
+		}
+
+		return $result;
+	}
+
 	protected function parseWithValues(string $string): string
 	{
 		return Utility\TemplateVariableParser::parse($string, $this->getFormValues());
@@ -79,4 +109,5 @@ abstract class AbstractFinisher implements LoggerAwareInterface
 			'formUid' => $this->getForm()->getUid(),
 		], $additionalContext);
 	}
+
 }

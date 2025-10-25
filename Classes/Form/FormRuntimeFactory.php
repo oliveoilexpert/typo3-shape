@@ -230,13 +230,9 @@ class FormRuntimeFactory implements FormRuntimeFactoryInterface
 		} else {
 			$formValue = $flexFormValues->get('settings')['form'] ?? null;
 		}
-		if (is_array($formValue)) {
-			$form = $formValue[0];
-		} else {
-			$form = $formValue;
-		}
+		$form = $formValue[0] ?? $formValue;
 		if (!$form instanceof Model\FormInterface) {
-			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .') settings do not contain a valid FormInterface.', 1741369825);
+			throw new Exception\InvalidFormPluginRecordException('Plugin record (uid: '. $plugin->getUid() .')  does not contain a valid FormInterface.', 1741369825);
 		}
 		return $form;
 	}

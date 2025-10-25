@@ -7,11 +7,11 @@ namespace UBOS\Shape\Form\Condition;
 use TYPO3\CMS\Core\ExpressionLanguage\Resolver;
 use UBOS\Shape\Form;
 
-final class FieldConditionResolutionEvent
+final class FinisherConditionResolutionEvent
 {
 	public function __construct(
 		public readonly Form\FormRuntime          $runtime,
-		public readonly Form\Model\FieldInterface $field,
+		public readonly Form\Model\FinisherConfigurationInterface $finisherConfiguration,
 		public readonly Resolver                  $resolver,
 		public ?bool                              $result = null,
 	) {}
