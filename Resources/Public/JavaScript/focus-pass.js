@@ -4,7 +4,7 @@
 		if (!form) return
 
 		if (form.__shapeFocusPassSetup) return
-		const template = form.getElementById('shape-focus-pass-template')
+		const template = form.querySelector('[data-shape-focus-pass-template]')
 		if (!template) return
 
 		form.__shapeFocusPassSetup = true

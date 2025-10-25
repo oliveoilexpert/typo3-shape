@@ -6,7 +6,7 @@ import jstin from './lib/subscript-9.0.0/justin.min.js'
 		if (!fields.length) return
 
 		const data = Object.fromEntries(new FormData(form))
-		const dataName = form.dataset.yfForm
+		const dataName = form.dataset.shapeForm
 
 		fields.forEach(field => {
 			const cond = field.dataset.yfCondition

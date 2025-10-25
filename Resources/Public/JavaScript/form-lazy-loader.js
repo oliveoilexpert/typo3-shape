@@ -6,12 +6,8 @@
 			.then(html => {
 				loader.insertAdjacentHTML('beforebegin', html)
 				requestAnimationFrame(() => {
-					const element = loader.previousElementSibling
-
-					document.dispatchEvent(new CustomEvent('shape:connect', {
-						detail: { element }
-					}))
-
+					const detail = { element: loader.previousElementSibling}
+					document.dispatchEvent(new CustomEvent('shape:connect', { detail }))
 					loader.remove()
 				})
 			})

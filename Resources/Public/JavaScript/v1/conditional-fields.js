@@ -4,9 +4,9 @@ import jstin from '../lib/subscript-9.0.0/justin.min.js'
 		const fields = form.querySelectorAll(`[data-shape-condition]`)
 		if (!fields.length) return
 		let data = Object.fromEntries(new FormData(form))
-		let dataName = form.dataset.yfForm
+		let dataName = form.dataset.shapeForm
 		fields.forEach(field => {
-			const cond = field.dataset.yfCondition
+			const cond = field.dataset.shapeCondition
 			if (!cond) return
 			const inputs = field.querySelectorAll('[data-shape-control]')
 			if (jstin(cond)({

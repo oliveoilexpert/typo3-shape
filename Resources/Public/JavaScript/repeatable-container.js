@@ -7,7 +7,7 @@
 			setTimeout(() => btn.disabled = false, 500)
 		}
 
-		const container = document.getElementById(btn.dataset.yfRepeatableAdd)
+		const container = document.getElementById(btn.dataset.shapeRepeatableAdd)
 		if (!container) return
 
 		const tmpl = container.querySelector('template')
@@ -17,7 +17,7 @@
 		const clone = tmpl.content.cloneNode(true)
 
 		clone.querySelectorAll('[data-shape-condition]').forEach(wrap => {
-			const cond = wrap.dataset.yfCondition
+			const cond = wrap.dataset.shapeCondition
 			if (cond) {
 				wrap.setAttribute('data-shape-condition', cond.replaceAll('[__INDEX]', `[${i}]`))
 			}
@@ -32,7 +32,7 @@
 
 		const repeatableItem = clone.querySelector('[data-shape-repeatable-item]')
 		if (repeatableItem) {
-			repeatableItem.dataset.yfRepeatableItem = i
+			repeatableItem.dataset.shapeRepeatableItem = i
 		}
 
 		const nodes = [...clone.childNodes]
@@ -58,7 +58,7 @@
 			item.querySelectorAll('[data-shape-condition*="[__INDEX]"]').forEach(field => {
 				field.setAttribute(
 					'data-shape-condition',
-					field.dataset.yfCondition.replaceAll('[__INDEX]', `[${item.dataset.yfRepeatableItem}]`)
+					field.dataset.shapeCondition.replaceAll('[__INDEX]', `[${item.dataset.shapeRepeatableItem}]`)
 				)
 			})
 		})

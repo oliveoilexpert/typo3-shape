@@ -8,7 +8,7 @@
 				e.preventDefault()
 				form.querySelector('[data-shape-control]:invalid').focus()
 				error.classList.remove('--hidden')
-				error.innerHTML = `<div>${control.dataset.yfValidationMessage || control.validationMessage}</div>`
+				error.innerHTML = `<div>${control.dataset.shapeValidationMessage || control.validationMessage}</div>`
 			})
 			control.addEventListener('change', () => {
 				if (control.validity.valid) {

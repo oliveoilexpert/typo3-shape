@@ -2,7 +2,7 @@
 	const processNode = el => {
 		el.querySelectorAll('[data-shape-validation-message]').forEach(input => {
 			input.addEventListener('invalid', () => {
-				input.setCustomValidity(input.dataset.yfValidationMessage)
+				input.setCustomValidity(input.dataset.shapeValidationMessage)
 			})
 			input.addEventListener('change', () => {
 				input.setCustomValidity('')

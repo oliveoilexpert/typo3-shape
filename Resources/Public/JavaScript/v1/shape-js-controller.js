@@ -5,7 +5,7 @@ class ShapeJsController extends HTMLElement {
     this.form = this.closest('form[data-shape-form]')
     if (!this.form) return
 
-    this.formName = this.form.dataset.yfForm
+    this.formName = this.form.dataset.shapeForm
 
     // Process initial content
     this.processNode(this.form)
@@ -61,7 +61,7 @@ class ShapeJsController extends HTMLElement {
     const data = Object.fromEntries(new FormData(this.form))
 
     fields.forEach(field => {
-      const cond = field.dataset.yfCondition
+      const cond = field.dataset.shapeCondition
       if (!cond) return
 
       const inputs = field.querySelectorAll('[data-shape-control]')
@@ -82,7 +82,7 @@ class ShapeJsController extends HTMLElement {
       item.querySelectorAll('[data-shape-condition*="[__INDEX]"]').forEach(field => {
         field.setAttribute(
           'data-shape-condition',
-          field.dataset.yfCondition.replaceAll('[__INDEX]', `[${item.dataset.yfRepeatableItem}]`)
+          field.dataset.shapeCondition.replaceAll('[__INDEX]', `[${item.dataset.shapeRepeatableItem}]`)
         )
       })
     })
@@ -113,7 +113,7 @@ class ShapeJsController extends HTMLElement {
       setTimeout(() => btn.disabled = false, 500)
     }
 
-    const container = document.getElementById(btn.dataset.yfRepeatableAdd)
+    const container = document.getElementById(btn.dataset.shapeRepeatableAdd)
     if (!container) return
 
     const tmpl = container.querySelector('template')
@@ -124,7 +124,7 @@ class ShapeJsController extends HTMLElement {
 
     // Update condition placeholders
     clone.querySelectorAll('[data-shape-condition]').forEach(wrap => {
-      const cond = wrap.dataset.yfCondition
+      const cond = wrap.dataset.shapeCondition
       if (cond) {
         wrap.setAttribute('data-shape-condition', cond.replaceAll('[__INDEX]', `[${i}]`))
       }
@@ -141,7 +141,7 @@ class ShapeJsController extends HTMLElement {
     // Set repeatable item index
     const repeatableItem = clone.querySelector('[data-shape-repeatable-item]')
     if (repeatableItem) {
-      repeatableItem.dataset.yfRepeatableItem = i
+      repeatableItem.dataset.shapeRepeatableItem = i
     }
 
     // Append and process new nodes
@@ -174,7 +174,7 @@ class ShapeJsController extends HTMLElement {
         e.preventDefault()
         this.form.querySelector('[data-shape-control]:invalid')?.focus()
         error.classList.remove('--hidden')
-        error.innerHTML = `<div>${control.dataset.yfValidationMessage || control.validationMessage}</div>`
+        error.innerHTML = `<div>${control.dataset.shapeValidationMessage || control.validationMessage}</div>`
       })
 
       control.addEventListener('change', () => {
@@ -192,7 +192,7 @@ class ShapeJsController extends HTMLElement {
       input.__shapeValidationMsgListener = true
 
       input.addEventListener('invalid', () => {
-        input.setCustomValidity(input.dataset.yfValidationMessage)
+        input.setCustomValidity(input.dataset.shapeValidationMessage)
       })
 
       input.addEventListener('change', () => {
