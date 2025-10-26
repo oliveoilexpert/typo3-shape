@@ -1,4 +1,4 @@
-.yform__section {
+.shape__section {
 	--yf-field-width: 100%;
 	--yf-gap: 2.4rem;
 	--yf-spacing: .8rem;
@@ -15,18 +15,18 @@
 	}
 }
 
-.yform__page {
+.shape__page {
 	padding-bottom: var(--yf-gap);
 }
 
-.yform__page__header {
+.shape__page__header {
 	width: 100%;
 	margin: 0;
 	padding-bottom: var(--yf-gap);
 	font-size: 150%;
 }
 
-.yform__fieldset {
+.shape__fieldset {
 	display: flex;
 	flex-wrap: wrap;
 	margin: calc(var(--yf-gap) / -2);
@@ -37,12 +37,12 @@
 	}
 }
 
-.yform__fieldset__legend {
+.shape__fieldset__legend {
 	width: 100%;
 	padding: calc(var(--yf-gap) / 2);
 }
 
-.yform__field {
+.shape__field {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -65,26 +65,26 @@
 	}
 }
 
-.yform__label {
+.shape__label {
 	padding-block: 0;
 	margin-block: 0;
 	&.-for-checkbox, &.-for-radio {
 	}
 }
 
-.yform__control {
+.shape__control {
 	&[disabled] {
 		opacity: 0.6;
 	}
 }
 
-.yform__description {
+.shape__description {
 	padding-block: 0;
 	margin-block: 0;
 	font-size: smaller;
 }
 
-.yform__options-header {
+.shape__options-header {
 	padding-block: 0;
 	margin-block: 0;
 	opacity: 0.5;
@@ -93,42 +93,42 @@
 	}
 }
 
-.yform__spacing {
+.shape__spacing {
 	margin-top: var(--yf-spacing);
 }
 
-.yform__navigation {
+.shape__navigation {
 	display: flex;
 	margin-top: var(--yf-gap);
 	gap: var(--yf-gap);
 }
 
-.yform__navigation__button.-next {
+.shape__navigation__button.-next {
 	margin-left: auto;
 }
 
-.yform__button {
+.shape__button {
 }
 
-.yform__header-field {
+.shape__header-field {
 	margin-top: var(--yf-gap);
 }
 
-.yform__checkbox-control,
-.yform__radio-control,
-.yform__multi-checkbox-control,
-.yform__file-control {
+.shape__checkbox-control,
+.shape__radio-control,
+.shape__multi-checkbox-control,
+.shape__file-control {
 
 }
 
-.yform__multi-checkbox-list {
+.shape__multi-checkbox-list {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	gap: var(--yf-spacing);
 }
 
-.yform__message-list {
+.shape__message-list {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -139,7 +139,7 @@
 	}
 }
 
-.yform__message {
+.shape__message {
 	position: relative;
 	width: fit-content;
 	padding: .5em .75em;
@@ -148,7 +148,7 @@
 	line-height: 1.1;
 	border-radius: 5px;
 
-	&:has(.yform__message__icon) {
+	&:has(.shape__message__icon) {
 		padding-right: 2em;
 	}
 
@@ -191,7 +191,7 @@
 	}
 }
 
-.yform__message__icon {
+.shape__message__icon {
 	position: absolute;
 	padding-left: .5em;
 
@@ -202,11 +202,11 @@
 	}
 }
 
-.yform__repeatable-container-field {
+.shape__repeatable-container-field {
 	width: 100%;
 }
 
-.yform__repeatable__list {
+.shape__repeatable__list {
 	display: flex;
 	align-items: flex-start;
 	flex-direction: column;
@@ -222,7 +222,7 @@
 	}
 }
 
-.yform__repeatable__item {
+.shape__repeatable__item {
 	width: 100%;
 	padding: calc(var(--yf-gap) / 2);
 	border: 1px solid color-mix(in srgb, currentColor 50%, transparent 50%);
@@ -231,16 +231,16 @@
 	margin-block: calc(var(--yf-gap) / 2);
 }
 
-.yform__repeatable__fieldset {
+.shape__repeatable__fieldset {
 	display: flex;
 	flex-wrap: wrap;
 	margin: calc(var(--yf-gap) / -2);
 }
 
-.yform__repeatable__add {
+.shape__repeatable__add {
 }
 
-.yform__repeatable__remove {
+.shape__repeatable__remove {
 	display: block;
 	margin-top: var(--yf-gap);
 	margin-left: auto;

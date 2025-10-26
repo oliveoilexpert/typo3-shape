@@ -8,7 +8,7 @@ class BasenameViewHelper extends AbstractViewHelper
 {
 	public function initializeArguments(): void
 	{
-		$this->registerArgument('path', 'string', '', false, '');
+		$this->registerArgument('path', 'string', '', true);
 	}
 
 	public function render(): string
