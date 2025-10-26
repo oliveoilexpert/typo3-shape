@@ -2,7 +2,6 @@
 	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{fieldAttributes.name}"
-				   selectedValue="{field.value}"
 				   additionalAttributes="{fieldAttributes}"
 				   class="{blockClass}__control {blockClass}__{field.type}-control">
 		<f:render partial="Control/GroupedOptions" arguments="{_all}"/>

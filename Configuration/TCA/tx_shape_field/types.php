@@ -476,8 +476,8 @@ return [
 	],
 	'reset' => [
 		'showitem' => '
-		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-			label, 
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+			--palette--;;general-reset,
 		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
 			--palette--;;appearance,
 		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,

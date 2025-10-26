@@ -81,6 +81,16 @@ return [
 		--linebreak--,
 		default_value',
 	],
+	'general-reset' => [
+		'showitem' => '
+		page_parents,
+		--linebreak--,
+		label, name, 
+		--linebreak--, 
+		type, 
+		--linebreak--, 
+		description',
+	],
 	'general-repeatable-container' => [
 		'showitem' => '
 		page_parents,

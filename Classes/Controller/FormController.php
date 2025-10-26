@@ -103,8 +103,7 @@ class FormController extends ActionController
 	protected function initializeRuntime(): void
 	{
 		$this->runtime = $this->runtimeFactory
-			->createFromRequest($this->request, $this->view, $this->settings)
-			->initializeFieldValuesFromSession();
+			->createFromRequest($this->request, $this->view, $this->settings);
 	}
 	protected function formPage(int $pageIndex = 1, array $messages = []): ResponseInterface
 	{

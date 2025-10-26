@@ -29,9 +29,10 @@ class FormRuntime
 		protected bool                                          $hasErrors = false,
 	)
 	{
+		$this->setFieldSessionValues();
 	}
 
-	public function initializeFieldValuesFromSession(): self
+	public function setFieldSessionValues(): self
 	{
 		foreach ($this->form->getPages() as $page) {
 			foreach ($page->getFields() as $field) {

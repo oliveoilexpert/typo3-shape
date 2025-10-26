@@ -3,7 +3,11 @@
         <optgroup label="{groupLabel}">
     </f:if>
     <f:for each="{options}" as="option">
-        <f:form.select.option value="{option.value}">{option.label}</f:form.select.option>
+        <f:form.select.option
+                selected="{field.optionSelection.{option.value}}"
+                value="{option.value}">
+            {option.label}
+        </f:form.select.option>
     </f:for>
     <f:if condition="{groupLabel}">
         </optgroup>

@@ -1,20 +1,24 @@
 <f:render partial="Field" contentAs="content" arguments="{_all}">
 	<f:variable name="fieldAttributes" value="{field -> shape:field.attributes()}"/>
 	<f:render partial="Control/HeaderLabel" arguments="{_all}"/>
-	<f:for each="{field.field_options}" as="option" iteration="i">
-		<f:if condition="{option.group_label}">
-			<p class="{blockClass}__options-header">
-				{option.group_label}
-			</p>
-		</f:if>
-		<f:form.checkbox name="{fieldAttributes.name}"
-						 checked="{field.optionSelection.{option.value}}"
-						 multiple="1"
-						 value="{option.value}"
-						 additionalAttributes="{fieldAttributes}"
-						 id="{fieldAttributes.id}-{i.index}"
-						 class="{blockClass}__control {blockClass}__{field.type}-control"/>
-		<label class="{blockClass}__label -for-checkbox" for="{fieldAttributes.id}-{i.index}">{option.label}</label>
-	</f:for>
+	<div class="{blockClass}__{field.type}-list">
+		<f:for each="{field.field_options}" as="option" iteration="i">
+			<f:if condition="{option.group_label}">
+				<p class="{blockClass}__options-header">
+					{option.group_label}
+				</p>
+			</f:if>
+			<label class="{blockClass}__label -for-checkbox" for="{fieldAttributes.id}-{i.index}">
+				<f:form.checkbox name="{fieldAttributes.name}"
+								 checked="{field.optionSelection.{option.value}}"
+								 multiple="1"
+								 value="{option.value}"
+								 additionalAttributes="{fieldAttributes}"
+								 id="{fieldAttributes.id}-{i.index}"
+								 class="{blockClass}__control {blockClass}__{field.type}-control"/>
+				{option.label}
+			</label>
+		</f:for>
+	</div>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>

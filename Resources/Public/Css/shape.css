@@ -79,7 +79,6 @@
 }
 
 .yform__control {
-	width: 100%;
 	&[disabled] {
 		opacity: 0.6;
 	}
@@ -125,7 +124,6 @@
 .yform__radio-control,
 .yform__multi-checkbox-control,
 .yform__file-control {
-	width: auto;
 }
 
 .yform__message-list {

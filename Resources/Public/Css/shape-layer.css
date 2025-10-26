@@ -1,4 +1,5 @@
 @layer yform {
+
 	.yform__section {
 		--yf-field-width: 100%;
 		--yf-gap: 2.4rem;
@@ -44,10 +45,14 @@
 	}
 
 	.yform__field {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: flex-start;
 		box-sizing: border-box;
+		gap: var(--yf-spacing);
 		width: var(--yf-field-width);
 		padding: calc(var(--yf-gap) / 2);
-		margin-bottom: calc(var(--yf-spacing) * -1);
 		@media (max-width: 768px) {
 			min-width: 50%;
 		}
@@ -59,13 +64,6 @@
 		&.--hidden {
 			display: none;
 			visibility: hidden;
-		}
-		.yform__control,
-		.yform__label,
-		.yform__description,
-		.yform__message,
-		p {
-			margin-bottom: var(--yf-spacing);
 		}
 	}
 
@@ -79,7 +77,6 @@
 	}
 
 	.yform__control {
-		width: 100%;
 		&[disabled] {
 			opacity: 0.6;
 		}
@@ -125,7 +122,14 @@
 	.yform__radio-control,
 	.yform__multi-checkbox-control,
 	.yform__file-control {
-		width: auto;
+
+	}
+
+	.yform__multi-checkbox-list {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: var(--yf-spacing);
 	}
 
 	.yform__message-list {
@@ -238,7 +242,6 @@
 	}
 
 	.yform__repeatable__add {
-		margin-top: calc(var(--yf-gap) / 2);
 	}
 
 	.yform__repeatable__remove {

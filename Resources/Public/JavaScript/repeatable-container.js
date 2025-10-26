@@ -63,18 +63,17 @@
 			})
 		})
 
-		if (!document.__shapeRepeatableDelegation) {
-			document.__shapeRepeatableDelegation = true
+		el.querySelectorAll('[data-shape-repeatable-add]').forEach(btn => {
+			if (btn.__shapeRepeatableAddConnected) return
+			btn.__shapeRepeatableAddConnected = true
+			btn.addEventListener('click', e => addButtonHandler(e))
+		})
 
-			document.addEventListener('click', e => {
-				if (e.target.matches('[data-shape-repeatable-add]')) {
-					addButtonHandler(e)
-				}
-				if (e.target.matches('[data-shape-repeatable-remove]')) {
-					removeButtonHandler(e)
-				}
-			})
-		}
+		el.querySelectorAll('[data-shape-repeatable-remove]').forEach(btn => {
+			if (btn.__shapeRepeatableRemoveConnected) return
+			btn.__shapeRepeatableRemoveConnected = true
+			btn.addEventListener('click', e => removeButtonHandler(e))
+		})
 	}
 
 	document.addEventListener('shape:connect', e => connectElement(e.detail.element))

@@ -4,7 +4,6 @@
 
 	<f:render partial="Control/Label" arguments="{_all}"/>
 	<f:form.select name="{fieldAttributes.name}"
-				   selectedValue="{field.value}"
 				   data-shape-control="{field.name}"
 				   id="{fieldAttributes.id}"
 				   disabled="{hasCustomValue}"
@@ -14,13 +13,13 @@
 		<f:render partial="Control/GroupedOptions" arguments="{_all}"/>
 	</f:form.select>
 
-	<f:form.checkbox id="{fieldAttributes.id}--toggle"
-					 value="1"
-					 autocomplete="off"
-					 checked="{hasCustomValue}"
-					 onchange="this.parentElement.querySelectorAll('[data-shape-control]').forEach(el => el.toggleAttribute('disabled'))"/>
 	<label class="{blockClass}__label -for-checkbox"
 		   for="{fieldAttributes.id}--toggle">
+		<f:form.checkbox id="{fieldAttributes.id}--toggle"
+						 value="1"
+						 autocomplete="off"
+						 checked="{hasCustomValue}"
+						 onchange="this.closest('[data-shape-field]').querySelectorAll('[data-shape-control]').forEach(el => el.toggleAttribute('disabled'))"/>
 		{f:translate(key:'label.enter_custom_value')}
 	</label>
 	<f:form.textfield name="{fieldAttributes.name}"

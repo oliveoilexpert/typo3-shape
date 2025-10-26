@@ -1,4 +1,5 @@
 <p class="{blockClass}__label -for-{field.type}">
+	{content -> f:format.raw()}
 	<f:if condition="{field.rte_label}">
 		<f:then>
 			<f:variable name="allowedTags" value="<br><strong><em><a><span><sup><sub><s><u>"/>

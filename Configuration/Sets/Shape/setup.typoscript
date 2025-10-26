@@ -21,7 +21,7 @@ plugin.tx_shape {
                 fieldName = __email
             }
             focusPass {
-                enabled = 1
+                enabled = 0
                 fieldName = __focus_pass
                 value = human
             }

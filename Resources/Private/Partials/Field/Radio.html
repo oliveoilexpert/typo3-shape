@@ -7,13 +7,15 @@
 				{option.group_label}
 			</p>
 		</f:if>
-		<f:form.radio name="{fieldAttributes.name}"
-					  checked="{field.value} == {option.value}"
-					  value="{option.value}"
-					  additionalAttributes="{fieldAttributes}"
-					  class="{blockClass}__control {blockClass}__{field.type}-control"
-					  id="{fieldAttributes.id}-{i.index}"/>
-		<label class="{blockClass}__label -for-radio" for="{fieldAttributes.id}-{i.index}">{option.label}</label>
+		<label class="{blockClass}__label -for-radio" for="{fieldAttributes.id}-{i.index}">
+			<f:form.radio name="{fieldAttributes.name}"
+						  checked="{field.value} == {option.value}"
+						  value="{option.value}"
+						  additionalAttributes="{fieldAttributes}"
+						  class="{blockClass}__control {blockClass}__{field.type}-control"
+						  id="{fieldAttributes.id}-{i.index}"/>
+			{option.label}
+		</label>
 	</f:for>
 	<f:render partial="Control/Description" arguments="{_all}"/>
 </f:render>
