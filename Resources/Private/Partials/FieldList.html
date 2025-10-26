@@ -1,7 +1,5 @@
 <f:for each="{fields}" as="field">
 	<f:if condition="{field.conditionResult}">
-		<f:then>
-			<f:render partial="Field/{field.type -> shape:camelCase()}" arguments="{_all}"/>
-		</f:then>
+		<f:render partial="Field/{field.type -> shape:camelCase()}" arguments="{_all}"/>
 	</f:if>
 </f:for>

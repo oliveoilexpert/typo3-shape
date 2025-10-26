@@ -159,7 +159,7 @@ class EmailConsentFinisher extends AbstractFinisher
 		}
 
 		if ($this->settings['splitFinisherExecution']) {
-			$this->context->cancelled = true;
+			$this->context->cancel();
 		}
 	}
 }

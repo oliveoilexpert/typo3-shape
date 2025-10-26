@@ -13,8 +13,17 @@ class FinisherExecutionContext
 		public readonly Form\FormRuntime $runtime,
 		public ?ResponseInterface        $response = null,
 		public array                     $finishedActionArguments = [],
-		public bool                      $cancelled = false,
+		protected bool                   $cancelled = false,
 	)
 	{
+	}
+
+	public function cancel(): void
+	{
+		$this->cancelled = true;
+	}
+	public function isCancelled(): bool
+	{
+		return $this->cancelled;
 	}
 }

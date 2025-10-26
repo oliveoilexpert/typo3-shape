@@ -33,7 +33,7 @@ abstract class AbstractFinisher implements FinisherInterface, LoggerAwareInterfa
 
 	final public function execute(FinisherExecutionContext $context): void
 	{
-		if ($context->cancelled) {
+		if ($context->isCancelled()) {
 			return;
 		}
 		$this->context = $context;

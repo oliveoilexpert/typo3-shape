@@ -222,8 +222,8 @@ class FormRuntime
 		}
 
 		foreach ($executableFinishers as $finisher) {
-			$this->executeFinisher($finisher, $context);
-			if ($context->cancelled) {
+			$finisher->execute($context);
+			if ($context->isCancelled()) {
 				break;
 			}
 		}
@@ -248,20 +248,6 @@ class FormRuntime
 		}
 		$finisher->setSettings($event->settings);
 		return $finisher;
-	}
-
-	public function executeFinisher(
-		Finisher\FinisherInterface $finisher,
-		Finisher\FinisherExecutionContext $context
-	): void
-	{
-		// todo: remove event? finishers can already be cancelled by listening to FinisherConditionResolutionEvent, and finisher creation can be modified by BeforeFinisherCreationEvent
-		$event = new Finisher\BeforeFinisherExecutionEvent($context, $finisher);
-		$this->eventDispatcher->dispatch($event);
-		if ($event->cancelled) {
-			return;
-		}
-		$event->finisher->execute($event->context);
 	}
 
 	public function createExpressionResolver(array $variables): Core\ExpressionLanguage\Resolver
