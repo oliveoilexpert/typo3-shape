@@ -3,6 +3,9 @@
 <f:variable name="idPrefix" value="c{plugin.uid}-"/>
 
 <f:render partial="Assets"/>
-<section id="c{plugin.uid}" class="{blockClass}__section">
+<section id="c{plugin.uid}"
+		 class="{blockClass}__section -layout-{form.layout} {form.css_class}">
+	<f:render partial="Header/All"
+			  arguments="{data: plugin, settings: { defaultHeaderType: 2 }}"/>
 	<f:render partial="Form" arguments="{_all}"/>
 </section>

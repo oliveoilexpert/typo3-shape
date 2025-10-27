@@ -1,6 +1,6 @@
 <f:if condition="{currentPage.type} !== 'summary'">
   <f:then>
-    <div class="{blockClass}__page">
+    <div class="{blockClass}__page -layout-{currentPage.layout} {currentPage.css_class}">
       <fieldset class="{blockClass}__fieldset">
         <f:if condition="{currentPage.title} && {currentPage.header_layout} !== 'hidden'">
           <legend class="{blockClass}__fieldset__legend {blockClass}__page__header">
@@ -14,7 +14,7 @@
     </div>
   </f:then>
   <f:else>
-    <div class="{blockClass}__page">
+    <div class="{blockClass}__page -layout-{currentPage.layout} {currentPage.css_class}">
       <f:if condition="{currentPage.title} && {currentPage.header_layout} !== 'hidden'">
         <p class="{blockClass}__page__header">{currentPage.title}</p>
       </f:if>
