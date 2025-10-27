@@ -58,7 +58,7 @@ class FieldRecord extends Record implements FieldInterface
 		}
 	}
 
-	const array TYPE_DATETIME_FORMATS = [
+	const TYPE_DATETIME_FORMATS = [
 		'date' => 'Y-m-d',
 		'time' => 'H:i',
 		'datetime' => 'Y-m-d H:i',
