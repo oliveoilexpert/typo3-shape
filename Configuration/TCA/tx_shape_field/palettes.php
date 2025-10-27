@@ -166,9 +166,11 @@ return [
 	],
 	'appearance' => [
 		'showitem' => '
-		layout, css_class, 
+		layout, label_layout, 
 		--linebreak--, 
-		width, validation_message, 
+		width, css_class,
+		--linebreak--,
+		validation_message, 
 		--linebreak--, 
 		rte_label',
 	],

@@ -2,7 +2,7 @@
   <f:then>
     <div class="{blockClass}__page">
       <fieldset class="{blockClass}__fieldset">
-        <f:if condition="{currentPage.title}">
+        <f:if condition="{currentPage.title} && {currentPage.header_layout} !== 'hidden'">
           <legend class="{blockClass}__fieldset__legend {blockClass}__page__header">
             {currentPage.title}
           </legend>
@@ -15,7 +15,7 @@
   </f:then>
   <f:else>
     <div class="{blockClass}__page">
-      <f:if condition="{currentPage.title}">
+      <f:if condition="{currentPage.title} && {currentPage.header_layout} !== 'hidden'">
         <p class="{blockClass}__page__header">{currentPage.title}</p>
       </f:if>
       <f:variable name="arrivedAtCurrent" value="0"/>

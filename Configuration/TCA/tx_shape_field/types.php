@@ -490,12 +490,11 @@ return [
 		--div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.advanced,
 			--palette--;;advanced-default,' . $showItemBase,
 	],
-	'captcha' => [
+	'divider' => [
 		'showitem' => '
-		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
-			label, 
-		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
-			--palette--;;appearance,' . $showItemBase,
+		--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general,
+		type,
+		' . $showItemBase,
 	],
 	'content-header' => [
 		'showitem' => '

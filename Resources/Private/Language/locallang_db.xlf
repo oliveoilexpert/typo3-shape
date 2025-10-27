@@ -13,17 +13,26 @@
 			<trans-unit id="tab.consent"><source>Consent</source></trans-unit>
 			<trans-unit id="tab.template"><source>Template</source></trans-unit>
 
+			<trans-unit id="page.shape-folder"><source>Shape folder</source></trans-unit>
+
 			<trans-unit id="plugin.form"><source>Shape Form</source></trans-unit>
 			<trans-unit id="plugin.form.description"><source>Plugin to render Shape Form Record.</source></trans-unit>
 
 			<trans-unit id="plugin.consent"><source>Shape Email Consent Validation</source></trans-unit>
 			<trans-unit id="plugin.consent.description"><source>Plugin to process consent links.</source></trans-unit>
 
+
+			<trans-unit id="general.default"><source>Default</source></trans-unit>
+			<trans-unit id="general.hidden"><source>Hidden</source></trans-unit>
+
 			<trans-unit id="form.ctrl.title"><source>Form</source></trans-unit>
 			<trans-unit id="form.title"><source>Title</source></trans-unit>
 			<trans-unit id="form.name"><source>Name</source></trans-unit>
 			<trans-unit id="form.pages"><source>Pages</source></trans-unit>
 			<trans-unit id="form.finishers"><source>Finishers</source></trans-unit>
+			<trans-unit id="form.layout"><source>Layout</source></trans-unit>
+			<trans-unit id="form.header_layout"><source>Header Layout</source></trans-unit>
+			<trans-unit id="form.css_class"><source>CSS Class</source></trans-unit>
 
 			<trans-unit id="form_page.ctrl.title"><source>Form Page</source></trans-unit>
 			<trans-unit id="form_page.title"><source>Header</source></trans-unit>
@@ -33,6 +42,9 @@
 			<trans-unit id="form_page.display_condition"><source>Display Condition</source></trans-unit>
 			<trans-unit id="form_page.prev_label"><source>Back-Button Label</source></trans-unit>
 			<trans-unit id="form_page.next_label"><source>Next-Button Label</source></trans-unit>
+			<trans-unit id="form_page.layout"><source>Layout</source></trans-unit>
+			<trans-unit id="form_page.header_layout"><source>Header Layout</source></trans-unit>
+			<trans-unit id="form_page.css_class"><source>CSS Class</source></trans-unit>
 
 			<trans-unit id="field.ctrl.title"><source>Form Field</source></trans-unit>
 			<trans-unit id="field.label"><source>Label</source></trans-unit>
@@ -74,12 +86,12 @@
 			<trans-unit id="field.type.item.range"><source>Range</source></trans-unit>
 			<trans-unit id="field.type.item.color"><source>Color</source></trans-unit>
 			<trans-unit id="field.type.item.reset"><source>Reset</source></trans-unit>
-			<trans-unit id="field.type.item.captcha"><source>Captcha</source></trans-unit>
 			<trans-unit id="field.type.item.hidden"><source>Hidden</source></trans-unit>
 
 			<trans-unit id="field.type.item.repeatable-container"><source>Repeatable Field Group</source></trans-unit>
 			<trans-unit id="field.type.item.combined-select-text"><source>Select with Text Field Override</source></trans-unit>
 
+			<trans-unit id="field.type.item.divider"><source>Divider</source></trans-unit>
 			<trans-unit id="field.type.item.content-header"><source>Header</source></trans-unit>
 			<trans-unit id="field.type.item.content-rte"><source>RTE Content</source></trans-unit>
 			<trans-unit id="field.type.item.content-element"><source>Content Element</source></trans-unit>

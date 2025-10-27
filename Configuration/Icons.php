@@ -3,6 +3,14 @@
 use TYPO3\CMS\Core\Imaging\IconProvider\SvgIconProvider;
 
 return [
+	'shape-form' => [
+		'provider' => SvgIconProvider::class,
+		'source' => 'EXT:shape/Resources/Public/Icons/shape-form.svg',
+	],
+	'shape-folder' => [
+		'provider' => SvgIconProvider::class,
+		'source' => 'EXT:shape/Resources/Public/Icons/shape-folder.svg',
+	],
 	'shape-default' => [
 		'provider' => SvgIconProvider::class,
 		'source' => 'EXT:shape/Resources/Public/Icons/default.svg',

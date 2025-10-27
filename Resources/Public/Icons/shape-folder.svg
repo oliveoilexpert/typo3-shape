@@ -1,0 +1,15 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="ShapeFolder">
+<path id="Path" d="M0 3.00841V15.0084H12.69V4.81841H5.08L3.95 3.00841H0Z" fill="#888888"/>
+<rect id="Rectangle" x="2" y="3.00841" width="11" height="9" fill="#515151"/>
+<g id="Clip path group">
+<path id="Vector" d="M3 0H13.6667V12H3V0Z" fill="#BA26E7"/>
+<path id="Vector_2" d="M5.66669 9.33333H8.33335V10.6667H5.66669V9.33333Z" fill="white"/>
+<path id="Vector_3" opacity="0.5" d="M9 9.33333H11.6667V10.6667H9V9.33333Z" fill="white"/>
+<path id="Vector_4" d="M5.66669 1.33334H10.3334V2.00001H5.66669V1.33334ZM5.66669 6.00001H6.33335V6.66668H5.66669V6.00001ZM5.66669 7.33334H6.33335V8.00001H5.66669V7.33334Z" fill="white"/>
+<path id="Vector_5" opacity="0.5" d="M7.00002 6.00001H12.3334V6.66667H7.00002V6.00001ZM7.00002 7.33334H12.3334V8.00001H7.00002V7.33334ZM5.66669 2.66667H12.3334V5.33334H5.66669V2.66667Z" fill="white"/>
+<path id="Vector_6" opacity="0.5" d="M3.66669 0H4.33335V12H3.66669V0Z" fill="white"/>
+</g>
+<path id="Path_2" d="M8.26 7.08841L6.55 8.40841H2.53L0 15.0084H12.96L16 7.08841H8.26Z" fill="#AAAAAA"/>
+</g>
+</svg>

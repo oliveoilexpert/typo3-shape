@@ -74,12 +74,12 @@ $columns = [
 				'range' => [Util::t('field.type.item.range'), 'range', 'form-text', 'special'],
 				'color' => [Util::t('field.type.item.color'), 'color', 'form-text', 'special'],
 				'reset' => [Util::t('field.type.item.reset'), 'reset', 'form-text', 'special'],
-				'captcha' => [Util::t('field.type.item.captcha'), 'captcha', 'form-text', 'special'],
 				'hidden' => [Util::t('field.type.item.hidden'), 'hidden', 'form-hidden', 'special'],
 
 				'combined-select-text' => [Util::t('field.type.item.combined-select-text'), 'combined-select-text', 'form-multi-select', 'groups'],
 				'repeatable-container' => [Util::t('field.type.item.repeatable-container'), 'repeatable-container', 'content-container', 'groups'],
 
+				'divider' => [Util::t('field.type.item.divider'), 'divider', 'mimetypes-x-content-divider', 'no-input'],
 				'content-header' => [Util::t('field.type.item.content-header'), 'content-header', 'content-header', 'no-input'],
 				'content-rte' => [Util::t('field.type.item.content-rte'), 'content-rte', 'form-static-text', 'no-input'],
 				'content-element' => [Util::t('field.type.item.content-element'), 'content-element', 'form-content-element', 'no-input'],
@@ -168,14 +168,11 @@ $columns = [
 		],
 	],
 	'layout' => [
-		'behaviour' => [
-			'allowLanguageSynchronization' => true,
-		],
 		'config' => [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'items' => [
-				['Default', 'default'],
+				[Util::t('general.default'), 'default'],
 			],
 		],
 	],
@@ -184,8 +181,8 @@ $columns = [
 			'type' => 'select',
 			'renderType' => 'selectSingle',
 			'items' => [
-				['Default', 'default'],
-				['Hidden', 'hidden'],
+				[Util::t('general.default'), 'default'],
+				[Util::t('general.hidden'), 'hidden'],
 			],
 		],
 	],
@@ -215,13 +212,11 @@ $columns = [
 	'css_class' => [
 		'config' => [
 			'type' => 'input',
-			'size' => 30,
 		],
 	],
 	'validation_message' => [
 		'config' => [
 			'type' => 'input',
-			'size' => 30,
 		],
 	],
 	'rte_label' => [
@@ -240,9 +235,6 @@ $columns = [
 				'localizationStateSelector' => [
 					'disabled' => false,
 				]
-			],
-			'behaviour' => [
-				'allowLanguageSynchronization' => true,
 			],
 		],
 	],

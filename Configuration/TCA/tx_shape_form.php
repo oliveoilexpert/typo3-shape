@@ -103,6 +103,42 @@ $columns = [
 			]
 		],
 	],
+	'layout' => [
+		'label' => Util::t('form.layout'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [
+				[Util::t('general.default'), 'default'],
+			]
+		],
+	],
+	'header_layout' => [
+		'label' => Util::t('form.header_layout'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [
+				[Util::t('general.default'), 'default'],
+				[Util::t('general.hidden'), 'hidden'],
+			]
+		],
+	],
+	'css_class' => [
+		'label' => Util::t('form.css_class'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'input',
+		],
+	]
 ];
 foreach ($columns as $key => $column) {
 	$columns[$key]['label'] = Util::t('form.' . $key);
@@ -112,11 +148,16 @@ $palettes = [
 	'base' => [
 		'showitem' => 'title, name',
 	],
+	'appearance' => [
+		'showitem' => 'layout, --linebreak--, css_class',
+	],
 ];
 $showItem = '
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
         --palette--;;base, 
         pages,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance, 
+    	--palette--;;appearance,
     --div--;LLL:EXT:shape/Resources/Private/Language/locallang_db.xlf:tab.finishers, 
     	finishers,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 

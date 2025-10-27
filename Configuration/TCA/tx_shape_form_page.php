@@ -75,6 +75,10 @@ $columns = [
 			'foreign_table_where' => 'AND {#tx_shape_field}.{#sys_language_uid}=###REC_FIELD_sys_language_uid###',
 			'localizeReferences' => true,
 			'localizeReferencesAtParentLocalization' => true,
+			'appearance' => [
+				'expandSingle' => true,
+				'useSortable' => true
+			],
 			'fieldControl' => [
 				'editPopup' => [
 					'disabled' => false,
@@ -116,6 +120,42 @@ $columns = [
 			'eval' => 'trim',
 		],
 	],
+	'layout' => [
+		'label' => Util::t('form_page.layout'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [
+				[Util::t('general.default'), 'default'],
+			]
+		],
+	],
+	'header_layout' => [
+		'label' => Util::t('form_page.header_layout'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'select',
+			'renderType' => 'selectSingle',
+			'items' => [
+				[Util::t('general.default'), 'default'],
+				[Util::t('general.hidden'), 'hidden'],
+			]
+		],
+	],
+	'css_class' => [
+		'label' => Util::t('form_page.css_class'),
+		'config' => [
+			'behaviour' => [
+				'allowLanguageSynchronization' => true,
+			],
+			'type' => 'input',
+		],
+	]
 ];
 $langSyncColumns = [
 	'type',
@@ -143,13 +183,18 @@ $palettes = [
 	],
 	'button-labels' => [
 		'showitem' => 'prev_label, next_label',
-	]
+	],
+	'appearance' => [
+		'showitem' => 'layout, header_layout, --linebreak--, css_class',
+	],
 ];
 $showItem = '
 	--div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:general, 
 		--palette--;;title,
 		fields,
 		--palette--;;button-labels,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance, 
+    	--palette--;;appearance,
     --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language, 
         sys_language_uid, 
         l10n_parent, 
